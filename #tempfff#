@@ -1,0 +1,104 @@
+(defun ego/rearrange-category-sorted (file-attr-list)
+  "Rearrange and sort attribute property lists from FILE-ATTR-LIST. Rearrange
+according to category, and sort according to :sort-by property defined in
+`ego/category-config-alist', if category is not in `ego/category-config-alist',
+by default, category which set by config option `:default-category' will be used.
+For sorting, later lies headmost."
+  (let ((default-category (ego/get-config-option :default-category))
+        cat-alist cat-list)
+    (mapc
+     #'(lambda (plist)
+         (setq cat-list (cdr (assoc (plist-get plist :category) cat-alist)))
+         (if cat-list
+             (nconc cat-list (list plist))
+           (setq cat-alist (cons (cons (plist-get plist :category)
+                                       (list plist))
+                                 cat-alist))))
+     file-attr-list)
+    (mapc
+     #'(lambda (cell)
+         (setcdr
+          cell
+          (sort (cdr cell)
+                #'(lambda (plist1 plist2)
+                    (<= (ego/compare-standard-date
+                         (ego/fix-timestamp-string
+                          (plist-get
+                           plist1
+                           (plist-get
+                            (cdr (or (assoc (plist-get plist1 :category)
+                                            ego/category-config-alist)
+                                     (ego/get-category-setting default-category)))
+                            :sort-by)))
+                         (ego/fix-timestamp-string
+                          (plist-get
+                           plist2
+                           (plist-get
+                            (cdr (or (assoc (plist-get plist2 :category)
+                                            ego/category-config-alist)
+                                     (ego/get-category-setting default-category)))
+                            :sort-by))))
+                        0)))))
+     cat-alist)))
+(defun ego/update-category-index (file-attr-list pub-base-dir)
+  "Update index page of different categories. FILE-ATTR-LIST is the list of all
+file attribute property lists. PUB-BASE-DIR is the root publication directory."
+  (let* ((sort-alist (ego/rearrange-category-sorted file-attr-list))
+         (default-category (ego/get-config-option :default-category))
+         cat-dir)
+    (mapc
+     #'(lambda (cat-list)
+         (unless (not (plist-get (cdr (or (assoc (car cat-list)
+                                                 ego/category-config-alist)
+                                          (ego/get-category-setting default-category)))
+                                 :category-index))
+           (setq cat-dir (file-name-as-directory
+                          (concat (file-name-as-directory pub-base-dir)
+                                  (ego/encode-string-to-url (car cat-list)))))
+           (unless (file-directory-p cat-dir)
+             (mkdir cat-dir t))
+           (ego/string-to-file
+            (ego/relative-url-to-absolute
+             (mustache-render
+              (ego/get-cache-create
+               :container-template
+               (message "Read container.mustache from file")
+               (ego/file-to-string (ego/get-template-file "container.mustache")))
+              (ht ("header"
+                   (ego/render-header
+                    (ht ("page-title" (concat (capitalize (car cat-list))
+                                              " Index - "
+                                              (ego/get-config-option :site-main-title)))
+                        ("author" (or user-full-name "Unknown Author")))))
+                  ("nav" (ego/render-navigation-bar))
+                  ("content"
+                   (ego/render-content
+                    "category-index.mustache"
+                    (ht ("cat-name" (capitalize (car cat-list)))
+                        ("posts"
+                         (mapcar
+                          #'(lambda (attr-plist)
+                              (ht ("date"
+                                   (plist-get
+                                    attr-plist
+                                    (plist-get
+                                     (cdr (or (assoc
+                                               (plist-get attr-plist :category)
+                                               ego/category-config-alist)
+                                              (ego/get-category-setting default-category)))
+                                     :sort-by)))
+                                  ("post-uri" (plist-get attr-plist :uri))
+                                  ("post-title" (plist-get attr-plist :title))))
+                          (cdr cat-list))))))
+                  ("footer"
+                   (ego/render-footer
+                    (ht ("show-meta" nil)
+                        ("show-comment" nil)
+                        ("author" (or user-full-name "Unknown Author"))
+                        ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
+                        ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
+                        ("creator-info" (ego/get-html-creator-string))
+                        ("email" (ego/confound-email-address (or user-mail-address
+                                                                 "Unknown Email")))))))))
+            (concat cat-dir "index.html") 'html-mode)))
+     sort-alist)))

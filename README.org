@@ -149,3 +149,8 @@ or:
   detect that this has happened. it will only publish a new html
   file for you so you need to delete the old html file related to
   the old URI manually.
+
+* 改造计划
+1. summary 的日期排序
+2. 使用 ajax
+3. blog 的年表（保留 category 功能，但是将 blog 由 category 变为 summary）
