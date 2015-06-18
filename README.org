@@ -154,3 +154,4 @@ or:
 1. summary 的日期排序
 2. 使用 ajax
 3. blog 的年表（保留 category 功能，但是将 blog 由 category 变为 summary）
+4. UI 的改进（显示你前端水平的时候到了）
