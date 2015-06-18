@@ -1,0 +1,15 @@
+#+TITLE:       Change Log
+#+AUTHOR:      Feng Shu
+#+EMAIL:       tumashu@163.com
+#+DATE:        2015-04-02 四
+#+KEYWORDS:    changelog, 更新记录
+#+TAGS:        changelog, 更新记录
+#+LANGUAGE:    zh-CN
+#+OPTIONS:     H:3 num:nil toc:nil \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+
+
+* v0.1
+
+- Initial version, fork from org-page.
+- Use org-publish style config.
+- Increment Theme suport.

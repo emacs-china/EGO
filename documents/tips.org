@@ -1,0 +1,130 @@
+#+TITLE:       Tips of org-webpage
+#+AUTHOR:      Feng Shu
+#+EMAIL:       tumashu@163.com
+#+DATE:        2015-04-01
+
+
+* How to install org-webpage in manual way
+
+To install org-webpage manually you should first install all
+dependencies listed in *README.org*. Once this has been completed,
+clone the repo:
+
+#+BEGIN_EXAMPLE
+git clone https://github.com/tumashu/org-webpage.git
+#+END_EXAMPLE
+
+After that, please remember to add this location to your emacs'
+=load-path= variable so that emacs can find the package.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/path/to/org-webpage")
+(require 'org-webpage)
+#+END_SRC
+
+NOTE: This is NOT recommended way for emacs beginner.
+
+* How to install org-webpage Through package management system
+
+1. Setting melpa repository, see: http://melpa.org/#/getting-started
+2. Run the following command
+   #+BEGIN_EXAMPLE
+   M-x package-install RET org-website RET
+   #+END_EXAMPLE
+3. Add the following to your =~/.emacs= file:
+   #+BEGIN_EXAMPLE
+   (require 'org-webpage)
+   #+END_EXAMPLE
+
+* How to quickly build a org-webpage git repository
+
+If you find that initializing a repository manually is too much trouble,
+you can run:
+#+BEGIN_EXAMPLE
+M-x owp/new-repository
+#+END_EXAMPLE
+
+* How to quickly add a new post
+#+BEGIN_EXAMPLE
+M-x owp/new-post
+#+END_EXAMPLE
+
+This command will ask you the follow question:
+1. Which project do you want post?
+2. Category?
+3. Filename?
+
+* How to quickly insert org-website post template
+
+#+BEGIN_EXAMPLE
+M-x owp/insert-options-template
+#+END_EXAMPLE
+
+* How to configure the default slogan
+Add the follow two lines to you config alist.
+
+#+BEGIN_EXAMPLE
+:site-main-title "your main slogan"
+:site-sub-title "your sub slogan"
+#+END_EXAMPLE
+
+* How to add an avatar to the page?
+Add the follow line to you config alist.
+
+#+BEGIN_EXAMPLE
+:personal-avatar "URL to an image"
+#+END_EXAMPLE
+
+Image URL example:
+1. =http:/XXXXX.com/XXXX.jpg=
+2. /media/img/XXXXX.jpg
+3. /assets/XXX/XXX.jpg
+
+* How to change org source files branch to "master"?
+Add the follow line to you config alist.
+
+#+BEGIN_EXAMPLE
+:repository-org-branch "master"
+#+END_EXAMPLE
+
+* How to save html file to branch: "gh-pages"?
+Add the follow line to you config alist.
+
+#+BEGIN_EXAMPLE
+:repository-org-branch "gh-pages"
+#+END_EXAMPLE
+
+* How to add a github link
+Add the follow line to you config alist.
+
+#+BEGIN_EXAMPLE
+:source-browse-url ("GitHub" "https://github.io/<username>/<project-name>")
+#+END_EXAMPLE
+
+* How to do site traffic analytics with Google Analytics?
+
+Add the follow line to you config alist.
+
+#+BEGIN_EXAMPLE
+:personal-google-analytics-id "your google analytics id"
+#+END_EXAMPLE
+
+* How to disable commenting for posts under certain categories?
+
+#+BEGIN_SRC emacs-lisp
+(setq owp/category-config-alist
+      (cons '("photography" ;; category name goes here
+              :show-comment nil)
+            owp/category-config-alist))
+#+END_SRC
+
+Other config items:
+
+1. =:show-meta=: show post meta info at the bottom of post?
+2. =:uri-generator=: the function used to generate uri for posts
+   under that category (however, it is not recommended to
+   customize except you are an expert)
+3. =:uri-template=: the template used to generate uri
+4. =:sort-by=: how to sort posts on category index page, by
+5. =:date= or by =:mod-date=  (:mod-date is last modification date)?
+6. =:category-index=: generate an index page for this category?
