@@ -3,8 +3,21 @@
     <h1>{{summary-name}}: {{summary-item-name}}</h1>
     <ul class="org-ul">
       {{#posts}}
-        <li><a href="{{post-uri}}">{{post-title}}</a></li>
+        <li>
+          <span style="position:relative;float:left;width:100%;">{{post-date}}&nbsp;&nbsp;»&nbsp;&nbsp;
+            <a href="{{post-uri}}">{{post-title}}</a>
+            <span style="float:right;text-align:right;"><code>{{{tag-links}}}</code></span>
+          </span>
+        </li>
       {{/posts}}
+    </ul>
+    <br/>
+    <h1>{{summary-name}}: Index</h1>
+    <ul>
+      {{#summary}}
+        <li><a href="{{summary-item-uri}}">{{summary-item-name}} ({{count}})</a>
+        </li>
+      {{/summary}}
     </ul>
   </div>
 </div>

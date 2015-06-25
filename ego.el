@@ -1,6 +1,6 @@
 ;;; ego.el --- static site generator based on org mode
 
-;; Copyright (C)  2005 Feng Shu
+;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
 
 ;; Author: Feng Shu  <tumashu AT 163.com>

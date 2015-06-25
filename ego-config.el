@@ -191,7 +191,7 @@ converted to \"http://yourdomain.com/path/to/file.html\".
 
   `:default-category'
 
-If org fils don't set category, default category will be used.
+If org files don't set category, default category will be used.
 1. Type: string
 2. Example1: \"blog\"
 3. Example2: \"wiki\"
@@ -321,7 +321,7 @@ You can see fallback value of above option in `ego/config-fallback'"
      :uri-generator ego/generate-uri
      :uri-template "/blog/%y/%m/%d/%t/"
      :sort-by :date     ;; how to sort the posts
-     :category-index t) ;; generate category index or not
+     :category-index nil) ;; generate category index or not
     ("index"
      :show-meta nil
      :show-comment nil
@@ -337,6 +337,8 @@ You can see fallback value of above option in `ego/config-fallback'"
      :sort-by :date
      :category-index nil))
   "Configurations for different categories, can and should be customized.")
+
+(defvar ego/category-show-list nil "the list of category names(string) which will be showed in the navigation-bar")
 
 (defvar ego/current-project-name nil)
 (defvar ego/last-project-name nil)

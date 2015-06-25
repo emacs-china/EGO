@@ -1,6 +1,6 @@
 ;;; ego-template.el --- templating system based on mustache, required by ego
 
-;; Copyright (C)  2005 Feng Shu
+;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
 
 ;; Author: Feng Shu  <tumashu AT 163.com>
@@ -119,17 +119,26 @@ render from a default hash table."
                     (ht ("category-uri"
                          (concat "/" (ego/encode-string-to-url cat) "/"))
                         ("category-name" (capitalize cat))))
-                (sort (cl-remove-if
-                       #'(lambda (cat)
-                           (or (string= cat "index")
-                               (string= cat "about")))
-                       (ego/get-category nil))
-                      'string-lessp)))
+                (setq ego/category-show-list
+                      (sort (cl-remove-if
+                             #'(lambda (cat)
+                                 (or (string= cat "index")
+                                     (string= cat "about")
+                                     (not (plist-get (cdr (or (assoc cat
+                                                                     ego/category-config-alist)
+                                                              (ego/get-category-setting default-category)))
+                                                     :category-index))))
+                             (ego/get-category nil))
+                            'string-lessp))))
               ("nav-summary"
                (mapcar
                 #'(lambda (cat)
+                    (if (equal cat (caar (seq-filter #'(lambda (element) (equal :tags (cadr element)))
+                                                    (ego/get-config-option :summary))))
+                        (setq cat-real "tags")
+                      (setq cat-real cat))
                     (ht ("summary-item-uri"
-                         (concat "/" (ego/encode-string-to-url cat) "/"))
+                         (concat "/" (ego/encode-string-to-url cat-real) "/"))
                         ("summary-item-name" (capitalize cat))))
                 (mapcar #'car (ego/get-config-option :summary))))
               ("nav-source-browse"
@@ -223,7 +232,7 @@ similar to `ego/render-header'."
                              #'(lambda (tag)
                                  (mustache-render
                                   "<a href=\"{{link}}\">{{name}}</a>" tag))
-                             tags " ")))
+                             tags " : ")))
              ("author" (or (ego/read-org-option "AUTHOR")
                            user-full-name
                            "Unknown Author"))

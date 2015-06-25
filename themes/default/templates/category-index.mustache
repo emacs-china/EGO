@@ -3,8 +3,14 @@
     <h1>{{cat-name}} Index</h1>
     <ul class="org-ul">
       {{#posts}}
-        <li>{{date}}&nbsp;&nbsp;»&nbsp;&nbsp;<a href="{{post-uri}}">{{post-title}}</a></li>
+        <li>
+          <span style="position:relative;float:left;width:100%;">{{date}}&nbsp;&nbsp;»&nbsp;&nbsp;
+            <a href="{{post-uri}}">{{post-title}}</a>
+            <span style="float:right;text-align:right;"><code>{{{tag-links}}}</code></span>
+          </span>  
+        </li>
       {{/posts}}
     </ul>
+    <h1>&nbsp;&nbsp;</h1>
   </div>
 </div>
