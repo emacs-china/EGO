@@ -1,40 +1,27 @@
-#+TITLE:     org-webpage's README
-#+AUTHOR:    Feng Shu
-#+EMAIL:     tumashu@163.com
-#+DATE:      2015-04-01
-
+#+TITLE:     EGO's README
+#+AUTHOR:    Feng Shu, Kuangdash
+#+EMAIL:     emacs-china@googlegroups.com
+#+DATE:      2015-07-02
 
 * Introduction
 
-org-webpage is a static site generator based on [[http://orgmode.org/][org-mode]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
+EGO is a static site generator that depends on [[http://www.gnu.org/software/emacs][Emacs]], [[git-scm.com][Git]] and  [[http://orgmode.org/][Org-mode]]. it originates from Feng Shu's [[https://github.com/tumashu/org-webpage][org-webpage]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
-org-webpage provides similar features with org-page:
+EGO provides features below:
 
-#+BEGIN_EXAMPLE
 1) Org sources and html files managed by git
 2) Incremental publication (according to =git diff= command)
-3) Category support
+3) Category support (not recommended)
 4) Tags support (auto generated)
 5) RSS support (auto generated)
 6) Search engine support (auto generated)
 7) A beautiful theme
-8) Theme customization support
+8) Theme customization support is well (using mustache template)
 9) Commenting (implemented using disqus/duoshuo)
 10) Website traffic analytics (implemented using google analytics)
 11) Index/about page support (auto generated if no default is provided)
-12) Highly customizable
-#+END_EXAMPLE
-
-The main differents of two projects are as follow:
-
-1. org-page focus on personal blog, while org-webpage is main used to
-   generate project website.
-2. org-webpage's default config is `org-publish-project-alist' style alist,
-   which can manage multi-site configs in an emacs session easily.
-3. org-website find theme-files from a *themes-list* in sequence and same theme-file
-   first found will be used. User can set *fallback theme* with the help of this feature.
-4. org-website include a tiny emacs web server, which can be used to test publish.
-5. ...
+13) Include a tiny emacs web server, which can be used to test publish.
+14) Manage multi-site configs in an emacs session easily.
 
 * Workflow
 
@@ -42,68 +29,70 @@ The main differents of two projects are as follow:
    files will be on the "source" branch and the generated html files
    will be on the "master" branch (the branch names can be
    customized). Repos may be created manually or by
-   org-webpage's =owp/new-repository= command.
+   EGO's =ego/new-repository= command.
 2. Specify a "base commit" (the most recent prior commit will be used if
-   omitted). org-webpage will read changes between the latest commit
+   omitted). EGO will read changes between the latest commit
    and the specified base commit on branch "source". The changes
    will then be marked for publication.
-3. org-webpage does preparation jobs.
+3. EGO does preparation jobs.
 4. Publish the changes read in step 2. A change can be an addition,
-   a modification, or a deletion.  *org-webpage is designed to handle all of*
-   *these kinds of changes but since deletion does not happen often, *
-   *org-webpage has not implemented it yet.*
+   a modification, or a deletion.  *EGO is designed to handle all of these kinds of changes but since deletion does not happen often, EGO has not implemented it yet.*
 5. Update the index page for each category and tag.
 6. Publication finished.
 
 * Usage
 
-*Here is a general introduction about how to use org-webpage, for more detailed introduction and configuration, please see
+*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see
 "tips.org" in the "documents" folder.*
 
 ** Installation
 
-org-webpage is now available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]
-so the recommended way is to install it through emacs' package
-management system. For more info about installation, please see
-*tips.org* in the "doc" folder.
+EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository. For more info about installation, please see *tips.org* in the "document" folder.
 
 ** Configuration
-The follow code is [[http://tumashu.github.com][my website]]'s [[https://github.com/tumashu/tumashu.github.com/blob/source/eh-website.el][config]], you can adjust and paste it to your =.emacs= file:
+The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you can adjust and paste it to your =.emacs= file:
 
 #+BEGIN_SRC emacs-lisp
-;; the following is only needed if you install org-page manually
-(add-to-list 'load-path "path/to/org-webpage")
+  ;; the following is only needed if you install org-page manually
+  (add-to-list 'load-path "path/to/EGO")
 
-(require 'org-webpage)
+  (require 'ego)
 
-(add-to-list 'owp/project-config-alist
-             `("tumashu.github.com"
-               :repository-directory "~/project/emacs-packages/tumashu.github.com"
-               :site-domain "http://tumashu.github.com/"
-               :site-main-title "Tumashu 的个人小站"
-               :site-sub-title "(九天十地，太上忘情！！！)"
-               :theme (worg)
-               :source-browse-url ("Github" "https://github.com/tumashu/tumashu.github.com")
-               :personal-avatar "/media/img/horse.jpg"
-               :personal-duoshuo-shortname "tumashu-website"
-               :web-server-docroot "~/.emacs.d/org-webpage-server/tumashu.github.com"
-               :web-server-port 7654))
+  (add-to-list 'ego/project-config-alist
+                 `("emacs-china"
+                   :repository-directory "~/github/emacs-china.github.io"
+                   :site-domain "http://emacs-china.github.io/"
+                   :site-main-title "EMACS-CHINA"
+                   :site-sub-title "=============>集思广益"
+                   :theme (default)
+                   :summary (("years" :year :updates 10) ("authors" :authors) ("tags" :tags))
+                   :source-browse-url ("Github" "https://github.com/emacs-china")
+                   :personal-disqus-shortname "emacs-china"
+                   :personal-duoshuo-shortname "emacs-china"
+                   :confound-email nil
+                   :web-server-docroot "~/webRoot/emacs-china.github.io"
+                   :web-server-port 5432))
 #+END_SRC
-
-[[http://tumashu.github.io/chinese-pyim/][Chinese-pyim]] 's org-webpage [[https://github.com/tumashu/chinese-pyim/blob/master/chinese-pyim-devtools.el][config]] is a more complex example.
 
 You can find more config options and theirs default values by commands:
 
 #+BEGIN_EXAMPLE
-C-h v owp/project-config-alist
-C-h v owp/config-fallback
+C-h v ego/project-config-alist
+C-h v ego/config-fallback
+#+END_EXAMPLE
+
+** create new post
+Using the following command to create a new post: 
+
+#+BEGIN_EXAMPLE
+M-x ego/new-post
 #+END_EXAMPLE
 
 ** Publication
 The simplest way is run:
 
 #+BEGIN_EXAMPLE
-M-x owp/do-publication
+M-x ego/do-publication
 #+END_EXAMPLE
 
 This command will ask you some questions:
@@ -114,17 +103,17 @@ This command will ask you some questions:
 4. Auto commit to repo?
 5. Auto push to remote repo?
 
-You can use `owp/do-publication' in elisp, which let you code
+You can use `ego/do-publication' in elisp, which let you code
 your own quickly publication command:
 
 #+BEGIN_SRC emacs-lisp
-(owp/do-publication "project-name" nil "HEAD^1" "~/org-pub/" nil)
+(ego/do-publication "project-name" nil "HEAD^1" "~/org-pub/" nil)
 #+END_SRC
 
 or:
 
 #+BEGIN_SRC emacs-lisp
-(call-interactively 'owp/do-publication)
+(call-interactively 'ego/do-publication)
 #+END_SRC
 
 * Dependencies
@@ -150,7 +139,7 @@ or:
   file for you so you need to delete the old html file related to
   the old URI manually.
 
-* 改造计划
-1. summary 的日期排序
-2. 使用 ajax
-3. blog 的年表（保留 category 功能，但是将 blog 由 category 变为 summary）
+* Roadmap [0/3]
+- [ ] Next/Previous Page links
+- [ ] More themes
+- [ ] upload to melpa

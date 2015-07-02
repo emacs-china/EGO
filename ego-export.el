@@ -402,12 +402,12 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                    (ego/render-footer
                     (ht ("show-meta" nil)
                         ("show-comment" nil)
-                        ("author" (or user-full-name "Unknown Author"))
+                        ;; ("author" "ego")
                         ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
                         ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                         ("creator-info" (ego/get-html-creator-string))
-                        ("email" (ego/confound-email-address (or user-mail-address
-                                                                 "Unknown Email")))))))))
+                        ;; ("email" (ego/confound-email-address "ego@emacs-china.org"))
+                        ))))))
             (concat cat-dir "index.html") 'html-mode)))
      sort-alist)))
 
@@ -587,7 +587,7 @@ TODO: improve this function."
                                             (plist-get attr-plist :tags))))
                            (ht ("post-uri" (plist-get attr-plist :uri))
                                ("post-title" (plist-get attr-plist :title))
-                               ("post-date" (plist-get attr-plist :date))
+                               ("post-date" (plist-get attr-plist :mod-date))
                                ("tag-links" (if (not tags-multi) "N/A"
                                               (mapconcat
                                                #'(lambda (tag)
@@ -621,12 +621,12 @@ TODO: improve this function."
             (ego/render-footer
              (ht ("show-meta" nil)
                  ("show-comment" nil)
-                 ("author" (or user-full-name "Unknown Author"))
+                 ;; ("author" "ego")
                  ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
                  ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                  ("creator-info" (ego/get-html-creator-string))
-                 ("email" (ego/confound-email-address (or user-mail-address
-                                                          "Unknown Email")))))))))
+                 ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
+                 ))))))
      (concat summary-base-dir "index.html") 'html-mode)
     (mapc
      #'(lambda (summary-list)
@@ -646,7 +646,7 @@ TODO: improve this function."
                  (ego/render-header
                   (ht ("page-title" (concat (capitalize summary-name) ": " (car summary-list)
                                             " - " (ego/get-config-option :site-main-title)))
-                      ("author" (or user-full-name "Unknown Author")))))
+                      ("author" "ego"))))
                 ("nav" (ego/render-navigation-bar))
                 ("content"
                  (ego/render-content
@@ -682,12 +682,12 @@ TODO: improve this function."
                  (ego/render-footer
                   (ht ("show-meta" nil)
                       ("show-comment" nil)
-                      ("author" (or user-full-name "Unknown Author"))
+                      ;; ("author" "ego")
                       ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
                       ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                       ("creator-info" (ego/get-html-creator-string))
-                      ("email" (ego/confound-email-address (or user-mail-address
-                                                               "Unknown Email")))))))))
+                      ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
+                      ))))))
           (concat summary-dir "index.html") 'html-mode))
      summary-alist)))
 

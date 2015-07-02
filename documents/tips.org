@@ -4,39 +4,41 @@
 #+DATE:        2015-04-01
 
 
-* How to install org-webpage in manual way
+* How to install EGO in manual way
 
-To install org-webpage manually you should first install all
+To install EGO manually you should first install all
 dependencies listed in *README.org*. Once this has been completed,
 clone the repo:
 
 #+BEGIN_EXAMPLE
-git clone https://github.com/tumashu/org-webpage.git
+git clone https://github.com/emacs-china/EGO.git
 #+END_EXAMPLE
 
 After that, please remember to add this location to your emacs'
 =load-path= variable so that emacs can find the package.
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/path/to/org-webpage")
-(require 'org-webpage)
+(add-to-list 'load-path "/path/to/EGO")
+(require 'EGO)
 #+END_SRC
 
 NOTE: This is NOT recommended way for emacs beginner.
 
-* How to install org-webpage Through package management system
+* COMMENT How to install org-webpage Through package management system
+
+# this headline is left for EGO to improve
 
 1. Setting melpa repository, see: http://melpa.org/#/getting-started
 2. Run the following command
    #+BEGIN_EXAMPLE
-   M-x package-install RET org-website RET
+   M-x package-install RET org-webpage RET
    #+END_EXAMPLE
 3. Add the following to your =~/.emacs= file:
    #+BEGIN_EXAMPLE
    (require 'org-webpage)
    #+END_EXAMPLE
 
-* How to quickly build a org-webpage git repository
+* How to quickly build a EGO git repository
 
 If you find that initializing a repository manually is too much trouble,
 you can run:
@@ -109,7 +111,9 @@ Add the follow line to you config alist.
 :personal-google-analytics-id "your google analytics id"
 #+END_EXAMPLE
 
-* How to disable commenting for posts under certain categories?
+* How to disable commenting for posts under certain category?
+
+# category is not recommended for use
 
 #+BEGIN_SRC emacs-lisp
 (setq owp/category-config-alist
@@ -128,3 +132,5 @@ Other config items:
 4. =:sort-by=: how to sort posts on category index page, by
 5. =:date= or by =:mod-date=  (:mod-date is last modification date)?
 6. =:category-index=: generate an index page for this category?
+
+* How to disable commenting for posts under certain summary?

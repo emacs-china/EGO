@@ -29,8 +29,7 @@
 
 (require 'ox)
 (require 'ht)
-(require 'ego-util)
- 
+(require 'ego-util) 
 (require 'ego-config)
 
 

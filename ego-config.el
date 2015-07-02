@@ -1,6 +1,7 @@
-;;; ego-config.el --- Functions dealing with ego configure
+;;; ego-config.el --- Variables and Functions dealing with ego configure
 
-;; Copyright (C)  2015 Feng Shu
+;; Copyright (C)  2015 Feng Shu, Kuangdash
+;;                2012, 2013, 2014, 2015 Kelvin Hu
 
 ;; Author: Feng Shu <tumashu AT 163 DOT com>
 ;; Keywords: convenience
@@ -217,8 +218,8 @@ A summary is a statistic page, Which can be used show pages
 based on \"tags\" , \"data\" , \"author\" and so on.
 it is similar Micorsoft Excel pivot table feature.
 1. Type: alist
-2. Example1: ((\"tags\" :tags) (\"date\" :date) (\"authors\" :authors))
-2. Example2: ((\"按标签分类\" :tags) (\"按时间分类\" :date) (\"按作者分类\" :authors))
+2. Example1: ((\"tags\" :tags) (\"years\" :year) (\"authors\" :authors))
+2. Example2: ((\"按标签分类\" :tags) (\"按年度分类\" :year) (\"按作者分类\" :authors))
 
 
   `:category-ignore-list'
