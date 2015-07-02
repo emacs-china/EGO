@@ -4,7 +4,7 @@
     <span title="post date" class="post-info">{{{date}}}</span>
     <span title="last modification date" class="post-info">{{mod-date}}</span>
     <span title="tags" class="post-info">:{{{tag-links}}}:</span>
-    <span title="author" class="post-info">{{author}}</span>
+    <span title="author" class="post-info"><a href="mailto:{{email}}">{{author}}</a></span>
   </div>
   {{/show-meta}}
   <script src="/media/js/jquery-2.1.3.min.js"></script>
@@ -51,7 +51,7 @@
     {{/duoshuo-comment}}
   </section>
   {{/show-comment}}
-  <script src="/media/js/kdComment.js"></script>
+  <script src="/media/js/main.js"></script>
   {{#google-analytics}}
   <script type="text/javascript">
    var _gaq = _gaq || [];
@@ -70,8 +70,7 @@
     <p>
       Copyright &copy; 2014 - <span id="footerYear"></span> <a href="mailto:{{email}}">{{author}}</a>
       &nbsp;&nbsp;-&nbsp;&nbsp;
-      Powered by <a href="https://github.com/tumashu/org-webpage" target="_blank">org-webpage</a><br/>
-      Themed with <a href="https://github.com/kuangdash/owp_emacs_love" target="_blank">emacs_love</a><br/>
+      Powered by <a href="https://github.com/emacs-china/ego" target="_blank">ego</a><br/>
       <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" style="border-width:0" alt="Creative Commons License" class="center"></a>
       <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
     </p>

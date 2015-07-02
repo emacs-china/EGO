@@ -1,12 +1,12 @@
 <div>
   <div class="post">
     <h1>{{cat-name}} Index</h1>
-    <ul class="org-ul">
+    <ul class="org-ul-up">
       {{#posts}}
         <li>
-          <span style="position:relative;float:left;width:100%;">{{date}}&nbsp;&nbsp;»&nbsp;&nbsp;
+          <span>{{date}}&nbsp;&nbsp;»&nbsp;&nbsp;
             <a href="{{post-uri}}">{{post-title}}</a>
-            <span style="float:right;text-align:right;"><code>{{{tag-links}}}</code></span>
+            <span><code>{{{tag-links}}}</code></span>
           </span>  
         </li>
       {{/posts}}
