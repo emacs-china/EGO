@@ -143,7 +143,7 @@ or:
 - [ ] Next/Previous Page links
   Use =M-x org-insert-link= to choose previous .org file, and add a Next file links in the chosen .org file, which directs to the current .org file. 
 
-  Then export this *bi-directional file links* as hyperlinks in html.
+  Then export these *bi-directional file links* as hyperlinks in html.
  
   May this be accomplished by =org-add-link-type=.
 - [ ] More themes
