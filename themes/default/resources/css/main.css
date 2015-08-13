@@ -170,12 +170,15 @@ pre.src:hover:before {
 }
 pre.src-sh:before    { content: 'sh'; }
 pre.src-bash:before  { content: 'sh'; }
+pre.src-shell:before  { content: 'sh'; }
 pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
 pre.src-C:before     { content: 'C/C++'; }
 pre.src-js:before    { content: 'js'}
 pre.src-matlab:before  { content: 'matlab'; }
 pre.src-maxima:before  { content: 'maxima'; }
 pre.src-lisp:before   { content: 'common lisp'; }
+
+pre.example { background-color: #008f0f; color: #ffa0f0;}
 
 .verse {
     color: #afa;
