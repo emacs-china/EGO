@@ -178,7 +178,7 @@ pre.src-matlab:before  { content: 'matlab'; }
 pre.src-maxima:before  { content: 'maxima'; }
 pre.src-lisp:before   { content: 'common lisp'; }
 
-pre.example { background-color: midnightblue; }
+pre.example { background-color: #008f0f; color: #ffa0f0;}
 
 .verse {
     color: #afa;

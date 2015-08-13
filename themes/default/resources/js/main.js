@@ -97,7 +97,7 @@ function ls_init () {
         balloon.style.textAlign="left";
         balloon.style.border="solid thin green";
         balloon.style.borderRadius="1ex";
-        balloon.style.backgroundColor="hsla(240,80%,50%,0.8)";
+        balloon.style.backgroundColor="hsla((182, 80%, 20%, 0.8)";
         balloon.style.boxShadow="3px 3px 8px black";
         balloon.style.zIndex="341";
         balloon.innerHTML="<p>tips</p>";
