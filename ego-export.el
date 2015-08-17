@@ -760,6 +760,10 @@ PUB-BASE-DIR is the root publication directory."
     (or visiting (kill-buffer file-buffer))
     (format "<a href=\"%s\">%s</a>" webpath desc)))
 
+(defun org-ego-link-complete-link (&optional arg)
+  "Completion function for EGO-LINK. ARG does nothing."
+  (format "ego-link:%s" (read-file-name "enter file: " nil nil t)))
+
 (provide 'ego-export)
 
 ;;; ego-export.el ends here
