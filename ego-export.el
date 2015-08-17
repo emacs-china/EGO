@@ -739,7 +739,7 @@ PUB-BASE-DIR is the root publication directory."
                       ((eq format 'latex) "This ego-link haven't been implementted"))))
 
 (defun ego-link-type-process-html (path desc)
-  "Generate EGO-LINK for html export"
+  "Generate EGO-LINK for html export, WARNING: EGO-LINK can only be linked to files in the repository directory"
   (let* ((default-directory (ego/get-repository-directory))
          org-file webpath visiting file-buffer cat-config)
     (or (file-exists-p (setq org-file (expand-file-name path)))
@@ -753,8 +753,10 @@ PUB-BASE-DIR is the root publication directory."
                                  (ego/get-config-option :default-category)))))
       (setq webpath (funcall (plist-get cat-config :uri-generator)
                              (plist-get cat-config :uri-template)
-                             (plist-get attr-plist :date)
-                             (plist-get attr-plist :title))))
+                             (ego/fix-timestamp-string
+                                      (or (ego/read-org-option "DATE")
+                                          (format-time-string "%Y-%m-%d")))
+                             (funcall (ego/get-config-option :get-title-function)))))
     (or visiting (kill-buffer file-buffer))
     (format "<a href=\"%s\">%s</a>" webpath desc)))
 
