@@ -743,7 +743,7 @@ PUB-BASE-DIR is the root publication directory."
   (let* ((default-directory (ego/get-repository-directory))
          org-file webpath visiting file-buffer cat-config)
     (or (file-exists-p (setq org-file (expand-file-name path)))
-        (file-exists-p (setq org-file (file-expand-wildcards (format "**/*%s" path))))
+        (file-exists-p (setq org-file (car (file-expand-wildcards (format "**/*%s" path)))))
         (error "Can't find this ego-link!"))
     (setq visiting (find-buffer-visiting org-file))
     (with-current-buffer (setq file-buffer
