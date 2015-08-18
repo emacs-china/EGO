@@ -785,6 +785,3 @@ PUB-BASE-DIR is the root publication directory."
 (provide 'ego-export)
 
 ;;; ego-export.el ends here
-
-
-
