@@ -82,7 +82,7 @@ C-h v ego/config-fallback
 #+END_EXAMPLE
 
 ** create new post
-Using the following command to create a new post: 
+Using the following command to create a new post:
 
 #+BEGIN_EXAMPLE
 M-x ego/new-post
@@ -139,13 +139,14 @@ or:
   file for you so you need to delete the old html file related to
   the old URI manually.
 
-* Roadmap [0/3]
-- [ ] Next/Previous Page links
+* Roadmap [1/3]
+- [X] Next/Previous Page links
 
-  Use =M-x org-insert-link= to choose previous .org file, and add a Next file link in the chosen .org file, which directs to the current .org file. 
+  Use =M-x org-insert-link= (Normal key binding is =C-c C-l=) and choose =ego-link:= to insert a link to an org file. The link will be exported as hyperlink to the correct html page.
 
-  Then export these *bi-directional file links* as hyperlinks in html.
- 
-  May this be accomplished by =org-add-link-type=.
+  The function can be applied to the condition of Next/Previous Page links -- Get a chain of files in a logical order rather than just a time sequence.
+
+  When reply "Is it a PERVOUS(bi-directional) link? " with "y" (according to the =M-x org-insert-link ego-link:= process), you can add the *bi-directional* link.
+
 - [ ] More themes
 - [ ] upload to melpa

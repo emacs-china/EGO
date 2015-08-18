@@ -754,16 +754,37 @@ PUB-BASE-DIR is the root publication directory."
       (setq webpath (funcall (plist-get cat-config :uri-generator)
                              (plist-get cat-config :uri-template)
                              (ego/fix-timestamp-string
-                                      (or (ego/read-org-option "DATE")
-                                          (format-time-string "%Y-%m-%d")))
+                              (or (ego/read-org-option "DATE")
+                                  (format-time-string "%Y-%m-%d")))
                              (funcall (ego/get-config-option :get-title-function)))))
     (or visiting (kill-buffer file-buffer))
     (format "<a href=\"%s\">%s</a>" webpath desc)))
 
 (defun org-ego-link-complete-link (&optional arg)
   "Completion function for EGO-LINK. ARG does nothing."
-  (format "ego-link:%s" (read-file-name "enter file: " nil nil t)))
+  (let* ((org-file (file-relative-name (read-file-name "enter file: " nil nil t)))
+         (current-path (expand-file-name (buffer-name)))
+         visiting file-buffer next-link-name)
+    (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")
+      (setq visiting (find-buffer-visiting org-file))
+      (with-current-buffer (setq file-buffer
+                                 (or visiting (find-file org-file)))
+        (setq next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t))
+        (local-set-key "l" `(lambda ()
+                              (interactive)
+                              (insert (format "[[ego-link:%s][%s]]" ,(file-relative-name current-path) ,next-link-name))
+                              (local-unset-key "l")
+                              (save-buffer)
+                              (exit-recursive-edit)))
+        (message "Press 'l' to insert this '%s' and return" next-link-name)
+        (recursive-edit))
+      (or visiting (kill-buffer file-buffer))
+      )
+    (format "ego-link:%s" org-file)))
 
 (provide 'ego-export)
 
 ;;; ego-export.el ends here
+
+
+
