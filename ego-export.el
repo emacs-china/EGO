@@ -530,11 +530,11 @@ TODO: improve this function."
             (if (listp elem) elem (list elem)))))
      file-attr-list)
     (when (equal summary-name (caar (seq-filter #'(lambda (element) (equal :tags (cadr element)))
-                                                    (ego/get-config-option :summary))))
+                                                (ego/get-config-option :summary))))
       (setq summary-name "tags")
       (setq summary-base-dir (expand-file-name
-                            (concat summary-name "/")
-                            pub-base-dir)))
+                              (concat summary-name "/")
+                              pub-base-dir)))
     (unless (file-directory-p summary-base-dir)
       (mkdir summary-base-dir t))
     (setq summary-alist (sort summary-alist
@@ -731,6 +731,56 @@ PUB-BASE-DIR is the root publication directory."
                            last-10-posts)))))
      rss-file)))
 
+(org-add-link-type "ego-link"
+                   'org-open-file
+                   (lambda (path desc format)
+                     (cond
+                      ((eq format 'html) (ego-link-type-process-html path desc))
+                      ((eq format 'latex) "This ego-link haven't been implementted"))))
+
+(defun ego-link-type-process-html (path desc)
+  "Generate EGO-LINK for html export, WARNING: EGO-LINK can only be linked to files in the repository directory"
+  (let* ((default-directory (ego/get-repository-directory))
+         org-file webpath visiting file-buffer cat-config)
+    (or (file-exists-p (setq org-file (expand-file-name path)))
+        (file-exists-p (setq org-file (car (file-expand-wildcards (format "**/*%s" path)))))
+        (error "Can't find this ego-link!"))
+    (setq visiting (find-buffer-visiting org-file))
+    (with-current-buffer (setq file-buffer
+                               (or visiting (find-file org-file)))
+      (setq cat-config (cdr (or (assoc category ego/category-config-alist)
+                                (ego/get-category-setting
+                                 (ego/get-config-option :default-category)))))
+      (setq webpath (funcall (plist-get cat-config :uri-generator)
+                             (plist-get cat-config :uri-template)
+                             (ego/fix-timestamp-string
+                              (or (ego/read-org-option "DATE")
+                                  (format-time-string "%Y-%m-%d")))
+                             (funcall (ego/get-config-option :get-title-function)))))
+    (or visiting (kill-buffer file-buffer))
+    (format "<a href=\"%s\">%s</a>" webpath desc)))
+
+(defun org-ego-link-complete-link (&optional arg)
+  "Completion function for EGO-LINK. ARG does nothing."
+  (let* ((org-file (file-relative-name (read-file-name "enter file: " nil nil t)))
+         (current-path (expand-file-name (buffer-name)))
+         visiting file-buffer next-link-name)
+    (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")
+      (setq visiting (find-buffer-visiting org-file))
+      (with-current-buffer (setq file-buffer
+                                 (or visiting (find-file org-file)))
+        (setq next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t))
+        (local-set-key "l" `(lambda ()
+                              (interactive)
+                              (insert (format "[[ego-link:%s][%s]]" ,(file-relative-name current-path) ,next-link-name))
+                              (local-unset-key "l")
+                              (save-buffer)
+                              (exit-recursive-edit)))
+        (message "Press 'l' to insert this '%s' and return" next-link-name)
+        (recursive-edit))
+      (or visiting (kill-buffer file-buffer))
+      )
+    (format "ego-link:%s" org-file)))
 
 (provide 'ego-export)
 
