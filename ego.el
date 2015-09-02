@@ -124,8 +124,8 @@ then the \"html-branch\"  will be pushed to remote repo."
          (ego/publish-to-repository to-repo)
          repo-files addition-files changed-files remote-repos)
     (ego/git-change-branch repo-dir org-branch)
-    (when (y-or-n-p "commit all org files? (input 'n' if you have committed all org files)")
-    (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
+    ;;(when (y-or-n-p "commit all org files? (input 'n' if you have committed all org files)")
+    ;;(ego/git-commit-changes repo-dir "checkin all org files by EGO"))
     (ego/prepare-theme-resources store-dir)
     (setq repo-files
           (when (functionp repo-files-function)
@@ -188,7 +188,7 @@ perfectly manipulated by ego."
   "Ensure all required configuration fields are properly configured, include:
 1.  `:repository-directory': <required>
 2.  `:site-domain': <required>
-3.  `:personal-disqus-shortname': <optional>
+v3.  `:personal-disqus-shortname': <optional>
 4.  `:personal-duoshuo-shortname': <optional>
 5.  `:repository-org-branch': [optional] (but customization recommended)
 6.  `:repository-html-branch': [optional] (but customization recommended)
