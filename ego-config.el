@@ -302,7 +302,7 @@ You can see fallback value of above option in `ego/config-fallback'"
   :group 'ego
   :type 'function)
 
-(defconst ego/temp-buffer-name "*Org Page Output*"
+(defconst ego/temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
 
 (defconst ego/load-directory

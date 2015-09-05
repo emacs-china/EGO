@@ -131,19 +131,23 @@ then the \"html-branch\"  will be pushed to remote repo."
     (setq addition-files
           (when (functionp addition-files-function)
             (funcall addition-files-function repo-dir)))
+    (when (y-or-n-p "checkin all org files? (input 'n' if you have done it)")
+      (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
     (setq changed-files (if force-all
                             `(:update ,repo-files :delete nil)
+                          (message "Getting all changed files, just waiting...")
                           (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
+    (message "pre-publish all files needed to be publish, waiting...")
     (ego/publish-changes repo-files addition-files changed-files store-dir)
+    (message "pre-publish accomplished ~ begin real publish")
     (when to-repo
-      (when (y-or-n-p "commit all org files? (input 'n' if you have committed all org files)")
-        (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
       (ego/git-change-branch repo-dir html-branch)
       (copy-directory store-dir repo-dir t t t)
       (delete-directory store-dir t))
     (when (and to-repo auto-commit)
       (ego/git-commit-changes repo-dir (concat "Update published html files, "
-                                               "committed by ego."))
+                                               "committed by EGO."))
+      (message "Local publish finished, see *EGO output* buffer to get more information (Such as \"remote publish condition\")")
       (when auto-push
         (setq remote-repos (ego/git-remote-name repo-dir))
         (if (not remote-repos)
@@ -178,6 +182,7 @@ perfectly manipulated by ego."
   (ego/git-init-repo repo-dir)
   (ego/generate-readme repo-dir)
   (ego/git-commit-changes repo-dir "initial commit")
+  (ego/git-new-branch repo-dir (ego/get-config-option :repository-html-branch))
   (ego/git-new-branch repo-dir (ego/get-config-option :repository-org-branch))
   (ego/generate-index repo-dir)
   (ego/git-commit-changes repo-dir "add source index.org")
