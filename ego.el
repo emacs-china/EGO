@@ -54,7 +54,7 @@
 (require 'ox)
 (require 'ht)
 (require 'ego-util)
- 
+
 (require 'ego-config)
 (require 'ego-git)
 (require 'ego-resource)
@@ -124,8 +124,6 @@ then the \"html-branch\"  will be pushed to remote repo."
          (ego/publish-to-repository to-repo)
          repo-files addition-files changed-files remote-repos)
     (ego/git-change-branch repo-dir org-branch)
-    (when (y-or-n-p "commit all org files? (input 'n' if you have committed all org files)")
-    (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
     (ego/prepare-theme-resources store-dir)
     (setq repo-files
           (when (functionp repo-files-function)
@@ -138,6 +136,8 @@ then the \"html-branch\"  will be pushed to remote repo."
                           (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
     (ego/publish-changes repo-files addition-files changed-files store-dir)
     (when to-repo
+      (when (y-or-n-p "commit all org files? (input 'n' if you have committed all org files)")
+        (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
       (ego/git-change-branch repo-dir html-branch)
       (copy-directory store-dir repo-dir t t t)
       (delete-directory store-dir t))
