@@ -67,8 +67,10 @@
 
 (defun ego/do-publication (&optional project-name
                                      force-all
-                                     base-git-commit pub-base-dir
-                                     auto-commit auto-push)
+                                     base-git-commit
+                                     test-and-not-publish
+                                     checkin-all
+                                     publish-all)
   "The main entrance of ego. The entire procedure is:
 1) verify configuration
 2) read changed files on \"org branch\" of \"repository directory\",
@@ -77,16 +79,12 @@
       will be published.
    2. if FORCE-ALL is nil, the changed files will be obtained based on
       BASE-GIT-COMMIT
-   3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained
-      based on previous commit
-3) publish org files to html, if PUB-BASE-DIR is specified, use that directory
-   to store the generated html files, otherwise html files will be stored on \"html-branch\"
-   of \"repository directory\".
-4) if PUB-BASE-DIR is nil, and AUTO-COMMIT is non-nil, then the changes stored
-   on \"html-branch\" will be automatically committed, but be careful, this feature is
-   NOT recommended, and a manual commit is much better
-5) if PUB-BASE-DIR is nil, AUTO-COMMIT is non-nil, and AUTO-PUSH is non-nil,
-then the \"html-branch\"  will be pushed to remote repo."
+   3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained based on previous commit
+3) publish org files to html,
+   if TEST-AND-NOT-PUBLISH is t, test the generated html files by the web-server,
+   otherwise html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
+4) CHECKIN-ALL will checkin all the org-files, input 'n' if you have done it or don't want to checkin all.
+5) PUBLISH-ALL will publish all branch in the repository, input 'n' if you don't want to publish all. "
   (interactive
    (let* ((j (or ego/default-project-name
                  (completing-read "Which project do you want to publish? "
@@ -97,14 +95,10 @@ then the \"html-branch\"  will be pushed to remote repo."
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (p (progn (setq ego/current-project-name j)
                     (setq ego/last-project-name j)
-                    (when (y-or-n-p
-                           "Publish to:  [Yes] Web server docroot, [No] Original repo. ")
-                      (expand-file-name (ego/get-config-option :web-server-docroot)))))
-          (a (when (and (not p))
-               (y-or-n-p "Auto commit to repo? ")))
-          (u (when (and a (not p))
-               (y-or-n-p "Auto push to remote repo? "))))
-     (list j f b p a u)))
+                    (y-or-n-p "Publish to:  [Yes] Web server docroot, [No] Original repo. ")))
+          (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
+          (a (unless p (y-or-n-p "publish all branch? "))))
+     (list j f b p c a)))
 
   (let ((preparation-function
          (ego/get-config-option :preparation-function)))
@@ -119,65 +113,88 @@ then the \"html-branch\"  will be pushed to remote repo."
          (repo-files-function (ego/get-config-option :repo-files-function))
          (addition-files-function (ego/get-config-option :addition-files-function))
          (orig-branch (ego/git-branch-name repo-dir))
-         (to-repo (not (stringp pub-base-dir)))
-         (store-dir (if to-repo "~/.ego-tmp/" pub-base-dir)) ; TODO customization
-         (ego/publish-to-repository to-repo)
+         (to-repo (not test-and-not-publish))
+         (test-dir (expand-file-name (ego/get-config-option :web-server-docroot)))
+         (store-dir (if (not base-git-commit)
+                        test-dir
+                      "~/.ego-tmp/")) ; TODO customization
+         (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
     (ego/git-change-branch repo-dir org-branch)
-    (ego/prepare-theme-resources store-dir)
     (setq repo-files
           (when (functionp repo-files-function)
             (funcall repo-files-function repo-dir)))
     (setq addition-files
           (when (functionp addition-files-function)
             (funcall addition-files-function repo-dir)))
-    (setq changed-files (if force-all
-                            `(:update ,repo-files :delete nil)
-                          (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
-    (ego/publish-changes repo-files addition-files changed-files store-dir)
-    (when to-repo
-      (when (y-or-n-p "commit all org files? (input 'n' if you have committed all org files)")
-        (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
-      (ego/git-change-branch repo-dir html-branch)
-      (copy-directory store-dir repo-dir t t t)
-      (delete-directory store-dir t))
-    (when (and to-repo auto-commit)
-      (ego/git-commit-changes repo-dir (concat "Update published html files, "
-                                               "committed by ego."))
-      (when auto-push
-        (setq remote-repos (ego/git-remote-name repo-dir))
-        (if (not remote-repos)
-            (message "No valid remote repository found.")
-          (let (repo)
-            (if (> (length remote-repos) 1)
-                (setq repo (read-string
-                            (format "Which repo to push %s: "
-                                    (prin1-to-string remote-repos))
-                            (car remote-repos)))
-              (setq repo (car remote-repos)))
-            (if (not (member repo remote-repos))
-                (message "Invalid remote repository '%s'." repo)
-              (ego/git-push-remote repo-dir
-                                   repo
-                                   html-branch)))))
-      (ego/git-change-branch repo-dir orig-branch))
-    (if to-repo
-        (message "Publication finished: on branch '%s' of repository '%s'."
-                 html-branch repo-dir)
-      (message "Publication finished, output directory: %s." pub-base-dir)
-      (when (called-interactively-p 'any)
-        (ego/web-server-browse)))
+    (when checkin-all
+      (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
+    (when (or (not (equal base-git-commit-test ego/publish-to-repository))
+              test-and-not-publish)
+      (setq changed-files (if force-all
+                              `(:update ,repo-files :delete nil)
+                            (message "Getting all changed files, just waiting...")
+                            (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
+      (setq ego/publish-to-repository to-repo)
+      (when (file-directory-p store-dir)
+        (delete-directory store-dir t t))
+      (make-directory store-dir)
+      (ego/prepare-theme-resources store-dir)
+      (message "Pre-publish all files needed to be publish, waiting...")
+      (ego/publish-changes repo-files addition-files changed-files store-dir)
+      (message "Pre-publish finished, output directory: %s." store-dir)
+      (setq ego/publish-to-repository nil))
+    (ego/git-change-branch repo-dir html-branch)
+    (cond (test-and-not-publish
+           (unless (file-directory-p test-dir)
+             (make-directory test-dir))
+           (when (called-interactively-p 'any)
+             (if (not base-git-commit)
+                 (setq ego/publish-to-repository 2)
+               (copy-directory repo-dir test-dir t t t)
+               (copy-directory store-dir test-dir t t t)
+               (setq ego/publish-to-repository 1))
+             (ego/web-server-browse)))
+          (to-repo
+           (message "pre-publish accomplished ~ begin real publish")
+           ;;left the part below for async
+           (copy-directory store-dir repo-dir t t t)
+           (ego/git-commit-changes repo-dir (concat "Update published html files, "
+                                                    "committed by EGO."))
+           (ego/git-change-branch repo-dir orig-branch)
+           ;;left the part above for async
+
+           (message "Local publish finished, see *EGO output* buffer to get more information (Such as \"remote publish condition\")")
+           (setq remote-repos (ego/git-remote-name repo-dir))
+           (if (not remote-repos)
+               (message "No valid remote repository found.")
+             (let (repo)
+               (if (> (length remote-repos) 1)
+                   (setq repo (read-string
+                               (format "Which repo to push %s: "
+                                       (prin1-to-string remote-repos))
+                               (car remote-repos)))
+                 (setq repo (car remote-repos)))
+               (if (not (member repo remote-repos))
+                   (message "Invalid remote repository '%s'." repo)
+                 (ego/git-push-remote repo-dir
+                                      repo
+                                      html-branch publish-all))))
+           (message "Publication finished: on branch '%s' of repository '%s'." html-branch repo-dir)))
+    (ego/git-change-branch repo-dir orig-branch)
     (setq ego/current-project-name nil)))
 
 (defun ego/new-repository (repo-dir)
   "Generate a new git repository in directory REPO-DIR, which can be
-perfectly manipulated by ego."
+perfectly manipulated by EGO. In order to construct a real repository,
+you must customize the variable `ego/project-config-alist' according to the readme file of EGO project."
   (interactive
    (list (read-directory-name
           "Specify a directory to become the repository: " nil nil nil)))
   (ego/git-init-repo repo-dir)
   (ego/generate-readme repo-dir)
   (ego/git-commit-changes repo-dir "initial commit")
+  (ego/git-new-branch repo-dir (ego/get-config-option :repository-html-branch))
   (ego/git-new-branch repo-dir (ego/get-config-option :repository-org-branch))
   (ego/generate-index repo-dir)
   (ego/git-commit-changes repo-dir "add source index.org")

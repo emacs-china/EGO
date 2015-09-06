@@ -29,7 +29,8 @@
 
 (require 'ox)
 (require 'ht)
-(require 'ego-util) 
+;;(require 'deferred)
+(require 'ego-util)
 (require 'ego-config)
 
 
@@ -47,10 +48,10 @@ command to be executed."
   (if need-git
       (ego/verify-git-repository dir))
   (with-current-buffer (get-buffer-create ego/temp-buffer-name)
-    (erase-buffer)
+    ;;(erase-buffer)
     (setq default-directory (file-name-as-directory dir))
     (shell-command command t nil)
-    (buffer-string)))
+    (buffer-substring (region-beginning) (region-end))))
 
 (defun ego/git-all-files (repo-dir &optional branch)
   "This function will return a list contains all org files in git repository
@@ -95,7 +96,7 @@ TODO: verify if the branch exists."
                  repo-dir
                  (concat "env LC_ALL=C git checkout -b " branch-name)
                  t)))
-    (unless (string-match "Switched to a new branch" output)
+    (unless (or (string-match "Switched to a new branch" output) (string-match "already exists"))
       (error "Fatal: Failed to create a new branch with name '%s'."
              branch-name))))
 
@@ -105,8 +106,14 @@ by REPO-DIR. Do nothing if it is current branch."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (ego/shell-command
                  repo-dir
-                 (concat "env LC_ALL=C git checkout " branch-name)
+                 "env LC_ALL=C git status"
                  t)))
+    (when (not (string-match "nothing to commit" output))
+      (error "The branch have something uncommitted, recheck it!"))
+    (setq output (ego/shell-command
+                  repo-dir
+                  (concat "env LC_ALL=C git checkout " branch-name)
+                  t))
     (when (string-match "\\`error" output)
       (error "Failed to change branch to '%s' of repository '%s'."
              branch-name repo-dir))))
@@ -120,6 +127,7 @@ directory where repository will be initialized."
                            (ego/shell-command repo-dir "env LC_ALL=C git init" nil))
     (error "Fatal: Failed to initialize new git repository '%s'." repo-dir)))
 
+
 (defun ego/git-commit-changes (repo-dir message)
   "This function will commit uncommitted changes to git repository presented by
 REPO-DIR, MESSAGE is the commit message."
@@ -129,7 +137,7 @@ REPO-DIR, MESSAGE is the commit message."
           (ego/shell-command repo-dir
                              (format "env LC_ALL=C git commit -m \"%s\"" message)
                              t))
-    (when (not (string-match "\\[.* .*\\]" output))
+    (when (not (or (string-match "\\[.* .*\\]" output) (string-match "nothing to commit" output)))
       (error "Failed to commit changes on current branch of repository '%s'."
              repo-dir))))
 
@@ -181,21 +189,28 @@ presented by REPO-DIR, return nil if there is no remote repository."
                  t)))
     (delete "" (split-string output "\n"))))
 
-(defun ego/git-push-remote (repo-dir remote-repo branch)
+(defun ego/async-command (repo-dir cmd)
+  
+  )
+
+(defun ego/git-push-remote (repo-dir remote-repo branch publish-all)
   "This function will push local branch to remote repository, REPO-DIR is the
 local git repository, REMOTE-REPO is the remote repository, BRANCH is the name
 of branch will be pushed (the branch name will be the same both in local and
 remote repository), and if there is no branch named BRANCH in remote repository,
 it will be created."
-  (let ((repo-dir (file-name-as-directory repo-dir))
-        (output (ego/shell-command
-                 repo-dir
-                 (concat "env LC_ALL=C git push " remote-repo " " branch ":" branch)
-                 t)))
-    (when (or (string-match "fatal" output)
-              (string-match "error" output))
-      (error "Failed to push branch '%s' to remote repository '%s'."
-             branch remote-repo))))
+  (let* ((default-directory (file-name-as-directory repo-dir))
+         (cmd (if publish-all
+                  (append '("git")
+                          `("push" "--all"))
+                (append '("git")
+                        `("push" ,remote-repo ,(concat branch ":" branch)))))
+         (proc (apply #'start-process "EGO-Async" ego/temp-buffer-name cmd)))
+    (set-process-filter proc `(lambda (proc output)
+                                (when (or (string-match "fatal" output)
+                                          (string-match "error" output))
+                                  (error "Failed to push branch '%s' to remote repository '%s'."
+                                         ,branch ,remote-repo))))))
 
 
 (provide 'ego-git)
