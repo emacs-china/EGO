@@ -339,12 +339,14 @@ You can see fallback value of above option in `ego/config-fallback'"
      :category-index nil))
   "Configurations for different categories, can and should be customized.")
 
-(defvar ego/category-show-list nil "the list of category names(string) which will be showed in the navigation-bar")
+(defvar ego/category-show-list nil
+  "the list of category names(string) which will be showed in the navigation-bar")
 
 (defvar ego/current-project-name nil)
 (defvar ego/last-project-name nil)
 
-(defvar ego/publish-to-repository nil)
+(defvar ego/publish-to-repository nil
+  "partial org-files publish without org-html: 1; all org-files publish without org-html: 2")
 
 (defvar ego/item-cache nil
   "The cache for general purpose.")

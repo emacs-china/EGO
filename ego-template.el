@@ -134,7 +134,7 @@ render from a default hash table."
                (mapcar
                 #'(lambda (cat)
                     (if (equal cat (caar (seq-filter #'(lambda (element) (equal :tags (cadr element)))
-                                                    (ego/get-config-option :summary))))
+                                                     (ego/get-config-option :summary))))
                         (setq cat-real "tags")
                       (setq cat-real cat))
                     (ht ("summary-item-uri"

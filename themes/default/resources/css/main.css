@@ -382,6 +382,7 @@ table th.right, table td.right {
 }
 
 .center { margin-left: auto; margin-right: auto; text-align: center; }
+.org-center { margin-left: auto; margin-right: auto; text-align: center; }
 
 /* table of content */
 #table-of-contents {

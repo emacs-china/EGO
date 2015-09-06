@@ -25,6 +25,33 @@ EGO provides features below:
 
 * Workflow
 
+The files-flow of EGO is showed on Graph below:
+
+: 
+:           +-----------<-------------+----<---------------+-----------<--------------<------------------+
+:           |                         |                    |                                             |
+:           | re-test or        if you want to re-test...  |-tested publish if you think test is OK      |
+:           | untested publish                            \|/                                            |
+:           |                                                all html files test -|                      |
+:           |                        > Web Test Dir ------------------------->----+-->-Web-Test-Dir-->---+
+:           |                      / |                                          \       /
+:          \|/   all org files --/-  |                                           \     /- partial html files test
+:                              /-    |                                            v   ^
+:                            /-      |                                             \ /
+: EGO Repo  -+-------------->     org-to-html                                       X
+:            |               \-      |                                             / \
+:            |                 \-    |                                            ^   v
+:            | changed org files-\-  |                                           /     \- all html files publish
+:            |                     \ |                                          /       \       
+:       git gets changed files      >"~/.ego-tmp/"Dir ----------------------->-----+->-Publish-Repository-->-up-load-flies
+:                                                       partial html files publish-|
+:                                                                                                                                         
+
+MENTION: The global variable =ego/publish-to-repository=
+
+1) partial org-files publish without org-to-html: it equals 1
+2) all org-files publish without org-to-html: it equals 2
+
 1. Specify a git repo where the org source
    files will be on the "source" branch and the generated html files
    will be on the "master" branch (the branch names can be
@@ -81,6 +108,15 @@ C-h v ego/project-config-alist
 C-h v ego/config-fallback
 #+END_EXAMPLE
 
+** create new repository
+Using the following command to create a new repository:
+
+#+BEGIN_EXAMPLE
+M-x ego/new-repository
+#+END_EXAMPLE
+
+The repository is preliminary, you have to configure the =ego/project-config-alist= to make it work!
+
 ** create new post
 Using the following command to create a new post:
 
@@ -114,6 +150,70 @@ or:
 
 #+BEGIN_SRC emacs-lisp
 (call-interactively 'ego/do-publication)
+#+END_SRC
+
+** Async Publication
+You can use =async.el= package to wrap the command =ego/do-publication= in order to publish the static site without a wait.
+
+You can find some example about how to use =async.el= package here : [[https://github.com/jwiegley/emacs-async][Async]].
+
+And here is an example: (There are some important point so that you had better see it.)
+
+#+BEGIN_SRC emacs-lisp
+  (require 'async)
+  (defun ego/async-do-publish (&optional project-name
+                                         force-all
+                                         base-git-commit
+                                         test-and-not-publish
+                                         checkin-all
+                                         publish-all)
+    (interactive
+     (let* ((j (or ego/default-project-name
+                   (completing-read "Which project do you want to publish? "
+                                    (delete-dups
+                                     (mapcar 'car ego/project-config-alist))
+                                    nil t nil nil ego/last-project-name)))
+            (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
+            (b (unless f (read-string "Base git commit: " "HEAD~1")))
+            (p (progn (setq ego/current-project-name j)
+                      (setq ego/last-project-name j)
+                      (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. ")))
+            (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
+            (a (unless p (y-or-n-p "publish all branch? "))))
+       (list j f b p c a)))
+    (async-start
+     `(lambda ()
+        (setq package-user-dir ,(expand-file-name "~/.emacs.d/elpa/"))
+        (package-initialize t)
+        (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
+        (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
+        (add-to-list 'load-path ,ego/load-directory)
+        (require 'ego)
+        (setq ego/project-config-alist ',ego/project-config-alist)
+        (require 'simple-httpd)
+        (advice-add 'ego/web-server-browse
+                    :override
+                    (lambda ()
+                      (interactive)
+                      (setq httpd-port (ego/get-config-option :web-server-port))
+                      (httpd-serve-directory (ego/get-config-option :web-server-docroot))
+                      (browse-url (format "http://%s:%d" system-name httpd-port))))
+        (unless test-and-not-publish
+          (if base-git-commit
+              (setq ego/publish-to-repository 1)
+            (setq ego/publish-to-repository 2)))
+        (ego/do-publication project-name
+                            force-all
+                            base-git-commit
+                            test-and-not-publish
+                            checkin-all
+                            publish-all)
+        (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
+          (buffer-string))
+        )
+     `(lambda (result)
+        (message "ego/async-do-publish done, *EGO output* should be : %s" result)
+        )))
 #+END_SRC
 
 * Dependencies
