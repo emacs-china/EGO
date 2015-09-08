@@ -30,6 +30,7 @@
 (require 'format-spec)
 (require 'ox)
 (require 'ht)
+(require 'cl-lib)
 (require 'dash)
 (require 'ego-util)
 (require 'ego-config)
@@ -215,7 +216,7 @@ can contain following parameters:
         (encoded-title (ego/encode-string-to-url title)))
     (format-spec uri-template `((?y . ,(car date-list))
                                 (?m . ,(cadr date-list))
-                                (?d . ,(caddr date-list))
+                                (?d . ,(cl-caddr date-list))
                                 (?t . ,encoded-title)))))
 
 

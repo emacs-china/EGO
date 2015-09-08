@@ -54,14 +54,12 @@
 (require 'ox)
 (require 'ht)
 (require 'ego-util)
-
 (require 'ego-config)
 (require 'ego-git)
 (require 'ego-resource)
 (require 'ego-export)
 (require 'ego-web-server)
 (require 'cl-lib)
-
 
 (defconst ego-version "0.1")
 
@@ -91,14 +89,15 @@
                                   (delete-dups
                                    (mapcar 'car ego/project-config-alist))
                                   nil t nil nil ego/last-project-name)))
-          (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
+          (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (p (progn (setq ego/current-project-name j)
-                    (setq ego/last-project-name j)
-                    (y-or-n-p "Publish to:  [Yes] Web server docroot, [No] Original repo. ")))
+          (p (y-or-n-p "Publish to:  [Yes] Web server docroot, [No] Original repo. "))
           (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
           (a (unless p (y-or-n-p "publish all branch? "))))
      (list j f b p c a)))
+  
+  (setq ego/current-project-name project-name)
+  (setq ego/last-project-name project-name)
 
   (let ((preparation-function
          (ego/get-config-option :preparation-function)))
@@ -129,35 +128,34 @@
             (funcall addition-files-function repo-dir)))
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
-    (when (or (not (equal base-git-commit-test ego/publish-to-repository))
+    (when (or (not (equal base-git-commit-test ego/publish-without-org-to-html))
               test-and-not-publish)
       (setq changed-files (if force-all
                               `(:update ,repo-files :delete nil)
                             (message "Getting all changed files, just waiting...")
                             (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
-      (setq ego/publish-to-repository to-repo)
+      (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link, temporarily set it unusable.
       (when (file-directory-p store-dir)
         (delete-directory store-dir t t))
-      (make-directory store-dir)
+      (make-directory store-dir t)
       (ego/prepare-theme-resources store-dir)
       (message "Pre-publish all files needed to be publish, waiting...")
       (ego/publish-changes repo-files addition-files changed-files store-dir)
       (message "Pre-publish finished, output directory: %s." store-dir)
-      (setq ego/publish-to-repository nil))
-    (ego/git-change-branch repo-dir html-branch)
+      (setq ego/publish-without-org-to-html nil))
     (cond (test-and-not-publish
            (unless (file-directory-p test-dir)
-             (make-directory test-dir))
+             (make-directory test-dir t))
            (when (called-interactively-p 'any)
              (if (not base-git-commit)
-                 (setq ego/publish-to-repository 2)
-               (copy-directory repo-dir test-dir t t t)
+                 (setq ego/publish-without-org-to-html 2)
                (copy-directory store-dir test-dir t t t)
-               (setq ego/publish-to-repository 1))
+               (setq ego/publish-without-org-to-html 1))
              (ego/web-server-browse)))
           (to-repo
            (message "pre-publish accomplished ~ begin real publish")
            ;;left the part below for async
+           (ego/git-change-branch repo-dir html-branch)
            (copy-directory store-dir repo-dir t t t)
            (ego/git-commit-changes repo-dir (concat "Update published html files, "
                                                     "committed by EGO."))
@@ -181,7 +179,6 @@
                                       repo
                                       html-branch publish-all))))
            (message "Publication finished: on branch '%s' of repository '%s'." html-branch repo-dir)))
-    (ego/git-change-branch repo-dir orig-branch)
     (setq ego/current-project-name nil)))
 
 (defun ego/new-repository (repo-dir)
