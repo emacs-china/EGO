@@ -345,8 +345,11 @@ You can see fallback value of above option in `ego/config-fallback'"
 (defvar ego/current-project-name nil)
 (defvar ego/last-project-name nil)
 
+(defvar ego/publish-without-org-to-html nil
+  "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")
+
 (defvar ego/publish-to-repository nil
-  "partial org-files publish without org-html: 1; all org-files publish without org-html: 2")
+  "Mainly used in converting relative-url to absolute-url")
 
 (defvar ego/item-cache nil
   "The cache for general purpose.")

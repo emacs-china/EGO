@@ -47,10 +47,12 @@ The files-flow of EGO is showed on Graph below:
 :                                                       partial html files publish-|
 :                                                                                                                                         
 
-MENTION: The global variable =ego/publish-to-repository=
+MENTION: The global variable =ego/publish-without-org-to-html=
 
 1) partial org-files publish without org-to-html: it equals 1
 2) all org-files publish without org-to-html: it equals 2
+
+Now, here is the workflow:
 
 1. Specify a git repo where the org source
    files will be on the "source" branch and the generated html files
@@ -108,7 +110,7 @@ C-h v ego/project-config-alist
 C-h v ego/config-fallback
 #+END_EXAMPLE
 
-** create new repository
+** Create New Repository
 Using the following command to create a new repository:
 
 #+BEGIN_EXAMPLE
@@ -117,7 +119,7 @@ M-x ego/new-repository
 
 The repository is preliminary, you have to configure the =ego/project-config-alist= to make it work!
 
-** create new post
+** Create New Post
 Using the following command to create a new post:
 
 #+BEGIN_EXAMPLE
@@ -183,14 +185,25 @@ And here is an example: (There are some important point so that you had better s
        (list j f b p c a)))
     (async-start
      `(lambda ()
+        ;; load packages and set load-path
         (setq package-user-dir ,(expand-file-name "~/.emacs.d/elpa/"))
-        (package-initialize t)
+        (package-initialize)
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
         (add-to-list 'load-path ,ego/load-directory)
+      
+        ;; set coding-system
+        (set-terminal-coding-system 'utf-8-unix)
+        (set-keyboard-coding-system 'utf-8-unix)
+        (prefer-coding-system 'utf-8-unix)
+        (setq save-buffer-coding-system 'utf-8-unix)
+        (setq coding-system-for-write 'utf-8-unix)
+      
+        ;; pre-set ego configurations
+        (require 'cl-lib)
         (require 'ego)
-        (setq ego/project-config-alist ',ego/project-config-alist)
         (require 'simple-httpd)
+        (setq ego/project-config-alist ',ego/project-config-alist)
         (advice-add 'ego/web-server-browse
                     :override
                     (lambda ()
@@ -198,16 +211,20 @@ And here is an example: (There are some important point so that you had better s
                       (setq httpd-port (ego/get-config-option :web-server-port))
                       (httpd-serve-directory (ego/get-config-option :web-server-docroot))
                       (browse-url (format "http://%s:%d" system-name httpd-port))))
-        (unless test-and-not-publish
-          (if base-git-commit
-              (setq ego/publish-to-repository 1)
-            (setq ego/publish-to-repository 2)))
-        (ego/do-publication project-name
-                            force-all
-                            base-git-commit
-                            test-and-not-publish
-                            checkin-all
-                            publish-all)
+        (unless ,test-and-not-publish
+          (if ,base-git-commit
+              (setq ego/publish-without-org-to-html 1)
+            (setq ego/publish-without-org-to-html 2)))
+
+        ;; ego/do-publication here
+        (ego/do-publication ,project-name
+                            ,force-all
+                            ,base-git-commit
+                            ,test-and-not-publish
+                            ,checkin-all
+                            ,publish-all)
+
+        ;; return the result
         (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
           (buffer-string))
         )

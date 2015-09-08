@@ -190,7 +190,7 @@ presented by REPO-DIR, return nil if there is no remote repository."
     (delete "" (split-string output "\n"))))
 
 (defun ego/async-command (repo-dir cmd)
-  
+
   )
 
 (defun ego/git-push-remote (repo-dir remote-repo branch publish-all)
@@ -207,10 +207,12 @@ it will be created."
                         `("push" ,remote-repo ,(concat branch ":" branch)))))
          (proc (apply #'start-process "EGO-Async" ego/temp-buffer-name cmd)))
     (set-process-filter proc `(lambda (proc output)
-                                (when (or (string-match "fatal" output)
-                                          (string-match "error" output))
-                                  (error "Failed to push branch '%s' to remote repository '%s'."
-                                         ,branch ,remote-repo))))))
+                                (if (or (string-match "fatal" output)
+                                        (string-match "error" output))
+                                    (error "Failed to push branch '%s' to remote repository '%s'."
+                                           ,branch ,remote-repo)
+                                  (with-current-buffer (get-buffer-create ego/temp-buffer-name)
+                                    (insert "remote push success!")))))))
 
 
 (provide 'ego-git)
