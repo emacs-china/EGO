@@ -137,9 +137,9 @@ This command will ask you some questions:
 
 1. Which project do you want to publish?
 2. Publish all org files of "XXXXX" project?
-3. Publish to:  [Yes] Web server docroot, [No] Original repo.
-4. Auto commit to repo?
-5. Auto push to remote repo?
+3. Publish to:  [Yes] Web server docroot, [No] Original repo and push remote.
+4. checkin all org files? (input 'n' if you have done it)
+5. publish all branch? 
 
 You can use `ego/do-publication' in elisp, which let you code
 your own quickly publication command:
@@ -191,19 +191,21 @@ And here is an example: (There are some important point so that you had better s
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
         (add-to-list 'load-path ,ego/load-directory)
-      
+  
         ;; set coding-system
         (set-terminal-coding-system 'utf-8-unix)
         (set-keyboard-coding-system 'utf-8-unix)
         (prefer-coding-system 'utf-8-unix)
         (setq save-buffer-coding-system 'utf-8-unix)
         (setq coding-system-for-write 'utf-8-unix)
-      
+  
         ;; pre-set ego configurations
         (require 'cl-lib)
         (require 'ego)
-        (require 'simple-httpd)
         (setq ego/project-config-alist ',ego/project-config-alist)
+
+        ;; use my personal http-server for test
+        (require 'simple-httpd)
         (advice-add 'ego/web-server-browse
                     :override
                     (lambda ()
@@ -211,6 +213,8 @@ And here is an example: (There are some important point so that you had better s
                       (setq httpd-port (ego/get-config-option :web-server-port))
                       (httpd-serve-directory (ego/get-config-option :web-server-docroot))
                       (browse-url (format "http://%s:%d" system-name httpd-port))))
+
+        ;; without org-to-html if possible
         (unless ,test-and-not-publish
           (if ,base-git-commit
               (setq ego/publish-without-org-to-html 1)
@@ -223,7 +227,11 @@ And here is an example: (There are some important point so that you had better s
                             ,test-and-not-publish
                             ,checkin-all
                             ,publish-all)
-
+      
+        ;; waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually
+        (while (and (not ego/async-publish-success) test-and-not-publish)
+          (sit-for 1))
+      
         ;; return the result
         (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
           (buffer-string))
@@ -255,6 +263,7 @@ And here is an example: (There are some important point so that you had better s
   detect that this has happened. it will only publish a new html
   file for you so you need to delete the old html file related to
   the old URI manually.
+- When encountering the situation using EGO for project's gh-pages, don't use publish-without-org-to-html, because there is relative-to-absolute-url problem. (I think that you will discover the problem and the resolution.)
 
 * Roadmap [1/3]
 - [X] Next/Previous Page links
