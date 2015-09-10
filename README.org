@@ -213,7 +213,7 @@ And here is an example: (There are some important point so that you had better s
                       (setq httpd-port (ego/get-config-option :web-server-port))
                       (httpd-serve-directory (ego/get-config-option :web-server-docroot))
                       (browse-url (format "http://%s:%d" system-name httpd-port))))
-
+         ;; in order to support svg
         (require 'ox-html)
         (defun kd/org-html--format-image (source attributes info)
           "Return \"img\" tag with given SOURCE and ATTRIBUTES.
