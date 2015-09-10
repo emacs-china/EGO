@@ -191,14 +191,14 @@ And here is an example: (There are some important point so that you had better s
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
         (add-to-list 'load-path ,ego/load-directory)
-  
+
         ;; set coding-system
         (set-terminal-coding-system 'utf-8-unix)
         (set-keyboard-coding-system 'utf-8-unix)
         (prefer-coding-system 'utf-8-unix)
-        (setq save-buffer-coding-system 'utf-8-unix)
-        (setq coding-system-for-write 'utf-8-unix)
-  
+        (setq save-buffer-coding-system 'utf-8-unix
+              coding-system-for-write 'utf-8-unix)
+
         ;; pre-set ego configurations
         (require 'cl-lib)
         (require 'ego)
@@ -214,6 +214,26 @@ And here is an example: (There are some important point so that you had better s
                       (httpd-serve-directory (ego/get-config-option :web-server-docroot))
                       (browse-url (format "http://%s:%d" system-name httpd-port))))
 
+        (require 'ox-html)
+        (defun kd/org-html--format-image (source attributes info)
+          "Return \"img\" tag with given SOURCE and ATTRIBUTES.
+    SOURCE is a string specifying the location of the image.
+    ATTRIBUTES is a plist, as returned by
+    `org-export-read-attribute'.  INFO is a plist used as
+    a communication channel."
+          (org-html-close-tag
+           "img"
+           (org-html--make-attribute-string
+            (org-combine-plists
+             (list :src source
+                   :alt (if (string-match-p "^ltxpng/" source)
+                            (org-html-encode-plain-text
+                             (org-find-text-property-in-string 'org-latex-src source))
+                          (file-name-nondirectory source)))
+             attributes))
+           info))
+        (advice-add 'org-html--format-image :override #'kd/org-html--format-image)
+
         ;; without org-to-html if possible
         (unless ,test-and-not-publish
           (if ,base-git-commit
@@ -227,11 +247,11 @@ And here is an example: (There are some important point so that you had better s
                             ,test-and-not-publish
                             ,checkin-all
                             ,publish-all)
-      
+
         ;; waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually
-        (while (and (not ego/async-publish-success) test-and-not-publish)
+        (while (not ego/async-publish-success)
           (sit-for 1))
-      
+
         ;; return the result
         (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
           (buffer-string))

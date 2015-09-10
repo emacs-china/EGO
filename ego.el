@@ -95,7 +95,7 @@
           (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
           (a (unless p (y-or-n-p "publish all branch? "))))
      (list j f b p c a)))
-  
+
   (setq ego/current-project-name project-name)
   (setq ego/last-project-name project-name)
 
@@ -146,12 +146,12 @@
     (cond (test-and-not-publish
            (unless (file-directory-p test-dir)
              (make-directory test-dir t))
-           (when (called-interactively-p 'any)
-             (if (not base-git-commit)
-                 (setq ego/publish-without-org-to-html 2)
-               (copy-directory store-dir test-dir t t t)
-               (setq ego/publish-without-org-to-html 1))
-             (ego/web-server-browse)))
+           ;; when (called-interactively-p 'any)
+           (if (not base-git-commit)
+               (setq ego/publish-without-org-to-html 2)
+             (copy-directory store-dir test-dir t t t)
+             (setq ego/publish-without-org-to-html 1))
+           (ego/web-server-browse))
           (to-repo
            (message "pre-publish accomplished ~ begin real publish")
            ;;left the part below for async
