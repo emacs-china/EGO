@@ -60,6 +60,7 @@
 (require 'ego-export)
 (require 'ego-web-server)
 (require 'cl-lib)
+(require 'seq)
 
 (defconst ego-version "0.1")
 
