@@ -283,7 +283,6 @@ And here is an example: (There are some important point so that you had better s
   detect that this has happened. it will only publish a new html
   file for you so you need to delete the old html file related to
   the old URI manually.
-- When encountering the situation using EGO for project's gh-pages, don't use publish-without-org-to-html, because there is relative-to-absolute-url problem. (I think that you will discover the problem and the resolution.)
 
 * Roadmap [1/3]
 - [X] Next/Previous Page links
