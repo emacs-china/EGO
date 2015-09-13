@@ -152,12 +152,16 @@
                (setq ego/publish-without-org-to-html 2)
              (copy-directory store-dir test-dir t t t)
              (setq ego/publish-without-org-to-html 1))
+           (message "test the generated htmls in %s." test-dir)
            (ego/web-server-browse))
           (to-repo
            (message "pre-publish accomplished ~ begin real publish")
            ;;left the part below for async
            (ego/git-change-branch repo-dir html-branch)
+           (push '("\\(?:\\.htm\\|\\.html\\)" . ego/copy-file-handler) file-name-handler-alist); register ego/copy-file-handler to tackle relative-url-to-absolute problem
            (copy-directory store-dir repo-dir t t t)
+           (setq file-name-handler-alist
+                 (delete '("\\(?:\\.htm\\|\\.html\\)" . ego/copy-file-handler) file-name-handler-alist)); unregister ego/copy-file-handler
            (ego/git-commit-changes repo-dir (concat "Update published html files, "
                                                     "committed by EGO."))
            (ego/git-change-branch repo-dir orig-branch)
