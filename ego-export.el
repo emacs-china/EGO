@@ -274,6 +274,23 @@ file's category is based on its name and its root folder name."
             (replace-match url))))
       (buffer-string))))
 
+(defun ego/copy-file-handler (operation &rest args)
+  "Use ego/relative-url-to-absolute function in export process for htm/html files"
+  ;; First check for the specific operations
+  ;; that we have special handling for.
+  (cond ((eq operation 'copy-file)
+         (ego/string-to-file
+          (ego/relative-url-to-absolute
+           (ego/file-to-string (nth 0 args)))
+          (nth 1 args)))
+        ;; Handle any operation we don’t know about.
+        (t (let ((inhibit-file-name-handlers
+                  (cons 'ego/copy-file-handler
+                        (and (eq inhibit-file-name-operation operation)
+                             inhibit-file-name-handlers)))
+                 (inhibit-file-name-operation operation))
+             (apply operation args)))))
+
 (defun ego/publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table
 used to render the template, PUB-DIR is the directory for published html file.
@@ -282,13 +299,12 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (ego/string-to-file
-     (ego/relative-url-to-absolute
       (mustache-render
        (ego/get-cache-create
         :container-template
         (message "Read container.mustache from file")
         (ego/file-to-string (ego/get-template-file "container.mustache")))
-       component-table))
+       component-table)
      (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
      )))
 
@@ -356,7 +372,6 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
            (unless (file-directory-p cat-dir)
              (mkdir cat-dir t))
            (ego/string-to-file
-            (ego/relative-url-to-absolute
              (mustache-render
               (ego/get-cache-create
                :container-template
@@ -408,7 +423,7 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                         ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                         ("creator-info" (ego/get-html-creator-string))
                         ;; ("email" (ego/confound-email-address "ego@emacs-china.org"))
-                        ))))))
+                        )))))
             (concat cat-dir "index.html") 'html-mode)))
      sort-alist)))
 
@@ -419,7 +434,6 @@ publication directory."
   (let ((sort-alist (ego/rearrange-category-sorted file-attr-list))
         (id 0))
     (ego/string-to-file
-     (ego/relative-url-to-absolute
       (mustache-render
        (ego/get-cache-create
         :container-template
@@ -461,7 +475,7 @@ publication directory."
                  ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                  ("creator-info" (ego/get-html-creator-string))
                  ("email" (ego/confound-email-address (or user-mail-address
-                                                          "Unknown Email")))))))))
+                                                          "Unknown Email"))))))))
      (concat (file-name-as-directory pub-base-dir) "index.html") 'html-mode)))
 
 (defun ego/generate-default-about (pub-base-dir)
@@ -476,7 +490,6 @@ is the root publication directory."
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (ego/string-to-file
-     (ego/relative-url-to-absolute
       (mustache-render
        (ego/get-cache-create
         :container-template
@@ -500,7 +513,7 @@ is the root publication directory."
                  ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                  ("creator-info" (ego/get-html-creator-string))
                  ("email" (ego/confound-email-address (or user-mail-address
-                                                          "Unknown Email")))))))))
+                                                          "Unknown Email"))))))))
      (concat pub-dir "index.html") 'html-mode)))
 
 (defun ego/generate-summary-uri (summary-name summary-item-name)
@@ -559,7 +572,6 @@ TODO: improve this function."
                         0)))))
      summary-alist); sort the summary post list according to the date
     (ego/string-to-file
-     (ego/relative-url-to-absolute
       (mustache-render
        (ego/get-cache-create
         :container-template
@@ -627,7 +639,7 @@ TODO: improve this function."
                  ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                  ("creator-info" (ego/get-html-creator-string))
                  ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
-                 ))))))
+                 )))))
      (concat summary-base-dir "index.html") 'html-mode)
     (mapc
      #'(lambda (summary-list)
@@ -637,7 +649,6 @@ TODO: improve this function."
          (unless (file-directory-p summary-dir)
            (mkdir summary-dir t))
          (ego/string-to-file
-          (ego/relative-url-to-absolute
            (mustache-render
             (ego/get-cache-create
              :container-template
@@ -688,7 +699,7 @@ TODO: improve this function."
                       ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
                       ("creator-info" (ego/get-html-creator-string))
                       ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
-                      ))))))
+                      )))))
           (concat summary-dir "index.html") 'html-mode))
      summary-alist)))
 
@@ -718,7 +729,6 @@ PUB-BASE-DIR is the root publication directory."
     (unless (file-directory-p rss-base-dir)
       (mkdir rss-base-dir t))
     (ego/string-to-file
-     (ego/relative-url-to-absolute
       (mustache-render
        ego/rss-template
        (ht ("title" (ego/get-config-option :site-main-title))
@@ -729,7 +739,7 @@ PUB-BASE-DIR is the root publication directory."
                                ("item-link" (ego/get-full-url (plist-get it :uri)))
                                ("item-description" (plist-get it :description))
                                ("item-update-date" (plist-get it :mod-date)))
-                           last-10-posts)))))
+                           last-10-posts))))
      rss-file)))
 
 (org-add-link-type "ego-link"
