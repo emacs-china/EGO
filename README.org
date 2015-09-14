@@ -154,6 +154,8 @@ or:
 (call-interactively 'ego/do-publication)
 #+END_SRC
 
+you can track the process in \*message\* buffer and \*EGO OUTPUT\* buffer.
+
 ** Async Publication
 You can use =async.el= package to wrap the command =ego/do-publication= in order to publish the static site without a wait.
 
@@ -258,6 +260,8 @@ And here is an example: (There are some important point so that you had better s
         (with-current-buffer (get-buffer-create ego/temp-buffer-name)
           (insert (format "*EGO output* should be :\n %s \nego/async-do-publish done!" result))))))
 #+END_SRC
+
+you can track the process in \*emacs\* buffer and \*EGO OUTPUT\* buffer.
 
 * Dependencies
 
