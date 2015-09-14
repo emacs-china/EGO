@@ -48,7 +48,6 @@ command to be executed."
   (if need-git
       (ego/verify-git-repository dir))
   (with-current-buffer (get-buffer-create ego/temp-buffer-name)
-    ;;(erase-buffer)
     (setq default-directory (file-name-as-directory dir))
     (shell-command command t nil)
     (buffer-substring (region-beginning) (region-end))))
@@ -209,6 +208,7 @@ it will be created."
                                     (error "Failed to push branch '%s' to remote repository '%s'."
                                            ,branch ,remote-repo)
                                   (with-current-buffer (get-buffer-create ego/temp-buffer-name)
+                                    (setf (point) (point-max))
                                     (insert "remote push success!")
                                     (setq ego/async-publish-success t)))))))
 

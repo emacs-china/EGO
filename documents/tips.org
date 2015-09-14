@@ -33,6 +33,7 @@ NOTE: This is NOT recommended way for emacs beginner.
    #+BEGIN_EXAMPLE
    M-x package-install RET org-webpage RET
    #+END_EXAMPLE
+
 3. Add the following to your =~/.emacs= file:
    #+BEGIN_EXAMPLE
    (require 'org-webpage)
