@@ -295,5 +295,7 @@ you can track the process in \*emacs\* buffer and \*EGO OUTPUT\* buffer.
 
   When reply "Is it a PERVOUS(bi-directional) link? " with "y" (according to the =M-x org-insert-link ego-link:= process), you can add the *bi-directional* link.
 
+  The link is assigned to class "ego_link" with label "span", you can customize it in CSS.
+
 - [ ] More themes
 - [ ] upload to melpa
