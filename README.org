@@ -239,7 +239,7 @@ And here is an example: (There are some important point so that you had better s
           (if ,base-git-commit
               (setq ego/publish-without-org-to-html 1)
             (setq ego/publish-without-org-to-html 2)))
-
+    
         ;; ego/do-publication here
         (ego/do-publication ,project-name
                             ,force-all
