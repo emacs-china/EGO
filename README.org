@@ -177,9 +177,7 @@ And here is an example: (There are some important point so that you had better s
                                     nil t nil nil ego/last-project-name)))
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
-            (p (progn (setq ego/current-project-name j)
-                      (setq ego/last-project-name j)
-                      (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. ")))
+            (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
             (a (unless p (y-or-n-p "publish all branch? "))))
        (list j f b p c a)))
@@ -213,7 +211,7 @@ And here is an example: (There are some important point so that you had better s
                       (setq httpd-port (ego/get-config-option :web-server-port))
                       (httpd-serve-directory (ego/get-config-option :web-server-docroot))
                       (browse-url (format "http://%s:%d" system-name httpd-port))))
-         ;; in order to support svg
+
         (require 'ox-html)
         (defun kd/org-html--format-image (source attributes info)
           "Return \"img\" tag with given SOURCE and ATTRIBUTES.
@@ -257,8 +255,8 @@ And here is an example: (There are some important point so that you had better s
           (buffer-string))
         )
      `(lambda (result)
-        (message "ego/async-do-publish done, *EGO output* should be : %s" result)
-        )))
+        (with-current-buffer (get-buffer-create ego/temp-buffer-name)
+          (insert (format "*EGO output* should be :\n %s \nego/async-do-publish done!" result))))))
 #+END_SRC
 
 * Dependencies
