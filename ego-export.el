@@ -769,7 +769,7 @@ PUB-BASE-DIR is the root publication directory."
                                   (format-time-string "%Y-%m-%d")))
                              (funcall (ego/get-config-option :get-title-function)))))
     (or visiting (kill-buffer file-buffer))
-    (format "<a href=\"%s\">%s</a>" webpath desc)))
+    (format "<span class=\"ego_link\"><a href=\"%s\">%s</a></span>" webpath desc)))
 
 (defun org-ego-link-complete-link (&optional arg)
   "Completion function for EGO-LINK. ARG does nothing."

@@ -62,7 +62,7 @@
 (require 'cl-lib)
 (require 'seq)
 
-(defconst ego-version "0.1")
+(defconst ego-version "0.9")
 
 (defun ego/do-publication (&optional project-name
                                      force-all
@@ -92,9 +92,9 @@
                                   nil t nil nil ego/last-project-name)))
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (p (y-or-n-p "Publish to:  [Yes] Web server docroot, [No] Original repo. "))
+          (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
           (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
-          (a (unless p (y-or-n-p "publish all branch? "))))
+          (a (unless p (y-or-n-p "publish all branch? (input 'n' if you only want to publish html)"))))
      (list j f b p c a)))
 
   (setq ego/current-project-name project-name)
@@ -317,7 +317,7 @@ month and day): " (unless (string= i "")
            org-export-default-language
            org-export-headline-levels
            nil ;; org-export-with-section-numbers
-           nil ;; org-export-with-toc
+           org-export-with-toc
            org-export-preserve-breaks
            ;; org-export-html-expand
            org-export-with-fixed-width
