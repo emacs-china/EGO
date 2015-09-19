@@ -37,8 +37,8 @@
    `("EGO"
      :repository-directory ,ego/devtools-repository-directory
      :site-domain "http://emacs-china.github.io/ego"
-     :site-main-title "Org-webpage"
-     :site-sub-title "(Static site senerator based on Emacs Git Org-mode)"
+     :site-main-title "EGO"
+     :site-sub-title "Static site senerator based on Emacs Git Org-mode"
      :theme (default)
      :force-absolute-url t
      :source-browse-url ("GitHub" "https://github.com/emacs-china/ego")
