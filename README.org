@@ -5,7 +5,7 @@
 
 * Introduction
 
-EGO is a static site generator that depends on [[http://www.gnu.org/software/emacs][Emacs]], [[git-scm.com][Git]] and  [[http://orgmode.org/][Org-mode]]. it originates from Feng Shu's [[https://github.com/tumashu/org-webpage][org-webpage]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
+EGO is a static site generator that depends on [[http://www.gnu.org/software/emacs][Emacs]], [[http://git-scm.com][Git]] and  [[http://orgmode.org/][Org-mode]]. it originates from Feng Shu's [[https://github.com/tumashu/org-webpage][org-webpage]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
 EGO provides features below:
 
@@ -27,16 +27,16 @@ EGO provides features below:
 
 The files-flow of EGO is showed on Graph below:
 
-: 
+:                                               
 :           +-----------<-------------+----<---------------+-----------<--------------<------------------+
 :           |                         |                    |                                             |
 :           | re-test or        if you want to re-test...  |-tested publish if you think test is OK      |
-:           | untested publish                            \|/                                            |
+:           | untested publish                             v                                             |
 :           |                                                all html files test -|                      |
 :           |                        > Web Test Dir ------------------------->----+-->-Web-Test-Dir-->---+
 :           |                      / |                                          \       /
-:          \|/   all org files --/-  |                                           \     /- partial html files test
-:                              /-    |                                            v   ^
+:           |    all org files --/-  |                                           \     /- partial html files test
+:           v                  /-    |                                            v   ^
 :                            /-      |                                             \ /
 : EGO Repo  -+-------------->     org-to-html                                       X
 :            |               \-      |                                             / \
@@ -46,6 +46,7 @@ The files-flow of EGO is showed on Graph below:
 :       git gets changed files      >"~/.ego-tmp/"Dir ----------------------->-----+->-Publish-Repository-->-up-load-flies
 :                                                       partial html files publish-|
 :                                                                                                                                         
+:                                                                            
 
 MENTION: The global variable =ego/publish-without-org-to-html=
 

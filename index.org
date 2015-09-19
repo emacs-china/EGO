@@ -1,10 +1,15 @@
-#+TITLE:       Tips of org-webpage
-#+AUTHOR:      Feng Shu
-#+EMAIL:       tumashu@163.com
-#+DATE:        2015-04-01
+#+title: EGO 使用手册
+#+author: 皐月中二
+#+email: kuangdash@163.com
 
+#+URI:     /
+#+LANGUAGE:    zh-CN
+#+OPTIONS:     H:3 num:nil toc:t \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+DESCRIPTION:  EGO Manual
 
-* How to install EGO in manual way
+建设中
+* Tips
+** How to install EGO in manual way
 
 To install EGO manually you should first install all
 dependencies listed in *README.org*. Once this has been completed,
@@ -24,7 +29,7 @@ After that, please remember to add this location to your emacs'
 
 NOTE: This is NOT recommended way for emacs beginner.
 
-* COMMENT How to install org-webpage Through package management system
+** COMMENT How to install org-webpage Through package management system
 
 # this headline is left for EGO to improve
 
@@ -39,7 +44,7 @@ NOTE: This is NOT recommended way for emacs beginner.
    (require 'org-webpage)
    #+END_EXAMPLE
 
-* How to quickly build a EGO git repository
+** How to quickly build a EGO git repository
 
 If you find that initializing a repository manually is too much trouble,
 you can run:
@@ -47,7 +52,7 @@ you can run:
 M-x owp/new-repository
 #+END_EXAMPLE
 
-* How to quickly add a new post
+** How to quickly add a new post
 #+BEGIN_EXAMPLE
 M-x owp/new-post
 #+END_EXAMPLE
@@ -57,13 +62,13 @@ This command will ask you the follow question:
 2. Category?
 3. Filename?
 
-* How to quickly insert org-website post template
+** How to quickly insert org-website post template
 
 #+BEGIN_EXAMPLE
 M-x owp/insert-options-template
 #+END_EXAMPLE
 
-* How to configure the default slogan
+** How to configure the default slogan
 Add the follow two lines to you config alist.
 
 #+BEGIN_EXAMPLE
@@ -71,7 +76,7 @@ Add the follow two lines to you config alist.
 :site-sub-title "your sub slogan"
 #+END_EXAMPLE
 
-* How to add an avatar to the page?
+** How to add an avatar to the page?
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
@@ -83,28 +88,28 @@ Image URL example:
 2. /media/img/XXXXX.jpg
 3. /assets/XXX/XXX.jpg
 
-* How to change org source files branch to "master"?
+** How to change org source files branch to "master"?
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
 :repository-org-branch "master"
 #+END_EXAMPLE
 
-* How to save html file to branch: "gh-pages"?
+** How to save html file to branch: "gh-pages"?
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
 :repository-org-branch "gh-pages"
 #+END_EXAMPLE
 
-* How to add a github link
+** How to add a github link
 Add the follow line to you config alist.
 
 #+BEGIN_EXAMPLE
 :source-browse-url ("GitHub" "https://github.io/<username>/<project-name>")
 #+END_EXAMPLE
 
-* How to do site traffic analytics with Google Analytics?
+** How to do site traffic analytics with Google Analytics?
 
 Add the follow line to you config alist.
 
@@ -112,7 +117,7 @@ Add the follow line to you config alist.
 :personal-google-analytics-id "your google analytics id"
 #+END_EXAMPLE
 
-* How to disable commenting for posts under certain category?
+** How to disable commenting for posts under certain category?
 
 # category is not recommended for use
 
@@ -134,4 +139,10 @@ Other config items:
 5. =:date= or by =:mod-date=  (:mod-date is last modification date)?
 6. =:category-index=: generate an index page for this category?
 
-* How to disable commenting for posts under certain summary?
+** How to disable commenting for posts under certain summary?
+* Change Logs
+** v0.1
+
+- Initial version, fork from org-page.
+- Use org-publish style config.
+- Increment Theme suport.

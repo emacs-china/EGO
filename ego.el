@@ -23,30 +23,30 @@
 
 ;;; Commentary:
 
-;; ego is a static site generator based on org mode.
+;; EGO is a static site generator based on org mode.
 
 ;; 1. Sources:   https://github.com/emacs-china/ego
 ;; 2. Documents: http://emacs-china.github.io/ego
 
-;; ego is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
+;; EGO is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
 ;; and provides similar features as org-page, the main differents is as follow:
 
 ;; 1. org-page focus on personal blog while ego is main used to
 ;;    generate small project website.
 ;; 2. org-page use many customizable variables to configure org-page
-;;    while org-website use an `org-publish-project-alist' style
-;;    alist to adjust org-website's behaver.
+;;    while EGO use an `org-publish-project-alist' style
+;;    alist to adjust EGO's behaver.
 
-;;    Managing multi-site configs in an emacs session with org-website is more
+;;    Managing multi-site configs in an emacs session with EGO is more
 ;;    simple than with org-page.
-;; 3. org-website can deal with "increment" or "inherit" themes.
+;; 3. EGO can deal with "increment" or "inherit" themes.
 ;;
 ;;    A "increment" theme is a mod theme which only include changed template,
 ;;    css and other files, the files same with base theme doesn't include.
 
-;;    ego autosearch the same files from base theme when use "increment"
+;;    EGO autosearch the same files from base theme when use "increment"
 ;;    theme.
-;; 4. org-website include a tiny emacs web server, which can be used to test publish.
+;; 4. EGO include a tiny emacs web server, which can be used to test publish.
 
 
 ;;; Code:
@@ -93,7 +93,7 @@
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
-          (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
+          (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
           (a (unless p (y-or-n-p "publish all branch? (input 'n' if you only want to publish html)"))))
      (list j f b p c a)))
 
@@ -120,6 +120,8 @@
                       "~/.ego-tmp/")) ; TODO customization
          (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
+    (when checkin-all
+      (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
     (ego/git-change-branch repo-dir org-branch)
     (setq repo-files
           (when (functionp repo-files-function)
@@ -128,7 +130,7 @@
           (when (functionp addition-files-function)
             (funcall addition-files-function repo-dir)))
     (when checkin-all
-      (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
+      (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
     (when (or (not (equal base-git-commit-test ego/publish-without-org-to-html))
               test-and-not-publish)
       (setq changed-files (if force-all
