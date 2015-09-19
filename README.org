@@ -5,7 +5,7 @@
 
 * Introduction
 
-EGO is a static site generator that depends on [[http://www.gnu.org/software/emacs][Emacs]], [[git-scm.com][Git]] and  [[http://orgmode.org/][Org-mode]]. it originates from Feng Shu's [[https://github.com/tumashu/org-webpage][org-webpage]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
+EGO is a static site generator that depends on [[http://www.gnu.org/software/emacs][Emacs]], [[http://git-scm.com][Git]] and  [[http://orgmode.org/][Org-mode]]. it originates from Feng Shu's [[https://github.com/tumashu/org-webpage][org-webpage]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
 
 EGO provides features below:
 
