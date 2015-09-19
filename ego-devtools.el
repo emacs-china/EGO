@@ -1,4 +1,4 @@
-;;; owp-devtools.el --- Functions used to develop org-webpage
+;;; ego-devtools.el --- Functions used to develop EGO
 
 ;; Copyright (C)  2015 Feng Shu
 
@@ -28,7 +28,7 @@
 (require 'ego-config)
 
 (defvar ego/devtools-repository-directory
-  (expand-file-name (buffer-name)))
+  (file-name-directory (expand-file-name (buffer-name))))
 
 (defun ego/devtools-update-ego-config ()
   (interactive)
