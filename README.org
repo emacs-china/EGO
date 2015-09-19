@@ -181,7 +181,7 @@ And here is an example: (There are some important point so that you had better s
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
             (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
-            (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
+            (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
             (a (unless p (y-or-n-p "publish all branch? "))))
        (list j f b p c a)))
     (async-start
