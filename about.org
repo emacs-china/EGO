@@ -12,7 +12,7 @@
 有兴趣可以尝试修改 *EGO* 的 default 主题，创造一个属于你自己的静态站点: 
 
 #+BEGIN_CENTER
-"powered by EGO"!
+*Powered by EGO* !
 #+END_CENTER
 
 

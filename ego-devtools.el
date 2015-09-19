@@ -27,18 +27,15 @@
 (require 'org)
 (require 'ego-config)
 
-(defvar ego/devtools-repository-directory
-  (file-name-directory (expand-file-name (buffer-name))))
-
 (defun ego/devtools-update-ego-config ()
   (interactive)
   (add-to-list
    'ego/project-config-alist
    `("EGO"
-     :repository-directory ,ego/devtools-repository-directory
+     :repository-directory ,ego/load-directory
      :site-domain "http://emacs-china.github.io/ego"
      :site-main-title "EGO"
-     :site-sub-title "Static site senerator based on Emacs Git Org-mode"
+     :site-sub-title "Static site senerator based on Emacs, Git and Org-mode"
      :theme (default)
      :force-absolute-url t
      :source-browse-url ("GitHub" "https://github.com/emacs-china/ego")

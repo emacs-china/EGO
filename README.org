@@ -72,8 +72,7 @@ Now, here is the workflow:
 
 * Usage
 
-*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see
-"tips.org" in the "documents" folder.*
+*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see [[http://emacs-china.github.io/ego][EGO main pages]] (in chinese)*
 
 ** Installation
 
@@ -167,9 +166,9 @@ And here is an example: (There are some important point so that you had better s
 #+BEGIN_SRC emacs-lisp
   (require 'async)
   (defun ego/async-do-publish (&optional project-name
+                                         test-and-not-publish
                                          force-all
                                          base-git-commit
-                                         test-and-not-publish
                                          checkin-all
                                          publish-all)
     (interactive
@@ -178,12 +177,12 @@ And here is an example: (There are some important point so that you had better s
                                     (delete-dups
                                      (mapcar 'car ego/project-config-alist))
                                     nil t nil nil ego/last-project-name)))
+            (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
-            (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
             (a (unless p (y-or-n-p "publish all branch? "))))
-       (list j f b p c a)))
+       (list j p f b c a)))
     (async-start
      `(lambda ()
         ;; load packages and set load-path

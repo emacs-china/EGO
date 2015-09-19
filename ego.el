@@ -1,6 +1,6 @@
 ;;; ego.el --- static site generator based on org mode
 
-;; Copyright (C)  2015 Feng Shu
+;; Copyright (C)  2015 Feng Shu, Kuangdash
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
 
 ;; Author: Feng Shu  <tumashu AT 163.com>
@@ -65,9 +65,9 @@
 (defconst ego-version "0.9")
 
 (defun ego/do-publication (&optional project-name
+                                     test-and-not-publish
                                      force-all
                                      base-git-commit
-                                     test-and-not-publish
                                      checkin-all
                                      publish-all)
   "The main entrance of ego. The entire procedure is:
@@ -90,12 +90,12 @@
                                   (delete-dups
                                    (mapcar 'car ego/project-config-alist))
                                   nil t nil nil ego/last-project-name)))
+          (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
           (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
           (a (unless p (y-or-n-p "publish all branch? (input 'n' if you only want to publish html)"))))
-     (list j f b p c a)))
+     (list j p f b c a)))
 
   (setq ego/current-project-name project-name)
   (setq ego/last-project-name project-name)
