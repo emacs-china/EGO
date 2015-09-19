@@ -93,7 +93,7 @@
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
-          (c (y-or-n-p "checkin all org files? (input 'n' if you have done it)"))
+          (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
           (a (unless p (y-or-n-p "publish all branch? (input 'n' if you only want to publish html)"))))
      (list j f b p c a)))
 
@@ -120,6 +120,8 @@
                       "~/.ego-tmp/")) ; TODO customization
          (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
+    (when checkin-all
+      (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
     (ego/git-change-branch repo-dir org-branch)
     (setq repo-files
           (when (functionp repo-files-function)
@@ -128,7 +130,7 @@
           (when (functionp addition-files-function)
             (funcall addition-files-function repo-dir)))
     (when checkin-all
-      (ego/git-commit-changes repo-dir "checkin all org files by EGO"))
+      (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
     (when (or (not (equal base-git-commit-test ego/publish-without-org-to-html))
               test-and-not-publish)
       (setq changed-files (if force-all
