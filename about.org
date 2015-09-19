@@ -1,4 +1,4 @@
-#+TITLE:       关于
+#+TITLE:       EGO 项目说明
 #+AUTHOR:      皐月中二
 #+EMAIL:       kuangdash@163.com
 
@@ -7,4 +7,12 @@
 #+OPTIONS:     H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
 #+DESCRIPTION:  aboutMe
 
-EGO 项目说明
+*EGO* 目前是 emacs-china 在 github 上的静态站点生成器，同时也可以作为个人站点的静态站点生成器被使用。
+
+有兴趣可以尝试修改 *EGO* 的 default 主题，创造一个属于你自己的静态站点: 
+
+#+BEGIN_CENTER
+"powered by EGO"!
+#+END_CENTER
+
+

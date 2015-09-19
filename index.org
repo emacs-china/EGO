@@ -8,7 +8,7 @@
 #+DESCRIPTION:  EGO Manual
 
 建设中
-* Tips
+* Tips in English
 ** How to install EGO in manual way
 
 To install EGO manually you should first install all
@@ -62,10 +62,10 @@ This command will ask you the follow question:
 2. Category?
 3. Filename?
 
-** How to quickly insert org-website post template
+** How to quickly insert EGO post template
 
 #+BEGIN_EXAMPLE
-M-x owp/insert-options-template
+M-x ego/insert-options-template
 #+END_EXAMPLE
 
 ** How to configure the default slogan
@@ -125,7 +125,7 @@ Add the follow line to you config alist.
 (setq owp/category-config-alist
       (cons '("photography" ;; category name goes here
               :show-comment nil)
-            owp/category-config-alist))
+            ego/category-config-alist))
 #+END_SRC
 
 Other config items:
@@ -140,9 +140,18 @@ Other config items:
 6. =:category-index=: generate an index page for this category?
 
 ** How to disable commenting for posts under certain summary?
+Feature left for improvement.
+
 * Change Logs
 ** v0.1
 
-- Initial version, fork from org-page.
+- Initial version, org-webpage which tumashu forks from org-page.
 - Use org-publish style config.
-- Increment Theme suport.
+- Increment Theme support.
+
+** v0.9
+
+- Initial version, EGO which kuangdash forks from org-webpage
+- More stability.
+- New theme.
+- Add some feature.
