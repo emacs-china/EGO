@@ -185,7 +185,7 @@
                  (ego/git-push-remote repo-dir
                                       repo
                                       html-branch publish-all))))
-           (message "Publication finished: on branch '%s' of repository '%s'." html-branch repo-dir)))
+           (message "Publication finished: on branch '%s' of repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." html-branch repo-dir)))
     (setq ego/current-project-name nil)))
 
 (defun ego/new-repository (repo-dir)
