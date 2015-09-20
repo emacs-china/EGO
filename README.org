@@ -1,4 +1,4 @@
-#+TITLE:     EGO's README
+#+TITLE:     README of EGO
 #+AUTHOR:    Feng Shu, Kuangdash
 #+EMAIL:     emacs-china@googlegroups.com
 #+DATE:      2015-07-02
