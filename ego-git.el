@@ -89,7 +89,8 @@ presented by REPO-DIR."
 
 (defun ego/git-change-branch (repo-dir branch-name)
   "This function will change branch to BRANCH-NAME of git repository presented
-by REPO-DIR. Do nothing if it is current branch."
+by REPO-DIR only if there is nothing uncommitted in the current branch.
+Create a new branch named BRANCH-NAME if BRANCH-NAME doesn't exist."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (ego/shell-command
                  repo-dir

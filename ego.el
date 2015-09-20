@@ -52,7 +52,7 @@
 
 ;;; Code:
 
-(require 'ox)
+(require 'ox-html)
 (require 'ht)
 (require 'ego-util)
 (require 'ego-config)
@@ -125,7 +125,8 @@
     (message "Git branch operation and get changed files")
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
-    (ego/git-change-branch repo-dir org-branch)
+    (unless (equal org-branch (ego/git-branch-name repo-dir))
+        (ego/git-change-branch repo-dir org-branch))
     (setq repo-files
           (seq-filter `(lambda (string)
                          (not (string-match ,ego/ignore-file-name-regexp string)))
