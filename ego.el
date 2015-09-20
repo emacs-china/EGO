@@ -5,6 +5,7 @@
 
 ;; Author: Feng Shu  <tumashu AT 163.com>
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
+;;         Kuangdash <kuangdash AT 163.com>
 ;; Keywords: org-mode, convenience, beautify
 ;; Homepage: https://github.com/emacs-china/ego
 
@@ -105,7 +106,7 @@
          (ego/get-config-option :preparation-function)))
     (when preparation-function
       (run-hooks 'preparation-function)))
-
+  (message "EGO: verify configuration")
   (ego/verify-configuration)
   (setq ego/item-cache nil)
   (let* ((repo-dir (ego/get-repository-directory))
@@ -121,12 +122,15 @@
                       "~/.ego-tmp/")) ; TODO customization
          (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
+    (message "Git branch operation and get changed files")
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
     (ego/git-change-branch repo-dir org-branch)
     (setq repo-files
-          (when (functionp repo-files-function)
-            (funcall repo-files-function repo-dir)))
+          (seq-filter `(lambda (string)
+                         (not (string-match ,ego/ignore-file-name-regexp string)))
+                      (when (functionp repo-files-function)
+                        (funcall repo-files-function repo-dir))))
     (setq addition-files
           (when (functionp addition-files-function)
             (funcall addition-files-function repo-dir)))
@@ -139,6 +143,7 @@
                             (message "Getting all changed files, just waiting...")
                             (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
       (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link, temporarily set it unusable.
+      (message "Create necessary directory and prepare theme!")
       (when (file-directory-p store-dir)
         (delete-directory store-dir t t))
       (make-directory store-dir t)
@@ -161,7 +166,6 @@
            (browse-url (format "http://%s:%d" system-name httpd-port)))
           (to-repo
            (message "pre-publish accomplished ~ begin real publish")
-           ;;left the part below for async
            (ego/git-change-branch repo-dir html-branch)
            (push '("\\(?:\\.htm\\|\\.html\\)" . ego/copy-file-handler) file-name-handler-alist); register ego/copy-file-handler to tackle relative-url-to-absolute problem
            (copy-directory store-dir repo-dir t t t)
@@ -170,8 +174,6 @@
            (ego/git-commit-changes repo-dir (concat "Update published html files, "
                                                     "committed by EGO."))
            (ego/git-change-branch repo-dir orig-branch)
-           ;;left the part above for async
-
            (message "Local publish finished, see *EGO output* buffer to get more information (Such as \"remote publish condition\")")
            (setq remote-repos (ego/git-remote-name repo-dir))
            (if (not remote-repos)

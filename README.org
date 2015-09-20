@@ -132,24 +132,12 @@ M-x ego/do-publication
 
 This command will ask you some questions:
 
-1. Which project do you want to publish?
-2. Publish all org files of "XXXXX" project?
-3. Publish to:  [Yes] Web server docroot, [No] Original repo and push remote.
-4. checkin all org files? (input 'n' if you have done it)
-5. publish all branch? 
-
-You can use `ego/do-publication' in elisp, which let you code
-your own quickly publication command:
-
-#+BEGIN_SRC emacs-lisp
-(ego/do-publication "project-name" nil "HEAD^1" "~/org-pub/" nil)
-#+END_SRC
-
-or:
-
-#+BEGIN_SRC emacs-lisp
-(call-interactively 'ego/do-publication)
-#+END_SRC
+1) Which project do you want to publish?
+2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote.
+3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
+4) (when (3) is n) Base git commit: HEAD~1 ? 
+5) checkin all changed files? (input 'n' if you have done it)
+6) (when (2) is n) publish all branch?
 
 you can track the process in *message* buffer and *EGO OUTPUT* buffer.
 

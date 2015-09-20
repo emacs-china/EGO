@@ -381,6 +381,9 @@ You can see fallback value of above option in `ego/config-fallback'"
 </rss>"
   "Template for RSS rendering.")
 
+(defvar ego/ignore-file-name-regexp "\n"
+  "the file whose name(include path) match the regexp won't be export.")
+
 (defvar ego/config-fallback
       `(:repository-directory nil
         :site-domain nil
