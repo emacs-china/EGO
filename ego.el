@@ -23,7 +23,7 @@
 
 ;;; Commentary:
 
-;; EGO is a static site generator based on org mode.
+;; EGO is a static site generator based on Emacs, Git and Org mode.
 
 ;; 1. Sources:   https://github.com/emacs-china/ego
 ;; 2. Documents: http://emacs-china.github.io/ego
@@ -58,7 +58,8 @@
 (require 'ego-git)
 (require 'ego-resource)
 (require 'ego-export)
-(require 'ego-web-server)
+(require 'browse-url)
+(require 'simple-httpd)
 (require 'cl-lib)
 (require 'seq)
 
@@ -155,7 +156,9 @@
              (copy-directory store-dir test-dir t t t)
              (setq ego/publish-without-org-to-html 1))
            (message "test the generated htmls in %s." test-dir)
-           (ego/web-server-browse))
+           (setq httpd-port (ego/get-config-option :web-server-port))
+           (httpd-serve-directory (ego/get-config-option :web-server-docroot))
+           (browse-url (format "http://%s:%d" system-name httpd-port)))
           (to-repo
            (message "pre-publish accomplished ~ begin real publish")
            ;;left the part below for async
