@@ -95,9 +95,7 @@
 </ul>
 </div>
 </div>
-<p>
-建设中
-</p>
+
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1">介绍</h2>
 <div class="outline-text-2" id="text-orgheadline1">
@@ -127,8 +125,41 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <h3 id="orgheadline3">设置</h3>
 <div class="outline-text-3" id="text-orgheadline3">
 <p>
-待添加
+下面是 emacs-china 的设置，将其写入 emacs-china 即可。你可以仿照它来设置自己的站点：
 </p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">the following is only needed if you install org-page manually</span>
+(add-to-list 'load-path <span style="font-style: italic;">"path/to/EGO"</span>)
+
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ego</span>)
+
+(add-to-list 'ego/project-config-alist
+               `(<span style="font-style: italic;">"emacs-china"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#24037;&#31243;&#30340;&#21517;&#23383;</span>
+                 <span style="font-weight: bold;">:repository-directory</span> <span style="font-style: italic;">"~/github/emacs-china.github.io"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#26412;&#22320;&#30446;&#24405;</span>
+                 <span style="font-weight: bold;">:site-domain</span> <span style="font-style: italic;">"http://emacs-china.github.io/"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#32593;&#22336;</span>
+                 <span style="font-weight: bold;">:site-main-title</span> <span style="font-style: italic;">"EMACS-CHINA"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#26631;&#39064;</span>
+                 <span style="font-weight: bold;">:site-sub-title</span> <span style="font-style: italic;">"=============&gt;&#38598;&#24605;&#24191;&#30410;"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#21103;&#26631;&#39064;</span>
+                 <span style="font-weight: bold;">:theme</span> (default) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20351;&#29992;&#30340;&#20027;&#39064;</span>
+                 <span style="font-weight: bold;">:summary</span> ((<span style="font-style: italic;">"years"</span> <span style="font-weight: bold;">:year</span> <span style="font-weight: bold;">:updates</span> 10) (<span style="font-style: italic;">"authors"</span> <span style="font-weight: bold;">:authors</span>) (<span style="font-style: italic;">"tags"</span> <span style="font-weight: bold;">:tags</span>)) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#23548;&#33322;&#26639;&#30340;&#35774;&#32622;&#65292;&#26377; category &#21644; summary &#20004;&#31181;</span>
+                 <span style="font-weight: bold;">:source-browse-url</span> (<span style="font-style: italic;">"Github"</span> <span style="font-style: italic;">"https://github.com/emacs-china"</span>) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20320;&#30340;&#24037;&#31243;&#28304;&#20195;&#30721;&#25152;&#22312;&#30340;&#20301;&#32622;</span>
+                 <span style="font-weight: bold;">:personal-disqus-shortname</span> <span style="font-style: italic;">"emacs-china"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20351;&#29992; disqus &#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
+                 <span style="font-weight: bold;">:personal-duoshuo-shortname</span> <span style="font-style: italic;">"emacs-china"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20351;&#29992;&#22810;&#35828;&#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
+                 <span style="font-weight: bold;">:confound-email</span> nil <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#26159;&#21542;&#20445;&#25252;&#37038;&#20214;&#21517;&#31216;&#21602;&#65311; t &#26159;&#20445;&#25252;&#65292;nil &#26159;&#19981;&#20445;&#25252;&#65292;&#40664;&#35748;&#26159;&#20445;&#25252;</span>
+                 <span style="font-weight: bold;">:web-server-docroot</span> <span style="font-style: italic;">"~/webRoot/emacs-china.github.io"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#30446;&#24405;</span>
+                 <span style="font-weight: bold;">:web-server-port</span> 5432)) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#31471;&#21475;</span>
+</pre>
+</div>
+
+<p>
+你可以通过以下方式发现 EGO 的设置方法（英文）
+</p>
+
+<pre class="example">
+C-h v ego/project-config-alist
+C-h v ego/config-fallback
+</pre>
 </div>
 </div>
 
@@ -136,7 +167,15 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <h3 id="orgheadline4">新建 Repository</h3>
 <div class="outline-text-3" id="text-orgheadline4">
 <p>
-待添加
+通过以下方式创建新的 Repository（也就是一个新站点了）：
+</p>
+
+<pre class="example">
+M-x ego/new-repository
+</pre>
+
+<p>
+这种方式只能进行一个初级的设置，要想让它正常工作，还是需要设置 <code>ego/project-config-alist</code> 变量。
 </p>
 </div>
 </div>
@@ -145,8 +184,12 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <h3 id="orgheadline5">新建文章</h3>
 <div class="outline-text-3" id="text-orgheadline5">
 <p>
-待添加
+用以下方式创建新文章：
 </p>
+
+<pre class="example">
+M-x ego/new-post
+</pre>
 </div>
 </div>
 
@@ -154,7 +197,28 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <h3 id="orgheadline6">发布</h3>
 <div class="outline-text-3" id="text-orgheadline6">
 <p>
-待添加
+用以下命令生成 html 文件，并按需传送到远程端：
+</p>
+
+<pre class="example">
+M-x ego/do-publication
+</pre>
+
+<p>
+这条命令会问你如下几个问题：
+</p>
+
+<ol class="org-ol">
+<li>Which project do you want to publish? （发布哪个站点？）</li>
+<li>Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. （测试发布（y）还是真正发布到远端（n）？）</li>
+<li>Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) （发布全部（y）还是改变的那些文件（n）？）</li>
+<li>(when (3) is n) Base git commit: HEAD~1 ? （将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可））</li>
+<li>checkin all changed files? (input 'n' if you have done it) （将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布）</li>
+<li>(when (2) is n) publish all branch? （把所有 branch 推送到远端？（在第二项是 n 时出现的选项））</li>
+</ol>
+
+<p>
+你可以在 <b>message</b> buffer 和 <b>EGO OUTPUT</b> buffer 里跟踪整个过程。
 </p>
 </div>
 </div>
@@ -163,7 +227,110 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <h3 id="orgheadline7">异步发布</h3>
 <div class="outline-text-3" id="text-orgheadline7">
 <p>
-待添加
+你可以使用 <code>async.el</code> 包来包裹 <code>ego/do-publication</code> 命令，使得该命令异步执行。
+</p>
+
+<p>
+关于 <code>async.el</code> 包的用法可以参看这里（英文） : <a href="https://github.com/jwiegley/emacs-async">Async</a>.
+</p>
+
+<p>
+这里是一个例子: (你当然不能直接使用它，但是可以参考它进行自己的设置，就当是一个使用 async 的作业吧)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">async</span>)
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">ego/async-do-publish</span> (<span style="font-weight: bold; text-decoration: underline;">&amp;optional</span> project-name
+                                       test-and-not-publish
+                                       force-all
+                                       base-git-commit
+                                       checkin-all
+                                       publish-all)
+  (<span style="font-weight: bold;">interactive</span>
+   (<span style="font-weight: bold;">let*</span> ((j (<span style="font-weight: bold;">or</span> ego/default-project-name
+                 (completing-read <span style="font-style: italic;">"Which project do you want to publish? "</span>
+                                  (delete-dups
+                                   (mapcar 'car ego/project-config-alist))
+                                  nil t nil nil ego/last-project-name)))
+          (p (y-or-n-p <span style="font-style: italic;">"Action:  [Yes] Test, [No] Tested Publish. "</span>))
+          (f (y-or-n-p (format <span style="font-style: italic;">"Publish all org files of \"%s\" project? "</span> j)))
+          (b (<span style="font-weight: bold;">unless</span> f (read-string <span style="font-style: italic;">"Base git commit: "</span> <span style="font-style: italic;">"HEAD~1"</span>)))
+          (c (y-or-n-p <span style="font-style: italic;">"checkin all changed files? (input 'n' if you have done it)"</span>))
+          (a (<span style="font-weight: bold;">unless</span> p (y-or-n-p <span style="font-style: italic;">"publish all branch? "</span>))))
+     (list j p f b c a)))
+  (<span style="font-weight: bold;">async-start</span>
+   `(<span style="font-weight: bold;">lambda</span> ()
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">load packages and set load-path &#36825;&#37324;&#24320;&#22987;&#35843;&#29992;&#26032;&#36827;&#31243;&#65292;&#22312;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#24320;&#22987;&#20043;&#21069;&#65292;&#38656;&#35201;&#37197;&#32622;&#26032;&#36827;&#31243;&#20351;&#24471; ego/do-publication &#21629;&#20196;&#27491;&#24120;&#24037;&#20316;</span>
+      (<span style="font-weight: bold;">setq</span> package-user-dir ,(expand-file-name <span style="font-style: italic;">"~/.emacs.d/elpa/"</span>))
+      (package-initialize)
+      (add-to-list 'load-path ,(expand-file-name <span style="font-style: italic;">"~/github/org-mode/lisp"</span>))
+      (add-to-list 'load-path ,(expand-file-name <span style="font-style: italic;">"~/github/org-mode/contrib/lisp"</span> t))
+      (add-to-list 'load-path ,ego/load-directory)
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">set coding-system</span>
+      (set-terminal-coding-system 'utf-8-unix)
+      (set-keyboard-coding-system 'utf-8-unix)
+      (prefer-coding-system 'utf-8-unix)
+      (<span style="font-weight: bold;">setq</span> save-buffer-coding-system 'utf-8-unix
+            coding-system-for-write 'utf-8-unix)
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">pre-set ego configurations</span>
+      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">cl-lib</span>)
+      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ego</span>)
+      (<span style="font-weight: bold;">setq</span> ego/project-config-alist ',ego/project-config-alist)
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Make EGO show svg images</span>
+      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ox-html</span>)
+      (<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">kd/org-html--format-image</span> (source attributes info)
+        <span style="font-style: italic;">"Return \"img\" tag with given SOURCE and ATTRIBUTES.</span>
+<span style="font-style: italic;">  SOURCE is a string specifying the location of the image.</span>
+<span style="font-style: italic;">  ATTRIBUTES is a plist, as returned by</span>
+<span style="font-style: italic;">  `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">org-export-read-attribute</span><span style="font-style: italic;">'.  INFO is a plist used as</span>
+<span style="font-style: italic;">  a communication channel."</span>
+        (org-html-close-tag
+         <span style="font-style: italic;">"img"</span>
+         (org-html--make-attribute-string
+          (org-combine-plists
+           (list <span style="font-weight: bold;">:src</span> source
+                 <span style="font-weight: bold;">:alt</span> (<span style="font-weight: bold;">if</span> (string-match-p <span style="font-style: italic;">"^ltxpng/"</span> source)
+                          (org-html-encode-plain-text
+                           (org-find-text-property-in-string 'org-latex-src source))
+                        (file-name-nondirectory source)))
+           attributes))
+         info))
+      (advice-add 'org-html--format-image <span style="font-weight: bold;">:override</span> #'kd/org-html--format-image)
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">without org-to-html if possible</span>
+      (<span style="font-weight: bold;">unless</span> ,test-and-not-publish
+        (<span style="font-weight: bold;">if</span> ,base-git-commit
+            (<span style="font-weight: bold;">setq</span> ego/publish-without-org-to-html 1)
+          (<span style="font-weight: bold;">setq</span> ego/publish-without-org-to-html 2)))
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">ego/do-publication here &#27880;&#24847;&#65306;&#36825;&#37324;&#24320;&#22987;&#26159;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#21629;&#20196;</span>
+      (ego/do-publication ,project-name
+                          ,force-all
+                          ,base-git-commit
+                          ,test-and-not-publish
+                          ,checkin-all
+                          ,publish-all)
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually</span>
+      (<span style="font-weight: bold;">while</span> (not ego/async-publish-success)
+        (sit-for 1))
+
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">return the result &#36820;&#22238;&#32467;&#26524;</span>
+      (<span style="font-weight: bold;">with-current-buffer</span> (get-buffer-create ,ego/temp-buffer-name)
+        (buffer-string))
+      )
+   `(<span style="font-weight: bold;">lambda</span> (result)
+      (<span style="font-weight: bold;">with-current-buffer</span> (get-buffer-create ego/temp-buffer-name)
+        (insert (format <span style="font-style: italic;">"*EGO output* should be :\n %s \nego/async-do-publish done!"</span> result))))))
+</pre>
+</div>
+
+<p>
+你可以在 <b>emacs</b> buffer 和 <b>EGO OUTPUT</b> buffer 里跟踪整个过程。
 </p>
 </div>
 </div>
@@ -174,6 +341,10 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <div class="outline-text-2" id="text-orgheadline9">
 <p>
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。
+</p>
+
+<p>
+也即是说，删除发布后的 html 文件比较麻烦。（使用传统的 git 操作模式）
 </p>
 </div>
 </div>
@@ -419,7 +590,7 @@ Feature left for improvement.
 <div id="text-footnotes">
 
 <div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
-这些待翻译
+这些暂时为英文，相信中学英语水平即可。
 </p></div></div>
 
 

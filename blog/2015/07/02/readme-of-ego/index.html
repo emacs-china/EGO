@@ -269,32 +269,12 @@ This command will ask you some questions:
 
 <ol class="org-ol">
 <li>Which project do you want to publish?</li>
-<li>Publish all org files of "XXXXX" project?</li>
-<li>Publish to:  [Yes] Web server docroot, [No] Original repo and push remote.</li>
-<li>checkin all org files? (input 'n' if you have done it)</li>
-<li>publish all branch?</li>
+<li>Publish to:  [Yes] Web server to test, [No] Original repo and publish remote.</li>
+<li>Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)</li>
+<li>(when (3) is n) Base git commit: HEAD~1 ?</li>
+<li>checkin all changed files? (input 'n' if you have done it)</li>
+<li>(when (2) is n) publish all branch?</li>
 </ol>
-
-<p>
-You can use `ego/do-publication' in elisp, which let you code
-your own quickly publication command:
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(ego/do-publication <span style="font-style: italic;">"project-name"</span> nil <span style="font-style: italic;">"HEAD^1"</span> <span style="font-style: italic;">"~/org-pub/"</span> nil)
-</pre>
-</div>
-
-<p>
-or:
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(call-interactively 'ego/do-publication)
-</pre>
-</div>
 
 <p>
 you can track the process in <b>message</b> buffer and <b>EGO OUTPUT</b> buffer.
@@ -491,8 +471,6 @@ The link is assigned to class "ego<sub>link</sub>" with label "span", you can cu
   <section>
     <h1>Comments</h1>
     <div id="comment-wrap">
-      <a class="disqus_label">使用Disqus评论</a>
-      <a class="ds-label">使用多说评论</a>
     </ul>
   </section>
   <script src="http://emacs-china.github.io/EGO/media/js/main.js"></script>
