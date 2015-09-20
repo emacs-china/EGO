@@ -1,4 +1,3 @@
-
 #+title: EGO 使用手册
 #+author: 皐月中二
 #+email: kuangdash@163.com
@@ -19,21 +18,6 @@ EGO 是一个由 [[https://github.com/kelvinh/org-page][org-page]] 和 [[https:/
 暂时不支持 melpa 安装，请用 git clone 后处理。
 
 ** 设置
-<<<<<<< HEAD
-待添加
-
-** 新建 Repository
-待添加
-
-** 新建文章
-待添加
-
-** 发布
-待添加
-
-** 异步发布
-待添加
-=======
 下面是 emacs-china 的设置，将其写入 emacs-china 即可。你可以仿照它来设置自己的站点：
 
 #+BEGIN_SRC emacs-lisp
@@ -196,7 +180,6 @@ M-x ego/do-publication
 #+END_SRC
 
 你可以在 *emacs* buffer 和 *EGO OUTPUT* buffer 里跟踪整个过程。
->>>>>>> 17e0d73518fd2cadc7a42b4440f55727524dd821
 
 * 一些缺点
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。

@@ -71,16 +71,8 @@ Now, here is the workflow:
 6. Publication finished.
 
 * Usage
-<<<<<<< HEAD
-
-*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see [[http://emacs-china.github.io/EGO][EGO main pages]] (in chinese)*
-
-** Installation
-
-=======
 *中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ！*
 ** Installation
->>>>>>> 17e0d73518fd2cadc7a42b4440f55727524dd821
 EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository.
 
 ** Configuration
