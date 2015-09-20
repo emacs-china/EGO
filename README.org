@@ -71,11 +71,8 @@ Now, here is the workflow:
 6. Publication finished.
 
 * Usage
-
-*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see [[http://emacs-china.github.io/EGO][EGO main pages]] (in chinese)*
-
+*中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ！*
 ** Installation
-
 EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository.
 
 ** Configuration
@@ -204,16 +201,7 @@ And here is an example: (There are some important point so that you had better s
         (require 'ego)
         (setq ego/project-config-alist ',ego/project-config-alist)
 
-        ;; use my personal http-server for test
-        (require 'simple-httpd)
-        (advice-add 'ego/web-server-browse
-                    :override
-                    (lambda ()
-                      (interactive)
-                      (setq httpd-port (ego/get-config-option :web-server-port))
-                      (httpd-serve-directory (ego/get-config-option :web-server-docroot))
-                      (browse-url (format "http://%s:%d" system-name httpd-port))))
-
+        ;; Make EGO show svg images
         (require 'ox-html)
         (defun kd/org-html--format-image (source attributes info)
           "Return \"img\" tag with given SOURCE and ATTRIBUTES.

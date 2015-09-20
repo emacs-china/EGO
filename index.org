@@ -1,4 +1,3 @@
-
 #+title: EGO 使用手册
 #+author: 皐月中二
 #+email: kuangdash@163.com
