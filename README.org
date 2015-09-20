@@ -218,9 +218,9 @@ And here is an example: (There are some important point so that you had better s
     
         ;; ego/do-publication here
         (ego/do-publication ,project-name
+                            ,test-and-not-publish
                             ,force-all
                             ,base-git-commit
-                            ,test-and-not-publish
                             ,checkin-all
                             ,publish-all)
 

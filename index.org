@@ -172,9 +172,9 @@ M-x ego/do-publication
     
         ;; ego/do-publication here 注意：这里开始是新进程的发布命令
         (ego/do-publication ,project-name
+                            ,test-and-not-publish
                             ,force-all
                             ,base-git-commit
-                            ,test-and-not-publish
                             ,checkin-all
                             ,publish-all)
 
