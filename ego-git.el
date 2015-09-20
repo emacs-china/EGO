@@ -99,14 +99,14 @@ by REPO-DIR. Do nothing if it is current branch."
       (error "The branch have something uncommitted, recheck it!"))
     (setq output (ego/shell-command
                   repo-dir
-                  (concat "env LC_ALL=C git checkout -b" branch-name)
+                  (concat "env LC_ALL=C git checkout -b " branch-name)
                   t))
     (cond ((string-match "Switched to a new branch" output)
            (message "Create a new branch with name '%s'." branch-name))
           ((string-match "already exists" output)
            (setq output (ego/shell-command
                           repo-dir
-                          (concat "env LC_ALL=C git checkout" branch-name)
+                          (concat "env LC_ALL=C git checkout " branch-name)
                           t)))
           (t (error "Failed to change branch to '%s' of repository '%s'."
              branch-name repo-dir)))
