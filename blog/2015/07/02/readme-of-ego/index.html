@@ -168,10 +168,9 @@ a modification, or a deletion.  <b>EGO is designed to handle all of these kinds 
 <h2 id="orgheadline9"><span class="section-number-2">3</span> Usage</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-<b>Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see <a href="http://emacs-china.github.io/EGO">EGO main pages</a> (in chinese)</b>
+<b>中文用户可以点击 <a href="http://emacs-china.github.io/EGO">EGO 中文手册</a> ！</b>
 </p>
 </div>
-
 <div id="outline-container-orgheadline3" class="outline-3">
 <h3 id="orgheadline3"><span class="section-number-3">3.1</span> Installation</h3>
 <div class="outline-text-3" id="text-3-1">
@@ -360,16 +359,7 @@ And here is an example: (There are some important point so that you had better s
       (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ego</span>)
       (<span style="font-weight: bold;">setq</span> ego/project-config-alist ',ego/project-config-alist)
 
-      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">use my personal http-server for test</span>
-      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">simple-httpd</span>)
-      (advice-add 'ego/web-server-browse
-                  <span style="font-weight: bold;">:override</span>
-                  (<span style="font-weight: bold;">lambda</span> ()
-                    (<span style="font-weight: bold;">interactive</span>)
-                    (<span style="font-weight: bold;">setq</span> httpd-port (ego/get-config-option <span style="font-weight: bold;">:web-server-port</span>))
-                    (httpd-serve-directory (ego/get-config-option <span style="font-weight: bold;">:web-server-docroot</span>))
-                    (browse-url (format <span style="font-style: italic;">"http://%s:%d"</span> system-name httpd-port))))
-
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Make EGO show svg images</span>
       (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ox-html</span>)
       (<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">kd/org-html--format-image</span> (source attributes info)
         <span style="font-style: italic;">"Return \"img\" tag with given SOURCE and ATTRIBUTES.</span>
