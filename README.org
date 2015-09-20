@@ -71,11 +71,16 @@ Now, here is the workflow:
 6. Publication finished.
 
 * Usage
+<<<<<<< HEAD
 
 *Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see [[http://emacs-china.github.io/EGO][EGO main pages]] (in chinese)*
 
 ** Installation
 
+=======
+*中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ！*
+** Installation
+>>>>>>> 17e0d73518fd2cadc7a42b4440f55727524dd821
 EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository.
 
 ** Configuration
@@ -135,24 +140,12 @@ M-x ego/do-publication
 
 This command will ask you some questions:
 
-1. Which project do you want to publish?
-2. Publish all org files of "XXXXX" project?
-3. Publish to:  [Yes] Web server docroot, [No] Original repo and push remote.
-4. checkin all org files? (input 'n' if you have done it)
-5. publish all branch? 
-
-You can use `ego/do-publication' in elisp, which let you code
-your own quickly publication command:
-
-#+BEGIN_SRC emacs-lisp
-(ego/do-publication "project-name" nil "HEAD^1" "~/org-pub/" nil)
-#+END_SRC
-
-or:
-
-#+BEGIN_SRC emacs-lisp
-(call-interactively 'ego/do-publication)
-#+END_SRC
+1) Which project do you want to publish?
+2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote.
+3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
+4) (when (3) is n) Base git commit: HEAD~1 ? 
+5) checkin all changed files? (input 'n' if you have done it)
+6) (when (2) is n) publish all branch?
 
 you can track the process in *message* buffer and *EGO OUTPUT* buffer.
 
@@ -204,16 +197,7 @@ And here is an example: (There are some important point so that you had better s
         (require 'ego)
         (setq ego/project-config-alist ',ego/project-config-alist)
 
-        ;; use my personal http-server for test
-        (require 'simple-httpd)
-        (advice-add 'ego/web-server-browse
-                    :override
-                    (lambda ()
-                      (interactive)
-                      (setq httpd-port (ego/get-config-option :web-server-port))
-                      (httpd-serve-directory (ego/get-config-option :web-server-docroot))
-                      (browse-url (format "http://%s:%d" system-name httpd-port))))
-
+        ;; Make EGO show svg images
         (require 'ox-html)
         (defun kd/org-html--format-image (source attributes info)
           "Return \"img\" tag with given SOURCE and ATTRIBUTES.
@@ -272,7 +256,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 5. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
 6. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
 7. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
-8. [[https://github.com/eschulte/emacs-web-server][web-server]]: a web server library for Emacs
+8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
 

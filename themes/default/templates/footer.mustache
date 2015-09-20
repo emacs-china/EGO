@@ -12,8 +12,12 @@
   <section>
     <h1>Comments</h1>
     <div id="comment-wrap">
+      {{#disqus-comment}}
       <a class="disqus_label">使用Disqus评论</a>
+      {{/disqus-comment}}
+      {{#duoshuo-comment}}
       <a class="ds-label">使用多说评论</a>
+      {{/duoshuo-comment}}
     </ul>
     {{#disqus-comment}}
     <div id="disqus_thread"></div>
