@@ -1,10 +1,11 @@
+
 #+title: EGO 使用手册
 #+author: 皐月中二
 #+email: kuangdash@163.com
 
 #+URI:     /
 #+LANGUAGE:    zh-CN
-#+OPTIONS:     H:3 num:nil toc:t \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS:     H:4 num:nil toc:t \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
 #+DESCRIPTION:  EGO Manual
 
 建设中
@@ -16,16 +17,22 @@ EGO 是一个由 [[https://github.com/kelvinh/org-page][org-page]] 和 [[https:/
 * 使用方法
 
 ** 安装
+暂时不支持 melpa 安装，请用 git clone 后处理。
 
 ** 设置
+待添加
 
 ** 新建 Repository
+待添加
 
 ** 新建文章
+待添加
 
 ** 发布
+待添加
 
 ** 异步发布
+待添加
 
 * 一些缺点
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。

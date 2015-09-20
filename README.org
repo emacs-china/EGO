@@ -72,11 +72,11 @@ Now, here is the workflow:
 
 * Usage
 
-*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see [[http://emacs-china.github.io/ego][EGO main pages]] (in chinese)*
+*Here is a general introduction about how to use EGO, for more detailed introduction and configuration, please see [[http://emacs-china.github.io/EGO][EGO main pages]] (in chinese)*
 
 ** Installation
 
-EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository. For more info about installation, please see *tips.org* in the "document" folder.
+EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository.
 
 ** Configuration
 The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you can adjust and paste it to your =.emacs= file:
