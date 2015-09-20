@@ -74,11 +74,9 @@ M-x ego/do-publication
 
 这条命令会问你如下几个问题：
 
-1) Which project do you want to publish?
-
+1) Which project do you want to publish? 
    发布哪个站点？
 2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. 
-
    测试发布（y）还是真正发布到远端（n）？
 3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
    
