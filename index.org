@@ -15,7 +15,7 @@ EGO 是一个由 [[https://github.com/kelvinh/org-page][org-page]] 和 [[https:/
 * 使用方法
 
 ** 安装
-暂时不支持 melpa 安装，请用 git clone 后处理。
+暂时不支持 melpa 安装，请用 =git clone= 后处理。
 
 ** 设置
 下面是 emacs-china 的设置，将其写入 emacs-china 即可。你可以仿照它来设置自己的站点：
@@ -74,12 +74,18 @@ M-x ego/do-publication
 
 这条命令会问你如下几个问题：
 
-1) Which project do you want to publish? （发布哪个站点？）
-2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. （测试发布（y）还是真正发布到远端（n）？）
-3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) （发布全部（y）还是改变的那些文件（n）？）
-4) (when (3) is n) Base git commit: HEAD~1 ? （将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可））
-5) checkin all changed files? (input 'n' if you have done it) （将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布）
-6) (when (2) is n) publish all branch? （把所有 branch 推送到远端？（在第二项是 n 时出现的选项））
+1) Which project do you want to publish? 
+   ~发布哪个站点？
+2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. 
+   ~测试发布（y）还是真正发布到远端（n）？
+3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
+   ~发布全部（y）还是改变的那些文件（n）？
+4) (when (3) is n) Base git commit: HEAD~1 ? 
+   ~将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可）
+5) checkin all changed files? (input 'n' if you have done it) 
+   ~将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布。
+6) (when (2) is n) publish all branch? 
+   ~把所有 branch 推送到远端？（在第二项是 n 时出现的选项）
 
 你可以在 *message* buffer 和 *EGO OUTPUT* buffer 里跟踪整个过程。
 
@@ -160,9 +166,9 @@ M-x ego/do-publication
     
         ;; ego/do-publication here 注意：这里开始是新进程的发布命令
         (ego/do-publication ,project-name
+                            ,test-and-not-publish
                             ,force-all
                             ,base-git-commit
-                            ,test-and-not-publish
                             ,checkin-all
                             ,publish-all)
 
