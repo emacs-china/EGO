@@ -1,6 +1,6 @@
 ;;; ego-git.el --- git related functions required by ego
 
-;; Copyright (C)  2005 Feng Shu
+;; Copyright (C)  2015 Feng Shu
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
 
 ;; Author: Feng Shu  <tumashu AT 163.com>
@@ -87,9 +87,8 @@ presented by REPO-DIR."
                  t)))
     (replace-regexp-in-string "[\n\r]" "" output)))
 
-(defun ego/git-new-branch (repo-dir branch-name)
-  "This function will create a new branch with BRANCH-NAME, and checkout it.
-TODO: verify if the branch exists."
+(defun ego/git-new-empty-branch (repo-dir branch-name)
+  "This function will create a new empty branch with BRANCH-NAME, and checkout it. "
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (ego/shell-command
                  repo-dir
@@ -97,7 +96,8 @@ TODO: verify if the branch exists."
                  t)))
     (unless (or (string-match "Switched to a new branch" output) (string-match "already exists"))
       (error "Fatal: Failed to create a new branch with name '%s'."
-             branch-name))))
+             branch-name))
+    (ego/shell-command repo-dir "env LC_ALL=C git rm -r ." t)))
 
 (defun ego/git-change-branch (repo-dir branch-name)
   "This function will change branch to BRANCH-NAME of git repository presented

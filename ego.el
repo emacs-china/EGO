@@ -196,14 +196,15 @@ you must customize the variable `ego/project-config-alist' according to the read
    (list (read-directory-name
           "Specify a directory to become the repository: " nil nil nil)))
   (ego/git-init-repo repo-dir)
+  (ego/git-new-empty-branch repo-dir (ego/get-config-option :repository-org-branch))
   (ego/generate-readme repo-dir)
   (ego/git-commit-changes repo-dir "initial commit")
-  (ego/git-new-branch repo-dir (ego/get-config-option :repository-html-branch))
-  (ego/git-new-branch repo-dir (ego/get-config-option :repository-org-branch))
   (ego/generate-index repo-dir)
   (ego/git-commit-changes repo-dir "add source index.org")
   (ego/generate-about repo-dir)
-  (ego/git-commit-changes repo-dir "add source about.org"))
+  (ego/git-commit-changes repo-dir "add source about.org")
+  (ego/git-new-empty-branch repo-dir (ego/get-config-option :repository-html-branch))
+  (ego/git-change-branch repo-dir (ego/get-config-option :repository-org-branch)))
 
 (defun ego/verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:
