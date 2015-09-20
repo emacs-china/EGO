@@ -87,18 +87,6 @@ presented by REPO-DIR."
                  t)))
     (replace-regexp-in-string "[\n\r]" "" output)))
 
-(defun ego/git-new-empty-branch (repo-dir branch-name)
-  "This function will create a new empty branch with BRANCH-NAME, and checkout it. "
-  (let ((repo-dir (file-name-as-directory repo-dir))
-        (output (ego/shell-command
-                 repo-dir
-                 (concat "env LC_ALL=C git checkout -b " branch-name)
-                 t)))
-    (unless (or (string-match "Switched to a new branch" output) (string-match "already exists"))
-      (error "Fatal: Failed to create a new branch with name '%s'."
-             branch-name))
-    (ego/shell-command repo-dir "env LC_ALL=C git rm -r ." t)))
-
 (defun ego/git-change-branch (repo-dir branch-name)
   "This function will change branch to BRANCH-NAME of git repository presented
 by REPO-DIR. Do nothing if it is current branch."
@@ -111,11 +99,36 @@ by REPO-DIR. Do nothing if it is current branch."
       (error "The branch have something uncommitted, recheck it!"))
     (setq output (ego/shell-command
                   repo-dir
-                  (concat "env LC_ALL=C git checkout " branch-name)
+                  (concat "env LC_ALL=C git checkout -b" branch-name)
                   t))
+    (cond ((string-match "Switched to a new branch" output)
+           (message "Create a new branch with name '%s'." branch-name))
+          ((string-match "already exists" output)
+           (setq (output (ego/shell-command
+                          repo-dir
+                          (concat "env LC_ALL=C git checkout" branch-name)
+                          t))))
+          (t (error "Failed to change branch to '%s' of repository '%s'."
+             branch-name repo-dir)))
     (when (string-match "\\`error" output)
       (error "Failed to change branch to '%s' of repository '%s'."
              branch-name repo-dir))))
+
+(defun ego/git-new-empty-branch (repo-dir branch-name)
+  "This function will create a new empty branch with BRANCH-NAME, and checkout it. "
+  (let ((repo-dir (file-name-as-directory repo-dir))
+        (output (ego/shell-command
+                 repo-dir
+                 (concat "env LC_ALL=C git checkout -b " branch-name)
+                 t)))
+    (unless (or (string-match "Switched to a new branch" output) (string-match "already exists" output))
+      (error "Fatal: Failed to create a new branch with name '%s'."
+             branch-name))
+    (if (string-match "already exists" output)
+        (ego/git-change-branch repo-dir branch-name)
+      (ego/shell-command repo-dir "env LC_ALL=C git rm -r ." t)
+      (ego/shell-command repo-dir "env LC_ALL=C git add .")
+      (ego/shell-command repo-dir "env LC_ALL=C git commit -m \"New empty branch by EGO\""))))
 
 (defun ego/git-init-repo (repo-dir)
   "This function will initialize a new empty git repository. REPO-DIR is the

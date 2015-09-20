@@ -33,7 +33,7 @@
    'ego/project-config-alist
    `("EGO"
      :repository-directory ,ego/load-directory
-     :site-domain "http://emacs-china.github.io/ego"
+     :site-domain "http://emacs-china.github.io/EGO"
      :site-main-title "EGO"
      :site-sub-title "Static site senerator based on Emacs, Git and Org-mode"
      :theme (default)
