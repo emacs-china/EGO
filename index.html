@@ -14,8 +14,8 @@
    #ds-thread #ds-reset .ds-comment-body p a:hover {color: #0ff;}
    #disqus_thread a {color: #00ffff;}
   </style>
-  <link rel="stylesheet" href="http://emacs-china.github.io/EGO/media/css/main.css" type="text/css">
-  <link rel="stylesheet" href="http://emacs-china.github.io/EGO/media/css/comment.css" type="text/css">
+  <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+  <link rel="stylesheet" href="/media/css/comment.css" type="text/css">
   <script type="text/javascript"
           src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG">
   </script>
@@ -27,7 +27,7 @@
   <body><div class="container">
 <div>
   <header class="masthead">
-    <h1 class="masthead-title"><a href="http://emacs-china.github.io/EGO/">EGO</a></h1>
+    <h1 class="masthead-title"><a href="/">EGO</a></h1>
     <p>Static site senerator based on Emacs, Git and Org-mode</p>
     <nav class="site-nav">
       <div class="menu-icon">
@@ -38,9 +38,9 @@
         </svg>
       </div>
       <ul class="trigger">
-        <li><a href="http://emacs-china.github.io/EGO/about/">About</a></li>
+        <li><a href="/about/">About</a></li>
         <li><a href="https://github.com/emacs-china/ego">GitHub</a></li>
-        <li><a href="http://emacs-china.github.io/EGO/rss.xml">RSS</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
       </ul>
     </nav>
     <form method="get" id="searchform" action="http://www.google.com/search">
@@ -130,25 +130,25 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">the following is only needed if you install org-page manually</span>
-(add-to-list 'load-path <span style="color: #7fffd4; font-style: italic;">"path/to/EGO"</span>)
+<pre class="src src-emacs-lisp"><span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">the following is only needed if you install org-page manually</span>
+(add-to-list 'load-path <span style="font-style: italic;">"path/to/EGO"</span>)
 
-(<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">ego</span>)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ego</span>)
 
 (add-to-list 'ego/project-config-alist
-               `(<span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#31449;&#28857;&#24037;&#31243;&#30340;&#21517;&#23383;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:repository-directory</span> <span style="color: #7fffd4; font-style: italic;">"~/github/emacs-china.github.io"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#31449;&#28857;&#30340;&#26412;&#22320;&#30446;&#24405;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:site-domain</span> <span style="color: #7fffd4; font-style: italic;">"http://emacs-china.github.io/"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#31449;&#28857;&#30340;&#32593;&#22336;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:site-main-title</span> <span style="color: #7fffd4; font-style: italic;">"EMACS-CHINA"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#31449;&#28857;&#30340;&#26631;&#39064;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:site-sub-title</span> <span style="color: #7fffd4; font-style: italic;">"=============&gt;&#38598;&#24605;&#24191;&#30410;"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#31449;&#28857;&#30340;&#21103;&#26631;&#39064;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:theme</span> (default) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992;&#30340;&#20027;&#39064;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:summary</span> ((<span style="color: #7fffd4; font-style: italic;">"years"</span> <span style="color: #b0c4de; font-weight: bold;">:year</span> <span style="color: #b0c4de; font-weight: bold;">:updates</span> 10) (<span style="color: #7fffd4; font-style: italic;">"authors"</span> <span style="color: #b0c4de; font-weight: bold;">:authors</span>) (<span style="color: #7fffd4; font-style: italic;">"tags"</span> <span style="color: #b0c4de; font-weight: bold;">:tags</span>)) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#23548;&#33322;&#26639;&#30340;&#35774;&#32622;&#65292;&#26377; category &#21644; summary &#20004;&#31181;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:source-browse-url</span> (<span style="color: #7fffd4; font-style: italic;">"Github"</span> <span style="color: #7fffd4; font-style: italic;">"https://github.com/emacs-china"</span>) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20320;&#30340;&#24037;&#31243;&#28304;&#20195;&#30721;&#25152;&#22312;&#30340;&#20301;&#32622;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:personal-disqus-shortname</span> <span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992; disqus &#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:personal-duoshuo-shortname</span> <span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992;&#22810;&#35828;&#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:confound-email</span> nil <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26159;&#21542;&#20445;&#25252;&#37038;&#20214;&#21517;&#31216;&#21602;&#65311; t &#26159;&#20445;&#25252;&#65292;nil &#26159;&#19981;&#20445;&#25252;&#65292;&#40664;&#35748;&#26159;&#20445;&#25252;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:web-server-docroot</span> <span style="color: #7fffd4; font-style: italic;">"~/webRoot/emacs-china.github.io"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#30446;&#24405;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:web-server-port</span> 5432)) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#31471;&#21475;</span>
+               `(<span style="font-style: italic;">"emacs-china"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#24037;&#31243;&#30340;&#21517;&#23383;</span>
+                 <span style="font-weight: bold;">:repository-directory</span> <span style="font-style: italic;">"~/github/emacs-china.github.io"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#26412;&#22320;&#30446;&#24405;</span>
+                 <span style="font-weight: bold;">:site-domain</span> <span style="font-style: italic;">"http://emacs-china.github.io/"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#32593;&#22336;</span>
+                 <span style="font-weight: bold;">:site-main-title</span> <span style="font-style: italic;">"EMACS-CHINA"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#26631;&#39064;</span>
+                 <span style="font-weight: bold;">:site-sub-title</span> <span style="font-style: italic;">"=============&gt;&#38598;&#24605;&#24191;&#30410;"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#31449;&#28857;&#30340;&#21103;&#26631;&#39064;</span>
+                 <span style="font-weight: bold;">:theme</span> (default) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20351;&#29992;&#30340;&#20027;&#39064;</span>
+                 <span style="font-weight: bold;">:summary</span> ((<span style="font-style: italic;">"years"</span> <span style="font-weight: bold;">:year</span> <span style="font-weight: bold;">:updates</span> 10) (<span style="font-style: italic;">"authors"</span> <span style="font-weight: bold;">:authors</span>) (<span style="font-style: italic;">"tags"</span> <span style="font-weight: bold;">:tags</span>)) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#23548;&#33322;&#26639;&#30340;&#35774;&#32622;&#65292;&#26377; category &#21644; summary &#20004;&#31181;</span>
+                 <span style="font-weight: bold;">:source-browse-url</span> (<span style="font-style: italic;">"Github"</span> <span style="font-style: italic;">"https://github.com/emacs-china"</span>) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20320;&#30340;&#24037;&#31243;&#28304;&#20195;&#30721;&#25152;&#22312;&#30340;&#20301;&#32622;</span>
+                 <span style="font-weight: bold;">:personal-disqus-shortname</span> <span style="font-style: italic;">"emacs-china"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20351;&#29992; disqus &#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
+                 <span style="font-weight: bold;">:personal-duoshuo-shortname</span> <span style="font-style: italic;">"emacs-china"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#20351;&#29992;&#22810;&#35828;&#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
+                 <span style="font-weight: bold;">:confound-email</span> nil <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#26159;&#21542;&#20445;&#25252;&#37038;&#20214;&#21517;&#31216;&#21602;&#65311; t &#26159;&#20445;&#25252;&#65292;nil &#26159;&#19981;&#20445;&#25252;&#65292;&#40664;&#35748;&#26159;&#20445;&#25252;</span>
+                 <span style="font-weight: bold;">:web-server-docroot</span> <span style="font-style: italic;">"~/webRoot/emacs-china.github.io"</span> <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#30446;&#24405;</span>
+                 <span style="font-weight: bold;">:web-server-port</span> 5432)) <span style="font-weight: bold; font-style: italic;">; </span><span style="font-weight: bold; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#31471;&#21475;</span>
 </pre>
 </div>
 
@@ -246,74 +246,74 @@ M-x ego/do-publication
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">async</span>)
-(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold; font-style: italic;">ego/async-do-publish</span> (<span style="color: #98fb98; font-weight: bold;">&amp;optional</span> project-name
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">async</span>)
+(<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">ego/async-do-publish</span> (<span style="font-weight: bold; text-decoration: underline;">&amp;optional</span> project-name
                                        test-and-not-publish
                                        force-all
                                        base-git-commit
                                        checkin-all
                                        publish-all)
-  (<span style="color: #00ffff; font-weight: bold;">interactive</span>
-   (<span style="color: #00ffff; font-weight: bold;">let*</span> ((j (<span style="color: #00ffff; font-weight: bold;">or</span> ego/default-project-name
-                 (completing-read <span style="color: #7fffd4; font-style: italic;">"Which project do you want to publish? "</span>
+  (<span style="font-weight: bold;">interactive</span>
+   (<span style="font-weight: bold;">let*</span> ((j (<span style="font-weight: bold;">or</span> ego/default-project-name
+                 (completing-read <span style="font-style: italic;">"Which project do you want to publish? "</span>
                                   (delete-dups
                                    (mapcar 'car ego/project-config-alist))
                                   nil t nil nil ego/last-project-name)))
-          (p (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"Action:  [Yes] Test, [No] Tested Publish. "</span>))
-          (f (y-or-n-p (format <span style="color: #7fffd4; font-style: italic;">"Publish all org files of \"%s\" project? "</span> j)))
-          (b (<span style="color: #00ffff; font-weight: bold;">unless</span> f (read-string <span style="color: #7fffd4; font-style: italic;">"Base git commit: "</span> <span style="color: #7fffd4; font-style: italic;">"HEAD~1"</span>)))
-          (c (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"checkin all changed files? (input 'n' if you have done it)"</span>))
-          (a (<span style="color: #00ffff; font-weight: bold;">unless</span> p (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"publish all branch? "</span>))))
+          (p (y-or-n-p <span style="font-style: italic;">"Action:  [Yes] Test, [No] Tested Publish. "</span>))
+          (f (y-or-n-p (format <span style="font-style: italic;">"Publish all org files of \"%s\" project? "</span> j)))
+          (b (<span style="font-weight: bold;">unless</span> f (read-string <span style="font-style: italic;">"Base git commit: "</span> <span style="font-style: italic;">"HEAD~1"</span>)))
+          (c (y-or-n-p <span style="font-style: italic;">"checkin all changed files? (input 'n' if you have done it)"</span>))
+          (a (<span style="font-weight: bold;">unless</span> p (y-or-n-p <span style="font-style: italic;">"publish all branch? "</span>))))
      (list j p f b c a)))
-  (<span style="color: #00ffff; font-weight: bold;">async-start</span>
-   `(<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">load packages and set load-path &#36825;&#37324;&#24320;&#22987;&#35843;&#29992;&#26032;&#36827;&#31243;&#65292;&#22312;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#24320;&#22987;&#20043;&#21069;&#65292;&#38656;&#35201;&#37197;&#32622;&#26032;&#36827;&#31243;&#20351;&#24471; ego/do-publication &#21629;&#20196;&#27491;&#24120;&#24037;&#20316;</span>
-      (<span style="color: #00ffff; font-weight: bold;">setq</span> package-user-dir ,(expand-file-name <span style="color: #7fffd4; font-style: italic;">"~/.emacs.d/elpa/"</span>))
+  (<span style="font-weight: bold;">async-start</span>
+   `(<span style="font-weight: bold;">lambda</span> ()
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">load packages and set load-path &#36825;&#37324;&#24320;&#22987;&#35843;&#29992;&#26032;&#36827;&#31243;&#65292;&#22312;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#24320;&#22987;&#20043;&#21069;&#65292;&#38656;&#35201;&#37197;&#32622;&#26032;&#36827;&#31243;&#20351;&#24471; ego/do-publication &#21629;&#20196;&#27491;&#24120;&#24037;&#20316;</span>
+      (<span style="font-weight: bold;">setq</span> package-user-dir ,(expand-file-name <span style="font-style: italic;">"~/.emacs.d/elpa/"</span>))
       (package-initialize)
-      (add-to-list 'load-path ,(expand-file-name <span style="color: #7fffd4; font-style: italic;">"~/github/org-mode/lisp"</span>))
-      (add-to-list 'load-path ,(expand-file-name <span style="color: #7fffd4; font-style: italic;">"~/github/org-mode/contrib/lisp"</span> t))
+      (add-to-list 'load-path ,(expand-file-name <span style="font-style: italic;">"~/github/org-mode/lisp"</span>))
+      (add-to-list 'load-path ,(expand-file-name <span style="font-style: italic;">"~/github/org-mode/contrib/lisp"</span> t))
       (add-to-list 'load-path ,ego/load-directory)
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">set coding-system</span>
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">set coding-system</span>
       (set-terminal-coding-system 'utf-8-unix)
       (set-keyboard-coding-system 'utf-8-unix)
       (prefer-coding-system 'utf-8-unix)
-      (<span style="color: #00ffff; font-weight: bold;">setq</span> save-buffer-coding-system 'utf-8-unix
+      (<span style="font-weight: bold;">setq</span> save-buffer-coding-system 'utf-8-unix
             coding-system-for-write 'utf-8-unix)
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">pre-set ego configurations</span>
-      (<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">cl-lib</span>)
-      (<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">ego</span>)
-      (<span style="color: #00ffff; font-weight: bold;">setq</span> ego/project-config-alist ',ego/project-config-alist)
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">pre-set ego configurations</span>
+      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">cl-lib</span>)
+      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ego</span>)
+      (<span style="font-weight: bold;">setq</span> ego/project-config-alist ',ego/project-config-alist)
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">Make EGO show svg images</span>
-      (<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">ox-html</span>)
-      (<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold; font-style: italic;">kd/org-html--format-image</span> (source attributes info)
-        <span style="font-weight: bold;">"Return \"img\" tag with given SOURCE and ATTRIBUTES.</span>
-<span style="font-weight: bold;">  SOURCE is a string specifying the location of the image.</span>
-<span style="font-weight: bold;">  ATTRIBUTES is a plist, as returned by</span>
-<span style="font-weight: bold;">  `</span><span style="color: #7fffd4; font-weight: bold;">org-export-read-attribute</span><span style="font-weight: bold;">'.  INFO is a plist used as</span>
-<span style="font-weight: bold;">  a communication channel."</span>
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">Make EGO show svg images</span>
+      (<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">ox-html</span>)
+      (<span style="font-weight: bold;">defun</span> <span style="font-weight: bold;">kd/org-html--format-image</span> (source attributes info)
+        <span style="font-style: italic;">"Return \"img\" tag with given SOURCE and ATTRIBUTES.</span>
+<span style="font-style: italic;">  SOURCE is a string specifying the location of the image.</span>
+<span style="font-style: italic;">  ATTRIBUTES is a plist, as returned by</span>
+<span style="font-style: italic;">  `</span><span style="font-weight: bold; font-style: italic; text-decoration: underline;">org-export-read-attribute</span><span style="font-style: italic;">'.  INFO is a plist used as</span>
+<span style="font-style: italic;">  a communication channel."</span>
         (org-html-close-tag
-         <span style="color: #7fffd4; font-style: italic;">"img"</span>
+         <span style="font-style: italic;">"img"</span>
          (org-html--make-attribute-string
           (org-combine-plists
-           (list <span style="color: #b0c4de; font-weight: bold;">:src</span> source
-                 <span style="color: #b0c4de; font-weight: bold;">:alt</span> (<span style="color: #00ffff; font-weight: bold;">if</span> (string-match-p <span style="color: #7fffd4; font-style: italic;">"^ltxpng/"</span> source)
+           (list <span style="font-weight: bold;">:src</span> source
+                 <span style="font-weight: bold;">:alt</span> (<span style="font-weight: bold;">if</span> (string-match-p <span style="font-style: italic;">"^ltxpng/"</span> source)
                           (org-html-encode-plain-text
                            (org-find-text-property-in-string 'org-latex-src source))
                         (file-name-nondirectory source)))
            attributes))
          info))
-      (advice-add 'org-html--format-image <span style="color: #b0c4de; font-weight: bold;">:override</span> #'kd/org-html--format-image)
+      (advice-add 'org-html--format-image <span style="font-weight: bold;">:override</span> #'kd/org-html--format-image)
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">without org-to-html if possible</span>
-      (<span style="color: #00ffff; font-weight: bold;">unless</span> ,test-and-not-publish
-        (<span style="color: #00ffff; font-weight: bold;">if</span> ,base-git-commit
-            (<span style="color: #00ffff; font-weight: bold;">setq</span> ego/publish-without-org-to-html 1)
-          (<span style="color: #00ffff; font-weight: bold;">setq</span> ego/publish-without-org-to-html 2)))
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">without org-to-html if possible</span>
+      (<span style="font-weight: bold;">unless</span> ,test-and-not-publish
+        (<span style="font-weight: bold;">if</span> ,base-git-commit
+            (<span style="font-weight: bold;">setq</span> ego/publish-without-org-to-html 1)
+          (<span style="font-weight: bold;">setq</span> ego/publish-without-org-to-html 2)))
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">ego/do-publication here &#27880;&#24847;&#65306;&#36825;&#37324;&#24320;&#22987;&#26159;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#21629;&#20196;</span>
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">ego/do-publication here &#27880;&#24847;&#65306;&#36825;&#37324;&#24320;&#22987;&#26159;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#21629;&#20196;</span>
       (ego/do-publication ,project-name
                           ,test-and-not-publish
                           ,force-all
@@ -321,17 +321,17 @@ M-x ego/do-publication
                           ,checkin-all
                           ,publish-all)
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually</span>
-      (<span style="color: #00ffff; font-weight: bold;">while</span> (not ego/async-publish-success)
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually</span>
+      (<span style="font-weight: bold;">while</span> (not ego/async-publish-success)
         (sit-for 1))
 
-      <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">return the result &#36820;&#22238;&#32467;&#26524;</span>
-      (<span style="color: #00ffff; font-weight: bold;">with-current-buffer</span> (get-buffer-create ,ego/temp-buffer-name)
+      <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">return the result &#36820;&#22238;&#32467;&#26524;</span>
+      (<span style="font-weight: bold;">with-current-buffer</span> (get-buffer-create ,ego/temp-buffer-name)
         (buffer-string))
       )
-   `(<span style="color: #00ffff; font-weight: bold;">lambda</span> (result)
-      (<span style="color: #00ffff; font-weight: bold;">with-current-buffer</span> (get-buffer-create ego/temp-buffer-name)
-        (insert (format <span style="color: #7fffd4; font-style: italic;">"*EGO output* should be :\n %s \nego/async-do-publish done!"</span> result))))))
+   `(<span style="font-weight: bold;">lambda</span> (result)
+      (<span style="font-weight: bold;">with-current-buffer</span> (get-buffer-create ego/temp-buffer-name)
+        (insert (format <span style="font-style: italic;">"*EGO output* should be :\n %s \nego/async-do-publish done!"</span> result))))))
 </pre>
 </div>
 
@@ -387,8 +387,8 @@ After that, please remember to add this location to your emacs'
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #7fffd4; font-style: italic;">"/path/to/EGO"</span>)
-(<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">EGO</span>)
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="font-style: italic;">"/path/to/EGO"</span>)
+(<span style="font-weight: bold;">require</span> '<span style="font-weight: bold; text-decoration: underline;">EGO</span>)
 </pre>
 </div>
 
@@ -531,9 +531,9 @@ Add the follow line to you config alist.
 <div class="outline-text-3" id="text-orgheadline21">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span style="color: #00ffff; font-weight: bold;">setq</span> owp/category-config-alist
-      (cons '(<span style="color: #7fffd4; font-style: italic;">"photography"</span> <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">category name goes here</span>
-              <span style="color: #b0c4de; font-weight: bold;">:show-comment</span> nil)
+<pre class="src src-emacs-lisp">(<span style="font-weight: bold;">setq</span> owp/category-config-alist
+      (cons '(<span style="font-style: italic;">"photography"</span> <span style="font-weight: bold; font-style: italic;">;; </span><span style="font-weight: bold; font-style: italic;">category name goes here</span>
+              <span style="font-weight: bold;">:show-comment</span> nil)
             ego/category-config-alist))
 </pre>
 </div>
@@ -605,8 +605,8 @@ Feature left for improvement.
 </div>
 </div>
 <div>
-  <script src="http://emacs-china.github.io/EGO/media/js/jquery-2.1.3.min.js"></script>
-  <script src="http://emacs-china.github.io/EGO/media/js/main.js"></script>
+  <script src="/media/js/jquery-2.1.3.min.js"></script>
+  <script src="/media/js/main.js"></script>
   <div class="footer">
     <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
     <p>
