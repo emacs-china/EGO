@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>EGO</title>
+    <link>http://emacs-china.github.io/EGO</link>
+    <description>Static site senerator based on Emacs, Git and Org-mode</description>
+    <pubDate>周日, 20 9月 2015 10:41:13 中国标准时间</pubDate>
+    <lastBuildDate>周日, 20 9月 2015 10:41:13 中国标准时间</lastBuildDate>
+    <docs>http://www.rssboard.org/rss-specification</docs>
+    <generator>ego static site generator (https://github.com/emacs-china/ego)</generator>
+<item>
+<title>README of EGO</title>
+<link>http://emacs-china.github.io/EGO/blog/2015/07/02/readme-of-ego/</link>
+<description>No Description</description>
+<pubDate>2015-09-20</pubDate>
+<guid>http://emacs-china.github.io/EGO/blog/2015/07/02/readme-of-ego/</guid>
+</item>
+<item>
+<title>readme</title>
+<link>http://emacs-china.github.io/EGO/blog/2015/09/20/readme/</link>
+<description>No Description</description>
+<pubDate>2015-09-20</pubDate>
+<guid>http://emacs-china.github.io/EGO/blog/2015/09/20/readme/</guid>
+</item>
+</channel>
+</rss>
