@@ -1,0 +1,277 @@
+#+TITLE:     README of EGO
+#+AUTHOR:    Feng Shu, Kuangdash
+#+EMAIL:     emacs-china@googlegroups.com
+#+DATE:      2015-07-02
+
+* Introduction
+
+EGO is a static site generator that depends on [[http://www.gnu.org/software/emacs][Emacs]], [[http://git-scm.com][Git]] and  [[http://orgmode.org/][Org-mode]]. it originates from Feng Shu's [[https://github.com/tumashu/org-webpage][org-webpage]], which is a fork of Kelvin H's [[https://github.com/kelvinh/org-page][org-page]].
+
+EGO provides features below:
+
+1) Org sources and html files managed by git
+2) Incremental publication (according to =git diff= command)
+3) Category support (not recommended)
+4) Tags support (auto generated)
+5) RSS support (auto generated)
+6) Search engine support (auto generated)
+7) A beautiful theme
+8) Theme customization support is well (using mustache template)
+9) Commenting (implemented using disqus/duoshuo)
+10) Website traffic analytics (implemented using google analytics)
+11) Index/about page support (auto generated if no default is provided)
+13) Include a tiny emacs web server, which can be used to test publish.
+14) Manage multi-site configs in an emacs session easily.
+
+* Workflow
+
+The files-flow of EGO is showed on Graph below:
+
+:                                               
+:           +-----------<-------------+----<---------------+-----------<--------------<------------------+
+:           |                         |                    |                                             |
+:           | re-test or        if you want to re-test...  |-tested publish if you think test is OK      |
+:           | untested publish                             v                                             |
+:           |                                                all html files test -|                      |
+:           |                        > Web Test Dir ------------------------->----+-->-Web-Test-Dir-->---+
+:           |                      / |                                          \       /
+:           |    all org files --/-  |                                           \     /- partial html files test
+:           v                  /-    |                                            v   ^
+:                            /-      |                                             \ /
+: EGO Repo  -+-------------->     org-to-html                                       X
+:            |               \-      |                                             / \
+:            |                 \-    |                                            ^   v
+:            | changed org files-\-  |                                           /     \- all html files publish
+:            |                     \ |                                          /       \       
+:       git gets changed files      >"~/.ego-tmp/"Dir ----------------------->-----+->-Publish-Repository-->-up-load-flies
+:                                                       partial html files publish-|
+:                                                                                                                                         
+:                                                                            
+
+MENTION: The global variable =ego/publish-without-org-to-html=
+
+1) partial org-files publish without org-to-html: it equals 1
+2) all org-files publish without org-to-html: it equals 2
+
+Now, here is the workflow:
+
+1. Specify a git repo where the org source
+   files will be on the "source" branch and the generated html files
+   will be on the "master" branch (the branch names can be
+   customized). Repos may be created manually or by
+   EGO's =ego/new-repository= command.
+2. Specify a "base commit" (the most recent prior commit will be used if
+   omitted). EGO will read changes between the latest commit
+   and the specified base commit on branch "source". The changes
+   will then be marked for publication.
+3. EGO does preparation jobs.
+4. Publish the changes read in step 2. A change can be an addition,
+   a modification, or a deletion.  *EGO is designed to handle all of these kinds of changes but since deletion does not happen often, EGO has not implemented it yet.*
+5. Update the index page for each category and tag.
+6. Publication finished.
+
+* Usage
+*中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ！*
+** Installation
+EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository.
+
+** Configuration
+The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you can adjust and paste it to your =.emacs= file:
+
+#+BEGIN_SRC emacs-lisp
+  ;; the following is only needed if you install org-page manually
+  (add-to-list 'load-path "path/to/EGO")
+
+  (require 'ego)
+
+  (add-to-list 'ego/project-config-alist
+                 `("emacs-china"
+                   :repository-directory "~/github/emacs-china.github.io"
+                   :site-domain "http://emacs-china.github.io/"
+                   :site-main-title "EMACS-CHINA"
+                   :site-sub-title "=============>集思广益"
+                   :theme (default)
+                   :summary (("years" :year :updates 10) ("authors" :authors) ("tags" :tags))
+                   :source-browse-url ("Github" "https://github.com/emacs-china")
+                   :personal-disqus-shortname "emacs-china"
+                   :personal-duoshuo-shortname "emacs-china"
+                   :confound-email nil
+                   :web-server-docroot "~/webRoot/emacs-china.github.io"
+                   :web-server-port 5432))
+#+END_SRC
+
+You can find more config options and theirs default values by commands:
+
+#+BEGIN_EXAMPLE
+C-h v ego/project-config-alist
+C-h v ego/config-fallback
+#+END_EXAMPLE
+
+** Create New Repository
+Using the following command to create a new repository:
+
+#+BEGIN_EXAMPLE
+M-x ego/new-repository
+#+END_EXAMPLE
+
+The repository is preliminary, you have to configure the =ego/project-config-alist= to make it work!
+
+** Create New Post
+Using the following command to create a new post:
+
+#+BEGIN_EXAMPLE
+M-x ego/new-post
+#+END_EXAMPLE
+
+** Publication
+The simplest way is run:
+
+#+BEGIN_EXAMPLE
+M-x ego/do-publication
+#+END_EXAMPLE
+
+This command will ask you some questions:
+
+1) Which project do you want to publish?
+2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote.
+3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
+4) (when (3) is n) Base git commit: HEAD~1 ? 
+5) checkin all changed files? (input 'n' if you have done it)
+6) (when (2) is n) publish all branch?
+
+you can track the process in *message* buffer and *EGO OUTPUT* buffer.
+
+** Async Publication
+You can use =async.el= package to wrap the command =ego/do-publication= in order to publish the static site without a wait.
+
+You can find some example about how to use =async.el= package here : [[https://github.com/jwiegley/emacs-async][Async]].
+
+And here is an example: (There are some important point so that you had better see it.)
+
+#+BEGIN_SRC emacs-lisp
+  (require 'async)
+  (defun ego/async-do-publish (&optional project-name
+                                         test-and-not-publish
+                                         force-all
+                                         base-git-commit
+                                         checkin-all
+                                         publish-all)
+    (interactive
+     (let* ((j (or ego/default-project-name
+                   (completing-read "Which project do you want to publish? "
+                                    (delete-dups
+                                     (mapcar 'car ego/project-config-alist))
+                                    nil t nil nil ego/last-project-name)))
+            (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
+            (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
+            (b (unless f (read-string "Base git commit: " "HEAD~1")))
+            (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
+            (a (unless p (y-or-n-p "publish all branch? "))))
+       (list j p f b c a)))
+    (async-start
+     `(lambda ()
+        ;; load packages and set load-path
+        (setq package-user-dir ,(expand-file-name "~/.emacs.d/elpa/"))
+        (package-initialize)
+        (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
+        (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
+        (add-to-list 'load-path ,ego/load-directory)
+
+        ;; set coding-system
+        (set-terminal-coding-system 'utf-8-unix)
+        (set-keyboard-coding-system 'utf-8-unix)
+        (prefer-coding-system 'utf-8-unix)
+        (setq save-buffer-coding-system 'utf-8-unix
+              coding-system-for-write 'utf-8-unix)
+
+        ;; pre-set ego configurations
+        (require 'cl-lib)
+        (require 'ego)
+        (setq ego/project-config-alist ',ego/project-config-alist)
+
+        ;; Make EGO show svg images
+        (require 'ox-html)
+        (defun kd/org-html--format-image (source attributes info)
+          "Return \"img\" tag with given SOURCE and ATTRIBUTES.
+    SOURCE is a string specifying the location of the image.
+    ATTRIBUTES is a plist, as returned by
+    `org-export-read-attribute'.  INFO is a plist used as
+    a communication channel."
+          (org-html-close-tag
+           "img"
+           (org-html--make-attribute-string
+            (org-combine-plists
+             (list :src source
+                   :alt (if (string-match-p "^ltxpng/" source)
+                            (org-html-encode-plain-text
+                             (org-find-text-property-in-string 'org-latex-src source))
+                          (file-name-nondirectory source)))
+             attributes))
+           info))
+        (advice-add 'org-html--format-image :override #'kd/org-html--format-image)
+
+        ;; without org-to-html if possible
+        (unless ,test-and-not-publish
+          (if ,base-git-commit
+              (setq ego/publish-without-org-to-html 1)
+            (setq ego/publish-without-org-to-html 2)))
+    
+        ;; ego/do-publication here
+        (ego/do-publication ,project-name
+                            ,test-and-not-publish
+                            ,force-all
+                            ,base-git-commit
+                            ,checkin-all
+                            ,publish-all)
+
+        ;; waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually
+        (while (not ego/async-publish-success)
+          (sit-for 1))
+
+        ;; return the result
+        (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
+          (buffer-string))
+        )
+     `(lambda (result)
+        (with-current-buffer (get-buffer-create ego/temp-buffer-name)
+          (insert (format "*EGO output* should be :\n %s \nego/async-do-publish done!" result))))))
+#+END_SRC
+
+you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
+
+* Dependencies
+
+1. [[http://www.gnu.org/software/emacs/][emacs]]: this is an "of-course" dependency
+2. [[http://orgmode.org/][org mode]]: v8.0 is required, please use =M-x org-version <RET>= to make sure you org mode version is not less than 8.0
+3. [[http://git-scm.com][git]]: a free and open source version control system
+4. [[https://github.com/Wilfred/mustache.el][mustache.el]]: a mustache templating library for Emacs
+5. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
+6. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
+7. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
+8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
+
+* Known issues
+
+- Currently the deletion change handler has not been implemented so
+  if you deleted some org sources, you may have to manually delete
+  corresponding generated html files.
+- URI path change detection is not available. That is, if you make a
+  post with the URI "/blog/2013/03/25/the-old-post-name" and then
+  change this value in your org source, org-webpage would be unable to
+  detect that this has happened. it will only publish a new html
+  file for you so you need to delete the old html file related to
+  the old URI manually.
+
+* Roadmap [1/3]
+- [X] Next/Previous Page links
+
+  Use =M-x org-insert-link= (Normal key binding is =C-c C-l=) and choose =ego-link:= to insert a link to an org file. The link will be exported as hyperlink to the correct html page.
+
+  The function can be applied to the condition of Next/Previous Page links -- Get a chain of files in a logical order rather than just a time sequence.
+
+  When reply "Is it a PERVOUS(bi-directional) link? " with "y" (according to the =M-x org-insert-link ego-link:= process), you can add the *bi-directional* link.
+
+  The link is assigned to class "ego_link" with label "span", you can customize it in CSS.
+
+- [ ] More themes
+- [ ] upload to melpa
