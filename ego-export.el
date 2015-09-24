@@ -29,6 +29,7 @@
 
 (require 'format-spec)
 (require 'ox)
+(require 'ido)
 (require 'ht)
 (require 'cl-lib)
 (require 'dash)
@@ -773,13 +774,13 @@ PUB-BASE-DIR is the root publication directory."
 
 (defun org-ego-link-complete-link (&optional arg)
   "Completion function for EGO-LINK. ARG does nothing."
-  (let* ((org-file (file-relative-name (read-file-name "enter file: " nil nil t)))
+  (let* ((org-file (file-relative-name (ido-read-file-name "enter file: " nil nil t)))
          (current-path (expand-file-name (buffer-name)))
          visiting file-buffer next-link-name)
     (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")
       (setq visiting (find-buffer-visiting org-file))
-      (with-current-buffer (setq file-buffer
-                                 (or visiting (find-file org-file)))
+      (with-current-buffer (switch-to-buffer (setq file-buffer
+                                 (or visiting (find-file org-file))))
         (setq next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t))
         (local-set-key "l" `(lambda ()
                               (interactive)
@@ -787,7 +788,7 @@ PUB-BASE-DIR is the root publication directory."
                               (local-unset-key "l")
                               (save-buffer)
                               (exit-recursive-edit)))
-        (message "Press 'l' to insert this '%s' and return" next-link-name)
+        (message "Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
         (recursive-edit))
       (or visiting (kill-buffer file-buffer))
       )

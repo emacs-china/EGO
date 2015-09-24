@@ -43,9 +43,9 @@
      :repository-html-branch "gh-pages"
      :summary nil
      :confound-email nil
+     :ignore-file-name-regexp "readme.org"
      :web-server-docroot ,(expand-file-name "~/webRoot/EGO")
-     :web-server-port 4321))
-  (setq ego/ignore-file-name-regexp "readme.org"))
+     :web-server-port 4321)))
 
 (ego/devtools-update-ego-config)
 

@@ -216,7 +216,7 @@ RSS page of org-website.
 
 A summary is a statistic page, Which can be used show pages
 based on \"tags\" , \"data\" , \"author\" and so on.
-it is similar Micorsoft Excel pivot table feature.
+it is similar Microsoft Excel pivot table feature.
 1. Type: alist
 2. Example1: ((\"tags\" :tags) (\"years\" :year) (\"authors\" :authors))
 2. Example2: ((\"按标签分类\" :tags) (\"按年度分类\" :year) (\"按作者分类\" :authors))
@@ -230,6 +230,10 @@ Ignore subdirs/categories for navigation.
 
 Names in this list will not showed in webpage navbar.
 
+
+  `:ignore-file-name-regexp'
+
+the file whose name(include path) match the regexp won't be exported.
 
   `:get-title-function'
 
@@ -381,9 +385,6 @@ You can see fallback value of above option in `ego/config-fallback'"
 </rss>"
   "Template for RSS rendering.")
 
-(defvar ego/ignore-file-name-regexp "\n"
-  "the file whose name(include path) match the regexp won't be exported.")
-
 (defvar ego/config-fallback
       `(:repository-directory nil
         :site-domain nil
@@ -402,6 +403,7 @@ You can see fallback value of above option in `ego/config-fallback'"
         :about ("About" "/about/")
         :rss ("RSS" "/rss.xml")
         :category-ignore-list ("themes" "assets")
+        :ignore-file-name-regexp "\n"
         :summary (("tags" :tags))
         :confound-email t
         :force-absolute-url t

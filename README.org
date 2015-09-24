@@ -177,6 +177,12 @@ And here is an example: (There are some important point so that you had better s
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
         (add-to-list 'load-path ,ego/load-directory)
 
+        ;;set color-theme
+        (add-to-list 'load-path ,(expand-file-name "~/.emacs.d/color-theme-6.6.0"))
+        (require 'color-theme-autoloads "color-theme-autoloads")
+        (color-theme-initialize)
+        (color-theme-dark-blue2)
+
         ;; set coding-system
         (set-terminal-coding-system 'utf-8-unix)
         (set-keyboard-coding-system 'utf-8-unix)
@@ -215,7 +221,7 @@ And here is an example: (There are some important point so that you had better s
           (if ,base-git-commit
               (setq ego/publish-without-org-to-html 1)
             (setq ego/publish-without-org-to-html 2)))
-    
+
         ;; ego/do-publication here
         (ego/do-publication ,project-name
                             ,test-and-not-publish
@@ -246,9 +252,10 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 3. [[http://git-scm.com][git]]: a free and open source version control system
 4. [[https://github.com/Wilfred/mustache.el][mustache.el]]: a mustache templating library for Emacs
 5. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
-6. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
-7. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
-8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
+6. ido.el: the library Emacs has contained
+7. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
+8. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
+9. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
 

@@ -32,7 +32,7 @@
 ;; EGO is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
 ;; and provides similar features as org-page, the main differents is as follow:
 
-;; 1. org-page focus on personal blog while ego is main used to
+;; 1. org-page focus on personal blog while EGO is main used to
 ;;    generate small project website.
 ;; 2. org-page use many customizable variables to configure org-page
 ;;    while EGO use an `org-publish-project-alist' style
@@ -52,7 +52,7 @@
 
 ;;; Code:
 
-(require 'ox)
+(require 'ox-html)
 (require 'ht)
 (require 'ego-util)
 (require 'ego-config)
@@ -125,10 +125,11 @@
     (message "Git branch operation and get changed files")
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
-    (ego/git-change-branch repo-dir org-branch)
+    (unless (equal org-branch (ego/git-branch-name repo-dir))
+        (ego/git-change-branch repo-dir org-branch))
     (setq repo-files
           (seq-filter `(lambda (string)
-                         (not (string-match ,ego/ignore-file-name-regexp string)))
+                         (not (string-match ,(ego/get-config-option :ignore-file-name-regexp) string)))
                       (when (functionp repo-files-function)
                         (funcall repo-files-function repo-dir))))
     (setq addition-files
@@ -136,13 +137,13 @@
             (funcall addition-files-function repo-dir)))
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
+    (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link
     (when (or (not (equal base-git-commit-test ego/publish-without-org-to-html))
               test-and-not-publish)
       (setq changed-files (if force-all
                               `(:update ,repo-files :delete nil)
                             (message "Getting all changed files, just waiting...")
                             (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
-      (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link, temporarily set it unusable.
       (message "Create necessary directory and prepare theme!")
       (when (file-directory-p store-dir)
         (delete-directory store-dir t t))
