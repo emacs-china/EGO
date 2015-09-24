@@ -209,18 +209,18 @@ M-x ego/do-publication
 </p>
 
 <ol class="org-ol">
-<li>Which project do you want to publish? 
-~发布哪个站点？</li>
-<li>Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. 
-~测试发布（y）还是真正发布到远端（n）？</li>
-<li>Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
-~发布全部（y）还是改变的那些文件（n）？</li>
-<li>(when (3) is n) Base git commit: HEAD~1 ? 
-~将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可）</li>
-<li>checkin all changed files? (input 'n' if you have done it) 
-~将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布。</li>
-<li>(when (2) is n) publish all branch? 
-~把所有 branch 推送到远端？（在第二项是 n 时出现的选项）</li>
+<li>Which project do you want to publish? <br  />
+~ <b>发布哪个站点？</b></li>
+<li>Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. <br  />
+~ <b>测试发布（y）还是真正发布到远端（n）？</b></li>
+<li>Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) <br  />
+~ <b>发布全部（y）还是改变的那些文件（n）？</b></li>
+<li>(when (3) is n) Base git commit: HEAD~1 ? <br  />
+~ <b>将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可）</b></li>
+<li>checkin all changed files? (input 'n' if you have done it) <br  />
+~ <b>将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布。</b></li>
+<li>(when (2) is n) publish all branch? <br  />
+~ <b>把所有 branch 推送到远端？（在第二项是 n 时出现的选项）</b></li>
 </ol>
 
 <p>
@@ -273,6 +273,12 @@ M-x ego/do-publication
       (add-to-list 'load-path ,(expand-file-name <span style="color: #7fffd4; font-style: italic;">"~/github/org-mode/lisp"</span>))
       (add-to-list 'load-path ,(expand-file-name <span style="color: #7fffd4; font-style: italic;">"~/github/org-mode/contrib/lisp"</span> t))
       (add-to-list 'load-path ,ego/load-directory)
+
+      <span style="color: #66cdaa; font-style: italic;">;;</span><span style="color: #66cdaa; font-style: italic;">set color-theme</span>
+      (add-to-list 'load-path ,(expand-file-name <span style="color: #7fffd4; font-style: italic;">"~/.emacs.d/color-theme-6.6.0"</span>))
+      (<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">color-theme-autoloads</span> <span style="color: #7fffd4; font-style: italic;">"color-theme-autoloads"</span>)
+      (color-theme-initialize)
+      (color-theme-dark-blue2)
 
       <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">set coding-system</span>
       (set-terminal-coding-system 'utf-8-unix)
