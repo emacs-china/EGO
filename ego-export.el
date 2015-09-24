@@ -788,7 +788,7 @@ PUB-BASE-DIR is the root publication directory."
                               (local-unset-key "l")
                               (save-buffer)
                               (exit-recursive-edit)))
-        (message "Press 'l' to insert this '%s'\n And then input description for  the PERVOUS link" next-link-name)
+        (message "Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
         (recursive-edit))
       (or visiting (kill-buffer file-buffer))
       )

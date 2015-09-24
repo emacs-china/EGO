@@ -32,7 +32,7 @@
 ;; EGO is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
 ;; and provides similar features as org-page, the main differents is as follow:
 
-;; 1. org-page focus on personal blog while ego is main used to
+;; 1. org-page focus on personal blog while EGO is main used to
 ;;    generate small project website.
 ;; 2. org-page use many customizable variables to configure org-page
 ;;    while EGO use an `org-publish-project-alist' style
@@ -129,7 +129,7 @@
         (ego/git-change-branch repo-dir org-branch))
     (setq repo-files
           (seq-filter `(lambda (string)
-                         (not (string-match ,ego/ignore-file-name-regexp string)))
+                         (not (string-match ,(ego/get-config-option :ignore-file-name-regexp) string)))
                       (when (functionp repo-files-function)
                         (funcall repo-files-function repo-dir))))
     (setq addition-files
