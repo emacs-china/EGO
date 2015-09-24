@@ -137,13 +137,13 @@
             (funcall addition-files-function repo-dir)))
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
+    (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link
     (when (or (not (equal base-git-commit-test ego/publish-without-org-to-html))
               test-and-not-publish)
       (setq changed-files (if force-all
                               `(:update ,repo-files :delete nil)
                             (message "Getting all changed files, just waiting...")
                             (ego/git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
-      (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link, temporarily set it unusable.
       (message "Create necessary directory and prepare theme!")
       (when (file-directory-p store-dir)
         (delete-directory store-dir t t))
