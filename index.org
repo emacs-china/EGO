@@ -87,6 +87,8 @@ M-x ego/do-publication
 6) (when (2) is n) publish all branch? \\
    ~ *把所有 branch 推送到远端？（在第二项是 n 时出现的选项）*
 
+*注意*: 当进行没测试过的发布时，任何未经测试的内容变化都不会被发布。也即，任何内容变化在真正发布之前必须经过测试发布。
+
 你可以在 *message* buffer 和 *EGO OUTPUT* buffer 里跟踪整个过程。
 
 ** 异步发布
