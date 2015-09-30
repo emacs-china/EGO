@@ -68,28 +68,29 @@
 <li><a href="#orgheadline7">异步发布</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline9">一些缺点</a></li>
-<li><a href="#orgheadline10">待完成事项</a></li>
-<li><a href="#orgheadline23">Tips in English</a>
+<li><a href="#orgheadline9">一些特点</a></li>
+<li><a href="#orgheadline10">一些缺点</a></li>
+<li><a href="#orgheadline11">待完成事项</a></li>
+<li><a href="#orgheadline24">Tips in English</a>
 <ul>
-<li><a href="#orgheadline11">How to install EGO in manual way</a></li>
-<li><a href="#orgheadline12">How to quickly build a EGO git repository</a></li>
-<li><a href="#orgheadline13">How to quickly add a new post</a></li>
-<li><a href="#orgheadline14">How to quickly insert EGO post template</a></li>
-<li><a href="#orgheadline15">How to configure the default slogan</a></li>
-<li><a href="#orgheadline16">How to add an avatar to the page?</a></li>
-<li><a href="#orgheadline17">How to change org source files branch to "master"?</a></li>
-<li><a href="#orgheadline18">How to save html file to branch: "gh-pages"?</a></li>
-<li><a href="#orgheadline19">How to add a github link</a></li>
-<li><a href="#orgheadline20">How to do site traffic analytics with Google Analytics?</a></li>
-<li><a href="#orgheadline21">How to disable commenting for posts under certain category?</a></li>
-<li><a href="#orgheadline22">How to disable commenting for posts under certain summary?</a></li>
+<li><a href="#orgheadline12">How to install EGO in manual way</a></li>
+<li><a href="#orgheadline13">How to quickly build a EGO git repository</a></li>
+<li><a href="#orgheadline14">How to quickly add a new post</a></li>
+<li><a href="#orgheadline15">How to quickly insert EGO post template</a></li>
+<li><a href="#orgheadline16">How to configure the default slogan</a></li>
+<li><a href="#orgheadline17">How to add an avatar to the page?</a></li>
+<li><a href="#orgheadline18">How to change org source files branch to "master"?</a></li>
+<li><a href="#orgheadline19">How to save html file to branch: "gh-pages"?</a></li>
+<li><a href="#orgheadline20">How to add a github link</a></li>
+<li><a href="#orgheadline21">How to do site traffic analytics with Google Analytics?</a></li>
+<li><a href="#orgheadline22">How to disable commenting for posts under certain category?</a></li>
+<li><a href="#orgheadline23">How to disable commenting for posts under certain summary?</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline26">Change Logs</a>
+<li><a href="#orgheadline27">Change Logs</a>
 <ul>
-<li><a href="#orgheadline24">v0.1</a></li>
-<li><a href="#orgheadline25">v0.9</a></li>
+<li><a href="#orgheadline25">v0.1</a></li>
+<li><a href="#orgheadline26">v0.9</a></li>
 </ul>
 </li>
 </ul>
@@ -125,12 +126,16 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 <h3 id="orgheadline3">设置</h3>
 <div class="outline-text-3" id="text-orgheadline3">
 <p>
-下面是 emacs-china 的设置，将其写入 emacs-china 即可。你可以仿照它来设置自己的站点：
+下面是 emacs-china 的设置，安装好 <a href="https://github.com/emacs-china/EGO">EGO</a> 后，将该设置写入配置即可管理 emacs-china 。
+</p>
+
+<p>
+CAUTION: 直接 clone emacs-china 后，需要 checkout master 和 source 后才能使用 emacs-china ，否则会导致意外情况。
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">the following is only needed if you install org-page manually</span>
+<pre class="src src-emacs-lisp"><span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">the following is only needed if you install EGO manually</span>
 (add-to-list 'load-path <span style="color: #7fffd4; font-style: italic;">"path/to/EGO"</span>)
 
 (<span style="color: #00ffff; font-weight: bold;">require</span> '<span style="color: #7fffd4; font-weight: bold;">ego</span>)
@@ -144,13 +149,18 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
                  <span style="color: #b0c4de; font-weight: bold;">:theme</span> (default) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992;&#30340;&#20027;&#39064;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:summary</span> ((<span style="color: #7fffd4; font-style: italic;">"years"</span> <span style="color: #b0c4de; font-weight: bold;">:year</span> <span style="color: #b0c4de; font-weight: bold;">:updates</span> 10) (<span style="color: #7fffd4; font-style: italic;">"authors"</span> <span style="color: #b0c4de; font-weight: bold;">:authors</span>) (<span style="color: #7fffd4; font-style: italic;">"tags"</span> <span style="color: #b0c4de; font-weight: bold;">:tags</span>)) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#23548;&#33322;&#26639;&#30340;&#35774;&#32622;&#65292;&#26377; category &#21644; summary &#20004;&#31181;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:source-browse-url</span> (<span style="color: #7fffd4; font-style: italic;">"Github"</span> <span style="color: #7fffd4; font-style: italic;">"https://github.com/emacs-china"</span>) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20320;&#30340;&#24037;&#31243;&#28304;&#20195;&#30721;&#25152;&#22312;&#30340;&#20301;&#32622;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:personal-disqus-shortname</span> <span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992; disqus &#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
-                 <span style="color: #b0c4de; font-weight: bold;">:personal-duoshuo-shortname</span> <span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992;&#22810;&#35828;&#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
+                 <span style="color: #b0c4de; font-weight: bold;">:personal-disqus-shortname</span> <span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992; disqus &#35780;&#35770;&#21151;&#33021;&#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
+                 <span style="color: #b0c4de; font-weight: bold;">:personal-duoshuo-shortname</span> <span style="color: #7fffd4; font-style: italic;">"emacs-china"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#20351;&#29992; &#22810;&#35828; &#35780;&#35770;&#21151;&#33021;&#30340;&#35805;&#65292;&#23427;&#30340;&#30701;&#21517;&#31216;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:confound-email</span> nil <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26159;&#21542;&#20445;&#25252;&#37038;&#20214;&#21517;&#31216;&#21602;&#65311; t &#26159;&#20445;&#25252;&#65292;nil &#26159;&#19981;&#20445;&#25252;&#65292;&#40664;&#35748;&#26159;&#20445;&#25252;</span>
+                 <span style="color: #b0c4de; font-weight: bold;">:ignore-file-name-regexp</span> <span style="color: #7fffd4; font-style: italic;">"readme.org"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26377;&#20123;&#19981;&#24819;&#21457;&#24067;&#25104; html &#30340; org &#25991;&#20214;&#65288;&#20294;&#26159;&#21448;&#24819;&#34987;&#23548;&#20837; git &#36827;&#34892;&#31649;&#29702;&#65289;&#65292;&#21487;&#20197;&#29992;&#36825;&#31181;&#27491;&#21017;&#34920;&#36798;&#30340;&#26041;&#24335;&#25490;&#38500;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:web-server-docroot</span> <span style="color: #7fffd4; font-style: italic;">"~/webRoot/emacs-china.github.io"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#30446;&#24405;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:web-server-port</span> 5432)) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#31471;&#21475;</span>
 </pre>
 </div>
+
+<p>
+TIP: 你可以仿照上面来设置自己的站点。
+</p>
 
 <p>
 你可以通过以下方式发现 EGO 的设置方法（英文）
@@ -219,9 +229,13 @@ M-x ego/do-publication
 ~ <b>将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可）</b></li>
 <li>checkin all changed files? (input 'n' if you have done it) <br  />
 ~ <b>将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布。</b></li>
-<li>(when (2) is n) publish all branch? <br  />
-~ <b>把所有 branch 推送到远端？（在第二项是 n 时出现的选项）</b></li>
+<li>(when (2) is n) There will be some questions for "publish-config" <br  />
+~ <b>对发布到远端的设置进行具体询问（在第二项是 n 时出现）</b></li>
 </ol>
+
+<p>
+<b>注意</b>: 当进行没测试过的发布时，任何未经测试的内容变化都不会被发布。也即，任何内容变化在真正发布之前必须经过测试发布。
+</p>
 
 <p>
 你可以在 <b>message</b> buffer 和 <b>EGO OUTPUT</b> buffer 里跟踪整个过程。
@@ -349,8 +363,27 @@ M-x ego/do-publication
 </div>
 
 <div id="outline-container-orgheadline9" class="outline-2">
-<h2 id="orgheadline9">一些缺点</h2>
+<h2 id="orgheadline9">一些特点</h2>
 <div class="outline-text-2" id="text-orgheadline9">
+<p>
+EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松很多。这里只点一下要点：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #b0c4de; font-weight: bold;">:theme</span> (haru emacs_love)
+</pre>
+</div>
+
+<p>
+<code>haru</code> 是在 <code>emacs_love</code> 上修改的主题。实际上 <code>:theme</code> 对应的括号里可以有很多主题，形成一个主题链（越开头越优先）。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10">一些缺点</h2>
+<div class="outline-text-2" id="text-orgheadline10">
 <p>
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。
 </p>
@@ -361,21 +394,21 @@ M-x ego/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline10" class="outline-2">
-<h2 id="orgheadline10">待完成事项</h2>
-<div class="outline-text-2" id="text-orgheadline10">
+<div id="outline-container-orgheadline11" class="outline-2">
+<h2 id="orgheadline11">待完成事项</h2>
+<div class="outline-text-2" id="text-orgheadline11">
 <p>
 目前只有一个 default 主题，希望能有一个好的主题收集办法。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline23" class="outline-2">
-<h2 id="orgheadline23">Tips in English<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></h2>
-<div class="outline-text-2" id="text-orgheadline23">
-</div><div id="outline-container-orgheadline11" class="outline-3">
-<h3 id="orgheadline11">How to install EGO in manual way</h3>
-<div class="outline-text-3" id="text-orgheadline11">
+<div id="outline-container-orgheadline24" class="outline-2">
+<h2 id="orgheadline24">Tips in English<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></h2>
+<div class="outline-text-2" id="text-orgheadline24">
+</div><div id="outline-container-orgheadline12" class="outline-3">
+<h3 id="orgheadline12">How to install EGO in manual way</h3>
+<div class="outline-text-3" id="text-orgheadline12">
 <p>
 To install EGO manually you should first install all
 dependencies listed in <b>README.org</b>. Once this has been completed,
@@ -404,9 +437,9 @@ NOTE: This is NOT recommended way for emacs beginner.
 </div>
 </div>
 
-<div id="outline-container-orgheadline12" class="outline-3">
-<h3 id="orgheadline12">How to quickly build a EGO git repository</h3>
-<div class="outline-text-3" id="text-orgheadline12">
+<div id="outline-container-orgheadline13" class="outline-3">
+<h3 id="orgheadline13">How to quickly build a EGO git repository</h3>
+<div class="outline-text-3" id="text-orgheadline13">
 <p>
 If you find that initializing a repository manually is too much trouble,
 you can run:
@@ -417,9 +450,9 @@ M-x ego/new-repository
 </div>
 </div>
 
-<div id="outline-container-orgheadline13" class="outline-3">
-<h3 id="orgheadline13">How to quickly add a new post</h3>
-<div class="outline-text-3" id="text-orgheadline13">
+<div id="outline-container-orgheadline14" class="outline-3">
+<h3 id="orgheadline14">How to quickly add a new post</h3>
+<div class="outline-text-3" id="text-orgheadline14">
 <pre class="example">
 M-x ego/new-post
 </pre>
@@ -435,18 +468,18 @@ This command will ask you the follow question:
 </div>
 </div>
 
-<div id="outline-container-orgheadline14" class="outline-3">
-<h3 id="orgheadline14">How to quickly insert EGO post template</h3>
-<div class="outline-text-3" id="text-orgheadline14">
+<div id="outline-container-orgheadline15" class="outline-3">
+<h3 id="orgheadline15">How to quickly insert EGO post template</h3>
+<div class="outline-text-3" id="text-orgheadline15">
 <pre class="example">
 M-x ego/insert-options-template
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgheadline15" class="outline-3">
-<h3 id="orgheadline15">How to configure the default slogan</h3>
-<div class="outline-text-3" id="text-orgheadline15">
+<div id="outline-container-orgheadline16" class="outline-3">
+<h3 id="orgheadline16">How to configure the default slogan</h3>
+<div class="outline-text-3" id="text-orgheadline16">
 <p>
 Add the follow two lines to you config alist.
 </p>
@@ -458,9 +491,9 @@ Add the follow two lines to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline16" class="outline-3">
-<h3 id="orgheadline16">How to add an avatar to the page?</h3>
-<div class="outline-text-3" id="text-orgheadline16">
+<div id="outline-container-orgheadline17" class="outline-3">
+<h3 id="orgheadline17">How to add an avatar to the page?</h3>
+<div class="outline-text-3" id="text-orgheadline17">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -480,9 +513,9 @@ Image URL example:
 </div>
 </div>
 
-<div id="outline-container-orgheadline17" class="outline-3">
-<h3 id="orgheadline17">How to change org source files branch to "master"?</h3>
-<div class="outline-text-3" id="text-orgheadline17">
+<div id="outline-container-orgheadline18" class="outline-3">
+<h3 id="orgheadline18">How to change org source files branch to "master"?</h3>
+<div class="outline-text-3" id="text-orgheadline18">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -493,9 +526,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline18" class="outline-3">
-<h3 id="orgheadline18">How to save html file to branch: "gh-pages"?</h3>
-<div class="outline-text-3" id="text-orgheadline18">
+<div id="outline-container-orgheadline19" class="outline-3">
+<h3 id="orgheadline19">How to save html file to branch: "gh-pages"?</h3>
+<div class="outline-text-3" id="text-orgheadline19">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -506,9 +539,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline19" class="outline-3">
-<h3 id="orgheadline19">How to add a github link</h3>
-<div class="outline-text-3" id="text-orgheadline19">
+<div id="outline-container-orgheadline20" class="outline-3">
+<h3 id="orgheadline20">How to add a github link</h3>
+<div class="outline-text-3" id="text-orgheadline20">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -519,9 +552,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline20" class="outline-3">
-<h3 id="orgheadline20">How to do site traffic analytics with Google Analytics?</h3>
-<div class="outline-text-3" id="text-orgheadline20">
+<div id="outline-container-orgheadline21" class="outline-3">
+<h3 id="orgheadline21">How to do site traffic analytics with Google Analytics?</h3>
+<div class="outline-text-3" id="text-orgheadline21">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -532,9 +565,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline21" class="outline-3">
-<h3 id="orgheadline21">How to disable commenting for posts under certain category?</h3>
-<div class="outline-text-3" id="text-orgheadline21">
+<div id="outline-container-orgheadline22" class="outline-3">
+<h3 id="orgheadline22">How to disable commenting for posts under certain category?</h3>
+<div class="outline-text-3" id="text-orgheadline22">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span style="color: #00ffff; font-weight: bold;">setq</span> owp/category-config-alist
@@ -561,9 +594,9 @@ customize except you are an expert)</li>
 </div>
 </div>
 
-<div id="outline-container-orgheadline22" class="outline-3">
-<h3 id="orgheadline22">How to disable commenting for posts under certain summary?</h3>
-<div class="outline-text-3" id="text-orgheadline22">
+<div id="outline-container-orgheadline23" class="outline-3">
+<h3 id="orgheadline23">How to disable commenting for posts under certain summary?</h3>
+<div class="outline-text-3" id="text-orgheadline23">
 <p>
 Feature left for improvement.
 </p>
@@ -571,12 +604,12 @@ Feature left for improvement.
 </div>
 </div>
 
-<div id="outline-container-orgheadline26" class="outline-2">
-<h2 id="orgheadline26">Change Logs</h2>
-<div class="outline-text-2" id="text-orgheadline26">
-</div><div id="outline-container-orgheadline24" class="outline-3">
-<h3 id="orgheadline24">v0.1</h3>
-<div class="outline-text-3" id="text-orgheadline24">
+<div id="outline-container-orgheadline27" class="outline-2">
+<h2 id="orgheadline27">Change Logs</h2>
+<div class="outline-text-2" id="text-orgheadline27">
+</div><div id="outline-container-orgheadline25" class="outline-3">
+<h3 id="orgheadline25">v0.1</h3>
+<div class="outline-text-3" id="text-orgheadline25">
 <ul class="org-ul">
 <li>Initial version, org-webpage which tumashu forks from org-page.</li>
 <li>Use org-publish style config.</li>
@@ -585,9 +618,9 @@ Feature left for improvement.
 </div>
 </div>
 
-<div id="outline-container-orgheadline25" class="outline-3">
-<h3 id="orgheadline25">v0.9</h3>
-<div class="outline-text-3" id="text-orgheadline25">
+<div id="outline-container-orgheadline26" class="outline-3">
+<h3 id="orgheadline26">v0.9</h3>
+<div class="outline-text-3" id="text-orgheadline26">
 <ul class="org-ul">
 <li>Initial version, EGO which kuangdash forks from org-webpage</li>
 <li>More stability.</li>
