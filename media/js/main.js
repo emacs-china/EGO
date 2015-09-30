@@ -69,7 +69,7 @@ function popupActivate (evt) {
 
     if(evt.target.firstChild.parentNode.nextSibling.tagName == "SUP"){
         var footRef = evt.target.nextSibling.childNodes[0].id;
-        var docNode = document.getElementById("fn."+footRef.slice(5));
+        var docNode = document.getElementById("fn."+footRef.slice(4));
         var nodeNew = docNode.parentNode.parentNode.cloneNode(true);
         balloon.replaceChild(nodeNew,balloon.lastChild);
         balloon.style.visibility="visible";
