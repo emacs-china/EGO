@@ -124,8 +124,18 @@ M-x ego/do-publication
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
             (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
-            (a (unless p (y-or-n-p "publish all branch? "))))
+            (a nil))
        (list j p f b c a)))
+    ;; set ego remote push (publish-config) 远端发布的设置
+    (unless test-and-not-publish
+      (setq ego/current-project-name project-name)
+      (setq ego/last-project-name project-name)
+      (setq publish-config
+            (ego/git-get-publish-config (ego/get-repository-directory)
+                                        (ego/get-config-option :repository-org-branch)
+                                        (ego/get-config-option :repository-html-branch))))
+    (message "See *EGO OUTPUT* buffer and *emacs* buffer for information")
+
     (async-start
      `(lambda ()
         ;; load packages and set load-path 这里开始调用新进程，在新进程的发布开始之前，需要配置新进程使得 ego/do-publication 命令正常工作
