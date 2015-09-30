@@ -93,7 +93,7 @@ a hash table accordint to current buffer."
            ("author" (or (ego/read-org-option "AUTHOR")
                          user-full-name "Unknown Author"))
            ("description" (ego/read-org-option "DESCRIPTION"))
-           ("keywords" (ego/read-org-option "KEYWORDS"))))))
+           ("keywords" (ego/read-org-option "TAGS"))))))
 
 (defun ego/render-navigation-bar (&optional param-table)
   "Render the navigation bar on each page. it will be read firstly from

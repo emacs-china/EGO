@@ -29,7 +29,7 @@
 
 (require 'ht)
 (require 'ego-config)
-
+(require 'ido)
 
 (defun ego/compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
@@ -219,6 +219,42 @@ alternative to `ht-from-plist'."
             (value (cadr pair)))
         (ht-set h key value)))))
 
+(defun ego/car-compare (project-config-a project-config-b)
+  "For EGO/PROJECT-CONFIG-ALIST"
+  (equal (car project-config-a) (car project-config-b)))
+
+(defun ego/ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
+  "Read multiple items with ido-completing-read. Reading stops
+  when the user enters SENTINEL. By default, SENTINEL is
+  \"*done*\". SENTINEL is disambiguated with clashing completions
+  by appending _ to SENTINEL until it becomes unique. So if there
+  are multiple values that look like SENTINEL, the one with the
+  most _ at the end is the actual sentinel value. See
+  documentation for `ido-completing-read' for details on the
+  other parameters."
+  (let
+      ((sentinel (if sentinel sentinel "*done*"))
+       (done-reading nil)
+       (remain-choices choices)
+       (res ()))
+
+    ;; uniquify the SENTINEL value
+    (while (find sentinel choices)
+      (setq sentinel (concat sentinel "_")))
+    (setq remain-choices (cons sentinel choices))
+
+    ;; read some choices
+    (while (not done-reading)
+      (setq this-choice (ido-completing-read prompt remain-choices predicate
+                                             require-match initial-input hist def))
+      (if (equal this-choice sentinel)
+          (setq done-reading t)
+        (setq res (cons this-choice res))
+        (setq remain-choices (delete this-choice remain-choices))))
+
+    ;; return the result
+    res
+    ))
 
 (provide 'ego-util)
 
