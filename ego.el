@@ -71,7 +71,7 @@
                                      force-all
                                      base-git-commit
                                      checkin-all
-                                     publish-all)
+                                     publish-config)
   "The main entrance of ego. The entire procedure is:
 1) verify configuration
 2) read changed files on \"org branch\" of \"repository directory\",
@@ -85,7 +85,7 @@
    if TEST-AND-NOT-PUBLISH is t, test the generated html files by the web-server,
    otherwise html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
 4) CHECKIN-ALL will checkin all the org-files, input 'n' if you have done it or don't want to checkin all.
-5) PUBLISH-ALL will publish all branch in the repository, input 'n' if you don't want to publish all. "
+5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive
    (let* ((j (or ego/default-project-name
                  (completing-read "Which project do you want to publish? "
@@ -96,7 +96,7 @@
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
-          (a (unless p (y-or-n-p "publish all branch? (input 'n' if you only want to publish html)"))))
+          (a nil))
      (list j p f b c a)))
 
   (setq ego/current-project-name project-name)
@@ -126,7 +126,7 @@
     (when checkin-all
       (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
     (unless (equal org-branch (ego/git-branch-name repo-dir))
-        (ego/git-change-branch repo-dir org-branch))
+      (ego/git-change-branch repo-dir org-branch))
     (setq repo-files
           (seq-filter `(lambda (string)
                          (not (string-match ,(ego/get-config-option :ignore-file-name-regexp) string)))
@@ -175,23 +175,15 @@
            (ego/git-commit-changes repo-dir (concat "Update published html files, "
                                                     "committed by EGO."))
            (ego/git-change-branch repo-dir orig-branch)
-           (message "Local publish finished, see *EGO output* buffer to get more information (Such as \"remote publish condition\")")
-           (setq remote-repos (ego/git-remote-name repo-dir))
-           (if (not remote-repos)
-               (message "No valid remote repository found.")
-             (let (repo)
-               (if (> (length remote-repos) 1)
-                   (setq repo (read-string
-                               (format "Which repo to push %s: "
-                                       (prin1-to-string remote-repos))
-                               (car remote-repos)))
-                 (setq repo (car remote-repos)))
-               (if (not (member repo remote-repos))
-                   (message "Invalid remote repository '%s'." repo)
-                 (ego/git-push-remote repo-dir
-                                      repo
-                                      html-branch publish-all))))
-           (message "Publication finished: on branch '%s' of repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." html-branch repo-dir)))
+           (message "Local Publication finished, see *EGO output* buffer to get more information.")
+           (unless publish-config
+             (setq publish-config
+                   (ego/git-get-publish-config repo-dir org-branch html-branch)))
+           (when publish-config
+             (ego/git-push-remote repo-dir
+                                  (car publish-config)
+                                  (cdr publish-config))
+             (message "Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))))
     (setq ego/current-project-name nil)))
 
 (defun ego/new-repository (repo-dir)
@@ -267,7 +259,7 @@ to save generated about.org."
    (expand-file-name "about.org" save-dir)))
 
 (defun ego/insert-options-template (&optional title uri
-                                              keywords tags description)
+                                              tags description)
   "Insert a template into current buffer with information for exporting.
 
 TITLE: the title of this post
@@ -292,7 +284,6 @@ month and day): " (unless (string= i "")
                                    (?m . "%m")
                                    (?d . "%d")
                                    (?t . ,(ego/encode-string-to-url i)))))))
-          (k (read-string "Keywords(separated by comma and space [, ]): "))
           (a (read-string "Tags(separated by comma and space [, ]): "))
           (d (read-string "Description: ")))
      (list i u k a d)))
@@ -303,10 +294,9 @@ month and day): " (unless (string= i "")
 #+EMAIL:       %s
 #+DATE:        %s
 
-# #+URI:         %s
-# #+KEYWORDS:    %s
-# #+TAGS:        %s
-# #+DESCRIPTION: %s
+#+URI:         %s
+#+TAGS:        %s
+#+DESCRIPTION: %s
 
 #+LANGUAGE:    %s
 #+OPTIONS:     H:%d num:%s toc:%s \\n:%s ::%s |:%s ^:%s -:%s f:%s *:%s <:%s
@@ -316,9 +306,6 @@ month and day): " (unless (string= i "")
            user-mail-address
            (format-time-string (substring (car org-time-stamp-formats) 1 -1))
            (if (string= uri "") "<TODO: insert your uri here>" uri)
-           (if (string= keywords "")
-               "<TODO: insert your keywords here>"
-             keywords)
            (if (string= tags "") "<TODO: insert your tags here>" tags)
            (if (string= description "")
                "<TODO: insert your description here>"
@@ -380,7 +367,6 @@ responsibility to guarantee the two parameters are valid."
       (ego/insert-options-template "<Insert Your Title Here>"
                                    (format "/%s/%%y/%%m/%%d/%%t/ Or /%s/%%t/"
                                            category category)
-                                   "keyword1, keyword2, keyword3"
                                    "tag1, tag2, tag3"
                                    "<Add description here>"))
     (save-buffer))

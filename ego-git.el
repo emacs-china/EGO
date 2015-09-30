@@ -106,11 +106,11 @@ Create a new branch named BRANCH-NAME if BRANCH-NAME doesn't exist."
            (message "Create a new branch with name '%s'." branch-name))
           ((string-match "already exists" output)
            (setq output (ego/shell-command
-                          repo-dir
-                          (concat "env LC_ALL=C git checkout " branch-name)
-                          t)))
+                         repo-dir
+                         (concat "env LC_ALL=C git checkout " branch-name)
+                         t)))
           (t (error "Failed to change branch to '%s' of repository '%s'."
-             branch-name repo-dir)))
+                    branch-name repo-dir)))
     (when (string-match "\\`error" output)
       (error "Failed to change branch to '%s' of repository '%s'."
              branch-name repo-dir))))
@@ -202,25 +202,41 @@ presented by REPO-DIR, return nil if there is no remote repository."
                  t)))
     (delete "" (split-string output "\n"))))
 
-(defun ego/git-push-remote (repo-dir remote-repo branch publish-all)
+(defun ego/git-get-publish-config (repo-dir org-branch html-branch)
+  "Get publish-config argument for ego/do-publication."
+  (let ((remote-repos (ego/git-remote-name repo-dir))
+            repo branchs)
+        (if (not remote-repos)
+            (error "No valid remote repository found.")
+          (if (> (length remote-repos) 1)
+              (setq repo (ido-completing-read "Which remote to push: "
+                                              remote-repos nil t))
+            (setq repo (car remote-repos)))
+          (setq branchs
+                (ego/ido-completing-read-multiple "(multiple choices)branchs to push: "
+                                                  (list org-branch html-branch) nil t))
+          (if (or (not (member repo remote-repos)) (not branchs))
+              (error "Invalid remote repository '%s'." repo)
+            (cons repo branchs)))))
+
+(defun ego/git-push-remote (repo-dir remote-repo branchs)
   "This function will push local branch to remote repository, REPO-DIR is the
 local git repository, REMOTE-REPO is the remote repository, BRANCH is the name
 of branch will be pushed (the branch name will be the same both in local and
 remote repository), and if there is no branch named BRANCH in remote repository,
 it will be created."
   (let* ((default-directory (file-name-as-directory repo-dir))
-         (cmd (if publish-all
-                  (append '("git")
-                          `("push" "--all"))
-                (append '("git")
-                        `("push" ,remote-repo ,(concat branch ":" branch)))))
+         (cmd (append '("git")
+                      `("push" ,remote-repo ,@(mapcar (lambda (branch)
+                                                       (concat branch ":" branch))
+                                                     branchs))))
          (proc (apply #'start-process "EGO-Async" ego/temp-buffer-name cmd)))
     (setq ego/async-publish-success nil)
     (set-process-filter proc `(lambda (proc output)
                                 (if (or (string-match "fatal" output)
                                         (string-match "error" output))
                                     (error "Failed to push branch '%s' to remote repository '%s'."
-                                           ,branch ,remote-repo)
+                                           ,(prin1-to-string branchs) ,remote-repo)
                                   (with-current-buffer (get-buffer-create ego/temp-buffer-name)
                                     (setf (point) (point-max))
                                     (insert "remote push success!")
