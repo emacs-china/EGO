@@ -279,8 +279,18 @@ M-x ego/do-publication
           (f (y-or-n-p (format <span style="color: #7fffd4; font-style: italic;">"Publish all org files of \"%s\" project? "</span> j)))
           (b (<span style="color: #00ffff; font-weight: bold;">unless</span> f (read-string <span style="color: #7fffd4; font-style: italic;">"Base git commit: "</span> <span style="color: #7fffd4; font-style: italic;">"HEAD~1"</span>)))
           (c (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"checkin all changed files? (input 'n' if you have done it)"</span>))
-          (a (<span style="color: #00ffff; font-weight: bold;">unless</span> p (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"publish all branch? "</span>))))
+          (a nil))
      (list j p f b c a)))
+  <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">set ego remote push (publish-config) &#36828;&#31471;&#21457;&#24067;&#30340;&#35774;&#32622;</span>
+  (<span style="color: #00ffff; font-weight: bold;">unless</span> test-and-not-publish
+    (<span style="color: #00ffff; font-weight: bold;">setq</span> ego/current-project-name project-name)
+    (<span style="color: #00ffff; font-weight: bold;">setq</span> ego/last-project-name project-name)
+    (<span style="color: #00ffff; font-weight: bold;">setq</span> publish-config
+          (ego/git-get-publish-config (ego/get-repository-directory)
+                                      (ego/get-config-option <span style="color: #b0c4de; font-weight: bold;">:repository-org-branch</span>)
+                                      (ego/get-config-option <span style="color: #b0c4de; font-weight: bold;">:repository-html-branch</span>))))
+  (message <span style="color: #7fffd4; font-style: italic;">"See *EGO OUTPUT* buffer and *emacs* buffer for information"</span>)
+
   (<span style="color: #00ffff; font-weight: bold;">async-start</span>
    `(<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
       <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">load packages and set load-path &#36825;&#37324;&#24320;&#22987;&#35843;&#29992;&#26032;&#36827;&#31243;&#65292;&#22312;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#24320;&#22987;&#20043;&#21069;&#65292;&#38656;&#35201;&#37197;&#32622;&#26032;&#36827;&#31243;&#20351;&#24471; ego/do-publication &#21629;&#20196;&#27491;&#24120;&#24037;&#20316;</span>

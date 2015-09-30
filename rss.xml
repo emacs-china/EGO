@@ -1,68 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <title>EMACS-CHINA</title>
-    <link>http://emacs-china.github.io</link>
-    <description>=============&gt;集思广益</description>
-    <pubDate>周三, 30 9月 2015 23:32:39 中国标准时间</pubDate>
-    <lastBuildDate>周三, 30 9月 2015 23:32:39 中国标准时间</lastBuildDate>
+    <title>EGO</title>
+    <link>http://emacs-china.github.io/EGO</link>
+    <description>Static site senerator based on Emacs, Git and Org-mode</description>
+    <pubDate>周四, 01 10月 2015 02:36:11 中国标准时间</pubDate>
+    <lastBuildDate>周四, 01 10月 2015 02:36:11 中国标准时间</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>ego static site generator (https://github.com/emacs-china/ego)</generator>
-<item>
-<title>使用 ctex 将 org 文件转化为 pdf</title>
-<link>http://emacs-china.github.io/blog/2015/04/20/使用-ctex-将-org-文件转化为-pdf/</link>
-<description>No Description</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/04/20/使用-ctex-将-org-文件转化为-pdf/</guid>
-</item>
-<item>
-<title>介绍一下 org-mode 内置的模板系统</title>
-<link>http://emacs-china.github.io/blog/2015/04/20/介绍一下-org-mode-内置的模板系统/</link>
-<description>No Description</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/04/20/介绍一下-org-mode-内置的模板系统/</guid>
-</item>
-<item>
-<title>org-mode 导出 html 时删除中文与中文之间多余的空格</title>
-<link>http://emacs-china.github.io/blog/2015/04/20/org-mode-导出-html-时删除中文与中文之间多余的空格/</link>
-<description>No Description</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/04/20/org-mode-导出-html-时删除中文与中文之间多余的空格/</guid>
-</item>
-<item>
-<title>Quick Guide for Org-page</title>
-<link>http://emacs-china.github.io/blog/2013/08/24/quick-guide-for-org-page/</link>
-<description>No Description</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2013/08/24/quick-guide-for-org-page/</guid>
-</item>
-<item>
-<title>org-page 的配置与使用</title>
-<link>http://emacs-china.github.io/blog/2015/04/15/org-page的配置与使用</link>
-<description>org-page的配置与使用</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/04/15/org-page的配置与使用</guid>
-</item>
-<item>
-<title>异步安装 emacs package</title>
-<link>http://emacs-china.github.io/blog/2015/06/01/异步安装-emacs-package</link>
-<description>install packages asynchronically</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/06/01/异步安装-emacs-package</guid>
-</item>
-<item>
-<title>如何流畅地管理 emacs-china 主站点</title>
-<link>http://emacs-china.github.io/blog/2015/09/27/如何流畅地管理-emacs-china</link>
-<description>让 emacs-china 主站点的更新简洁一些</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/09/27/如何流畅地管理-emacs-china</guid>
-</item>
-<item>
-<title>建站日</title>
-<link>http://emacs-china.github.io/blog/2015/03/15/建站日/</link>
-<description>site-date</description>
-<pubDate>2015-09-30</pubDate>
-<guid>http://emacs-china.github.io/blog/2015/03/15/建站日/</guid>
-</item>
 </channel>
 </rss>
