@@ -102,7 +102,9 @@ The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you
                    :confound-email nil
                    :ignore-file-name-regexp "readme.org"
                    :web-server-docroot "~/webRoot/emacs-china.github.io"
-                   :web-server-port 5432))
+                   :web-server-port 5432)
+                 t
+                 'ego/car-compare)
 #+END_SRC
 
 You can find more config options and theirs default values by commands:

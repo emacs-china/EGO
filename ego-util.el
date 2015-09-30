@@ -219,6 +219,10 @@ alternative to `ht-from-plist'."
             (value (cadr pair)))
         (ht-set h key value)))))
 
+(defun ego/car-compare (project-config-a project-config-b)
+  "For EGO/PROJECT-CONFIG-ALIST"
+  (equal (car project-config-a) (car project-config-b)))
+
 (defun ego/ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
   "Read multiple items with ido-completing-read. Reading stops
   when the user enters SENTINEL. By default, SENTINEL is
