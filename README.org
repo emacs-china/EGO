@@ -130,6 +130,13 @@ Using the following command to create a new post:
 M-x ego/new-post
 #+END_EXAMPLE
 
+** Test Post
+Using the following command to test current opening org-file:
+#+BEGIN_EXAMPLE
+M-x ego/test-current-page
+#+END_EXAMPLE
+You can see the html version of the org-file in browser.
+
 ** Publication
 The simplest way is run:
 

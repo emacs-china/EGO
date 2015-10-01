@@ -163,7 +163,7 @@
              (setq ego/publish-without-org-to-html 1))
            (message "test the generated htmls in %s." test-dir)
            (setq httpd-port (ego/get-config-option :web-server-port))
-           (httpd-serve-directory (ego/get-config-option :web-server-docroot))
+           (httpd-serve-directory test-dir)
            (browse-url (format "http://%s:%d" system-name httpd-port)))
           (to-repo
            (message "pre-publish accomplished ~ begin real publish")
@@ -185,6 +185,53 @@
                                   (cdr publish-config))
              (message "Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))))
     (setq ego/current-project-name nil)))
+
+(defun ego/test-current-page (project-name)
+  "Test the current opening org-file!"
+  (interactive
+   (let* ((j (or ego/default-project-name
+                 (completing-read "Which project do you want to publish? "
+                                  (delete-dups
+                                   (mapcar 'car ego/project-config-alist))
+                                  nil t nil nil ego/last-project-name))))
+     (list j)))
+  (setq ego/current-project-name project-name)
+  (setq ego/last-project-name project-name)
+  (let ((preparation-function
+         (ego/get-config-option :preparation-function)))
+    (when preparation-function
+      (run-hooks 'preparation-function)))
+  (setq ego/item-cache nil)
+  (let* ((repo-dir (ego/get-repository-directory))
+         (repo-files-function (ego/get-config-option :repo-files-function))
+         (addition-files-function (ego/get-config-option :addition-files-function))
+         (test-dir (expand-file-name (ego/get-config-option :web-server-docroot)))
+         (store-dir "~/.ego-tmp/") ; TODO customization
+         (org-file-to-test (list (expand-file-name (buffer-file-name) repo-dir)))
+         addition-files changed-files test-uri)
+    (setq addition-files
+          (when (functionp addition-files-function)
+            (funcall addition-files-function repo-dir)))
+    (setq changed-files `(:update ,org-file-to-test :delete nil))
+    (setq test-uri (plist-get (car (ego/get-org-file-options test-dir nil))
+                              :uri))
+    (message "Create necessary directory and prepare theme!")
+    (when (file-directory-p store-dir)
+      (delete-directory store-dir t t))
+    (make-directory store-dir t)
+    (ego/prepare-theme-resources store-dir)
+    (message "Pre-publish all files needed to be publish, waiting...")
+    (ego/publish-changes org-file-to-test addition-files changed-files store-dir)
+    (message "Pre-publish finished, output directory: %s." store-dir)
+    (setq ego/publish-without-org-to-html nil)
+    (unless (file-directory-p test-dir)
+      (make-directory test-dir t))
+    (copy-directory store-dir test-dir t t t)
+    (setq ego/publish-without-org-to-html nil)
+    (message "test the generated htmls in %s." test-dir)
+    (setq httpd-port (ego/get-config-option :web-server-port))
+    (httpd-serve-directory test-dir)
+    (browse-url (format "http://%s:%d%s" system-name httpd-port test-uri))))
 
 (defun ego/new-repository (repo-dir)
   "Generate a new git repository in directory REPO-DIR, which can be
