@@ -58,39 +58,40 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orgheadline1">介绍</a></li>
-<li><a href="#orgheadline8">使用方法</a>
+<li><a href="#orgheadline9">使用方法</a>
 <ul>
 <li><a href="#orgheadline2">安装</a></li>
 <li><a href="#orgheadline3">设置</a></li>
 <li><a href="#orgheadline4">新建 Repository</a></li>
 <li><a href="#orgheadline5">新建文章</a></li>
-<li><a href="#orgheadline6">发布</a></li>
-<li><a href="#orgheadline7">异步发布</a></li>
+<li><a href="#orgheadline6">测试单独文章的 html 页面</a></li>
+<li><a href="#orgheadline7">发布</a></li>
+<li><a href="#orgheadline8">异步发布</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline9">一些特点</a></li>
-<li><a href="#orgheadline10">一些缺点</a></li>
-<li><a href="#orgheadline11">待完成事项</a></li>
-<li><a href="#orgheadline24">Tips in English</a>
+<li><a href="#orgheadline10">一些特点</a></li>
+<li><a href="#orgheadline11">一些缺点</a></li>
+<li><a href="#orgheadline12">待完成事项</a></li>
+<li><a href="#orgheadline25">Tips in English</a>
 <ul>
-<li><a href="#orgheadline12">How to install EGO in manual way</a></li>
-<li><a href="#orgheadline13">How to quickly build a EGO git repository</a></li>
-<li><a href="#orgheadline14">How to quickly add a new post</a></li>
-<li><a href="#orgheadline15">How to quickly insert EGO post template</a></li>
-<li><a href="#orgheadline16">How to configure the default slogan</a></li>
-<li><a href="#orgheadline17">How to add an avatar to the page?</a></li>
-<li><a href="#orgheadline18">How to change org source files branch to "master"?</a></li>
-<li><a href="#orgheadline19">How to save html file to branch: "gh-pages"?</a></li>
-<li><a href="#orgheadline20">How to add a github link</a></li>
-<li><a href="#orgheadline21">How to do site traffic analytics with Google Analytics?</a></li>
-<li><a href="#orgheadline22">How to disable commenting for posts under certain category?</a></li>
-<li><a href="#orgheadline23">How to disable commenting for posts under certain summary?</a></li>
+<li><a href="#orgheadline13">How to install EGO in manual way</a></li>
+<li><a href="#orgheadline14">How to quickly build a EGO git repository</a></li>
+<li><a href="#orgheadline15">How to quickly add a new post</a></li>
+<li><a href="#orgheadline16">How to quickly insert EGO post template</a></li>
+<li><a href="#orgheadline17">How to configure the default slogan</a></li>
+<li><a href="#orgheadline18">How to add an avatar to the page?</a></li>
+<li><a href="#orgheadline19">How to change org source files branch to "master"?</a></li>
+<li><a href="#orgheadline20">How to save html file to branch: "gh-pages"?</a></li>
+<li><a href="#orgheadline21">How to add a github link</a></li>
+<li><a href="#orgheadline22">How to do site traffic analytics with Google Analytics?</a></li>
+<li><a href="#orgheadline23">How to disable commenting for posts under certain category?</a></li>
+<li><a href="#orgheadline24">How to disable commenting for posts under certain summary?</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline27">Change Logs</a>
+<li><a href="#orgheadline28">Change Logs</a>
 <ul>
-<li><a href="#orgheadline25">v0.1</a></li>
-<li><a href="#orgheadline26">v0.9</a></li>
+<li><a href="#orgheadline26">v0.1</a></li>
+<li><a href="#orgheadline27">v0.9</a></li>
 </ul>
 </li>
 </ul>
@@ -110,9 +111,9 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8">使用方法</h2>
-<div class="outline-text-2" id="text-orgheadline8">
+<div id="outline-container-orgheadline9" class="outline-2">
+<h2 id="orgheadline9">使用方法</h2>
+<div class="outline-text-2" id="text-orgheadline9">
 </div><div id="outline-container-orgheadline2" class="outline-3">
 <h3 id="orgheadline2">安装</h3>
 <div class="outline-text-3" id="text-orgheadline2">
@@ -206,8 +207,21 @@ M-x ego/new-post
 </div>
 
 <div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">发布</h3>
+<h3 id="orgheadline6">测试单独文章的 html 页面</h3>
 <div class="outline-text-3" id="text-orgheadline6">
+<p>
+使用以下命令可以生成当前 org 文件所对应的 html 文件，并浏览：
+</p>
+
+<pre class="example">
+M-x ego/test-current-page
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">发布</h3>
+<div class="outline-text-3" id="text-orgheadline7">
 <p>
 用以下命令生成 html 文件，并按需传送到远程端：
 </p>
@@ -245,9 +259,9 @@ M-x ego/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">异步发布</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">异步发布</h3>
+<div class="outline-text-3" id="text-orgheadline8">
 <p>
 你可以使用 <code>async.el</code> 包来包裹 <code>ego/do-publication</code> 命令，使得该命令异步执行。
 </p>
@@ -374,9 +388,9 @@ M-x ego/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline9" class="outline-2">
-<h2 id="orgheadline9">一些特点</h2>
-<div class="outline-text-2" id="text-orgheadline9">
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10">一些特点</h2>
+<div class="outline-text-2" id="text-orgheadline10">
 <p>
 EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松很多。这里只点一下要点：
 </p>
@@ -393,9 +407,9 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 </div>
 </div>
 
-<div id="outline-container-orgheadline10" class="outline-2">
-<h2 id="orgheadline10">一些缺点</h2>
-<div class="outline-text-2" id="text-orgheadline10">
+<div id="outline-container-orgheadline11" class="outline-2">
+<h2 id="orgheadline11">一些缺点</h2>
+<div class="outline-text-2" id="text-orgheadline11">
 <p>
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。
 </p>
@@ -406,21 +420,21 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 </div>
 </div>
 
-<div id="outline-container-orgheadline11" class="outline-2">
-<h2 id="orgheadline11">待完成事项</h2>
-<div class="outline-text-2" id="text-orgheadline11">
+<div id="outline-container-orgheadline12" class="outline-2">
+<h2 id="orgheadline12">待完成事项</h2>
+<div class="outline-text-2" id="text-orgheadline12">
 <p>
 目前只有一个 default 主题，希望能有一个好的主题收集办法。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline24" class="outline-2">
-<h2 id="orgheadline24">Tips in English<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></h2>
-<div class="outline-text-2" id="text-orgheadline24">
-</div><div id="outline-container-orgheadline12" class="outline-3">
-<h3 id="orgheadline12">How to install EGO in manual way</h3>
-<div class="outline-text-3" id="text-orgheadline12">
+<div id="outline-container-orgheadline25" class="outline-2">
+<h2 id="orgheadline25">Tips in English<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></h2>
+<div class="outline-text-2" id="text-orgheadline25">
+</div><div id="outline-container-orgheadline13" class="outline-3">
+<h3 id="orgheadline13">How to install EGO in manual way</h3>
+<div class="outline-text-3" id="text-orgheadline13">
 <p>
 To install EGO manually you should first install all
 dependencies listed in <b>README.org</b>. Once this has been completed,
@@ -449,9 +463,9 @@ NOTE: This is NOT recommended way for emacs beginner.
 </div>
 </div>
 
-<div id="outline-container-orgheadline13" class="outline-3">
-<h3 id="orgheadline13">How to quickly build a EGO git repository</h3>
-<div class="outline-text-3" id="text-orgheadline13">
+<div id="outline-container-orgheadline14" class="outline-3">
+<h3 id="orgheadline14">How to quickly build a EGO git repository</h3>
+<div class="outline-text-3" id="text-orgheadline14">
 <p>
 If you find that initializing a repository manually is too much trouble,
 you can run:
@@ -462,9 +476,9 @@ M-x ego/new-repository
 </div>
 </div>
 
-<div id="outline-container-orgheadline14" class="outline-3">
-<h3 id="orgheadline14">How to quickly add a new post</h3>
-<div class="outline-text-3" id="text-orgheadline14">
+<div id="outline-container-orgheadline15" class="outline-3">
+<h3 id="orgheadline15">How to quickly add a new post</h3>
+<div class="outline-text-3" id="text-orgheadline15">
 <pre class="example">
 M-x ego/new-post
 </pre>
@@ -480,18 +494,18 @@ This command will ask you the follow question:
 </div>
 </div>
 
-<div id="outline-container-orgheadline15" class="outline-3">
-<h3 id="orgheadline15">How to quickly insert EGO post template</h3>
-<div class="outline-text-3" id="text-orgheadline15">
+<div id="outline-container-orgheadline16" class="outline-3">
+<h3 id="orgheadline16">How to quickly insert EGO post template</h3>
+<div class="outline-text-3" id="text-orgheadline16">
 <pre class="example">
 M-x ego/insert-options-template
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgheadline16" class="outline-3">
-<h3 id="orgheadline16">How to configure the default slogan</h3>
-<div class="outline-text-3" id="text-orgheadline16">
+<div id="outline-container-orgheadline17" class="outline-3">
+<h3 id="orgheadline17">How to configure the default slogan</h3>
+<div class="outline-text-3" id="text-orgheadline17">
 <p>
 Add the follow two lines to you config alist.
 </p>
@@ -503,9 +517,9 @@ Add the follow two lines to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline17" class="outline-3">
-<h3 id="orgheadline17">How to add an avatar to the page?</h3>
-<div class="outline-text-3" id="text-orgheadline17">
+<div id="outline-container-orgheadline18" class="outline-3">
+<h3 id="orgheadline18">How to add an avatar to the page?</h3>
+<div class="outline-text-3" id="text-orgheadline18">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -525,9 +539,9 @@ Image URL example:
 </div>
 </div>
 
-<div id="outline-container-orgheadline18" class="outline-3">
-<h3 id="orgheadline18">How to change org source files branch to "master"?</h3>
-<div class="outline-text-3" id="text-orgheadline18">
+<div id="outline-container-orgheadline19" class="outline-3">
+<h3 id="orgheadline19">How to change org source files branch to "master"?</h3>
+<div class="outline-text-3" id="text-orgheadline19">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -538,9 +552,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline19" class="outline-3">
-<h3 id="orgheadline19">How to save html file to branch: "gh-pages"?</h3>
-<div class="outline-text-3" id="text-orgheadline19">
+<div id="outline-container-orgheadline20" class="outline-3">
+<h3 id="orgheadline20">How to save html file to branch: "gh-pages"?</h3>
+<div class="outline-text-3" id="text-orgheadline20">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -551,9 +565,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline20" class="outline-3">
-<h3 id="orgheadline20">How to add a github link</h3>
-<div class="outline-text-3" id="text-orgheadline20">
+<div id="outline-container-orgheadline21" class="outline-3">
+<h3 id="orgheadline21">How to add a github link</h3>
+<div class="outline-text-3" id="text-orgheadline21">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -564,9 +578,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline21" class="outline-3">
-<h3 id="orgheadline21">How to do site traffic analytics with Google Analytics?</h3>
-<div class="outline-text-3" id="text-orgheadline21">
+<div id="outline-container-orgheadline22" class="outline-3">
+<h3 id="orgheadline22">How to do site traffic analytics with Google Analytics?</h3>
+<div class="outline-text-3" id="text-orgheadline22">
 <p>
 Add the follow line to you config alist.
 </p>
@@ -577,9 +591,9 @@ Add the follow line to you config alist.
 </div>
 </div>
 
-<div id="outline-container-orgheadline22" class="outline-3">
-<h3 id="orgheadline22">How to disable commenting for posts under certain category?</h3>
-<div class="outline-text-3" id="text-orgheadline22">
+<div id="outline-container-orgheadline23" class="outline-3">
+<h3 id="orgheadline23">How to disable commenting for posts under certain category?</h3>
+<div class="outline-text-3" id="text-orgheadline23">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span style="color: #00ffff; font-weight: bold;">setq</span> owp/category-config-alist
@@ -606,9 +620,9 @@ customize except you are an expert)</li>
 </div>
 </div>
 
-<div id="outline-container-orgheadline23" class="outline-3">
-<h3 id="orgheadline23">How to disable commenting for posts under certain summary?</h3>
-<div class="outline-text-3" id="text-orgheadline23">
+<div id="outline-container-orgheadline24" class="outline-3">
+<h3 id="orgheadline24">How to disable commenting for posts under certain summary?</h3>
+<div class="outline-text-3" id="text-orgheadline24">
 <p>
 Feature left for improvement.
 </p>
@@ -616,12 +630,12 @@ Feature left for improvement.
 </div>
 </div>
 
-<div id="outline-container-orgheadline27" class="outline-2">
-<h2 id="orgheadline27">Change Logs</h2>
-<div class="outline-text-2" id="text-orgheadline27">
-</div><div id="outline-container-orgheadline25" class="outline-3">
-<h3 id="orgheadline25">v0.1</h3>
-<div class="outline-text-3" id="text-orgheadline25">
+<div id="outline-container-orgheadline28" class="outline-2">
+<h2 id="orgheadline28">Change Logs</h2>
+<div class="outline-text-2" id="text-orgheadline28">
+</div><div id="outline-container-orgheadline26" class="outline-3">
+<h3 id="orgheadline26">v0.1</h3>
+<div class="outline-text-3" id="text-orgheadline26">
 <ul class="org-ul">
 <li>Initial version, org-webpage which tumashu forks from org-page.</li>
 <li>Use org-publish style config.</li>
@@ -630,9 +644,9 @@ Feature left for improvement.
 </div>
 </div>
 
-<div id="outline-container-orgheadline26" class="outline-3">
-<h3 id="orgheadline26">v0.9</h3>
-<div class="outline-text-3" id="text-orgheadline26">
+<div id="outline-container-orgheadline27" class="outline-3">
+<h3 id="orgheadline27">v0.9</h3>
+<div class="outline-text-3" id="text-orgheadline27">
 <ul class="org-ul">
 <li>Initial version, EGO which kuangdash forks from org-webpage</li>
 <li>More stability.</li>
