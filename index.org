@@ -73,6 +73,13 @@ M-x ego/new-repository
 M-x ego/new-post
 #+END_EXAMPLE
 
+** 测试单独文章的 html 页面
+使用以下命令可以生成当前 org 文件所对应的 html 文件，并浏览：
+
+#+BEGIN_EXAMPLE
+M-x ego/test-current-page
+#+END_EXAMPLE
+
 ** 发布
 用以下命令生成 html 文件，并按需传送到远程端：
 

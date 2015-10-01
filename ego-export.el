@@ -754,29 +754,22 @@ PUB-BASE-DIR is the root publication directory."
 (defun ego-link-type-process-html (path desc)
   "Generate EGO-LINK for html export, WARNING: EGO-LINK can only be linked to files in the repository directory"
   (let* ((default-directory (ego/get-repository-directory))
-         org-file webpath visiting file-buffer cat-config)
+         org-file webpath visiting file-buffer)
     (or (file-exists-p (setq org-file (expand-file-name path)))
         (file-exists-p (setq org-file (car (file-expand-wildcards (format "**/*%s" path)))))
         (error "Can't find this ego-link!"))
     (setq visiting (find-buffer-visiting org-file))
     (with-current-buffer (setq file-buffer
                                (or visiting (find-file org-file)))
-      (setq cat-config (cdr (or (assoc category ego/category-config-alist)
-                                (ego/get-category-setting
-                                 (ego/get-config-option :default-category)))))
-      (setq webpath (funcall (plist-get cat-config :uri-generator)
-                             (plist-get cat-config :uri-template)
-                             (ego/fix-timestamp-string
-                              (or (ego/read-org-option "DATE")
-                                  (format-time-string "%Y-%m-%d")))
-                             (funcall (ego/get-config-option :get-title-function)))))
+      (setq webpath (plist-get (car (ego/get-org-file-options default-directory nil))
+                              :uri)))
     (or visiting (kill-buffer file-buffer))
     (format "<span class=\"ego_link\"><a href=\"%s\">%s</a></span>" webpath desc)))
 
 (defun org-ego-link-complete-link (&optional arg)
   "Completion function for EGO-LINK. ARG does nothing."
   (let* ((org-file (file-relative-name (ido-read-file-name "enter file: " nil nil t)))
-         (current-path (expand-file-name (buffer-name)))
+         (current-path (expand-file-name (buffer-file-name)))
          visiting file-buffer next-link-name)
     (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")
       (setq visiting (find-buffer-visiting org-file))
