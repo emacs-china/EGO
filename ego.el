@@ -7,7 +7,7 @@
 ;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
 ;;         Kuangdash <kuangdash AT 163.com>
 ;; Keywords: org-mode, convenience, beautify
-;; Homepage: https://github.com/emacs-china/ego
+;; Homepage: https://github.com/emacs-china/EGO
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@
 
 ;; EGO is a static site generator based on Emacs, Git and Org mode.
 
-;; 1. Sources:   https://github.com/emacs-china/ego
-;; 2. Documents: http://emacs-china.github.io/ego
+;; 1. Sources:   https://github.com/emacs-china/EGO
+;; 2. Documents: http://emacs-china.github.io/EGO
 
 ;; EGO is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
 ;; and provides similar features as org-page, the main differents is as follow:

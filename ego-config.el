@@ -3,9 +3,11 @@
 ;; Copyright (C)  2015 Feng Shu, Kuangdash
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
 
-;; Author: Feng Shu <tumashu AT 163 DOT com>
-;; Keywords: convenience
-;; Homepage: https://github.com/emacs-china/ego
+;; Author: Feng Shu  <tumashu AT 163.com>
+;;         Kelvin Hu <ini DOT kelvin AT gmail DOT com>
+;;         Kuangdash <kuangdash AT 163.com>
+;; Keywords: org-mode, convenience, beautify
+;; Homepage: https://github.com/emacs-china/EGO
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

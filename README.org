@@ -30,12 +30,12 @@ EGO provides features below:
 The files-flow of EGO is showed on Graph below:
 
 :                                               
-:           +-----------<-------------+----<---------------+-----------<--------------<------------------+
-:           |                         |                    |                                             |
-:           | re-test or        if you want to re-test...  |-tested publish if you think test is OK      |
-:           | untested publish                             v                                             |
-:           |                                                all html files test -|                      |
-:           |                        > Web Test Dir ------------------------->----+-->-Web-Test-Dir-->---+
+:           +-----------<-------------+----<---------------+-----------<--------------<-------------------------+
+:           |                         |                    |                                                    |
+:           | re-test or        if you want to re-test...  |-tested publish if you think test is OK             |
+:           | untested publish                             v                                                    |
+:           |                                                                     |-all html files test         |
+:           |                        > Web Test Dir ------------------------->----+-->-Web-Test-Dir-->----------+
 :           |                      / |                                          \       /
 :           |    all org files --/-  |                                           \     /- partial html files test
 :           v                  /-    |                                            v   ^
@@ -46,7 +46,7 @@ The files-flow of EGO is showed on Graph below:
 :            | changed org files-\-  |                                           /     \- all html files publish
 :            |                     \ |                                          /       \       
 :       git gets changed files      >"~/.ego-tmp/"Dir ----------------------->-----+->-Publish-Repository-->-up-load-flies
-:                                                       partial html files publish-|
+:                                                                                  |-partial html files publish
 :                                                                                                                                         
 :                                                                            
 

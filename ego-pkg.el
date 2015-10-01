@@ -1,5 +1,5 @@
 (define-package
-  "ego" "0.1"
+  "ego" "0.9"
   "a static site generator based on org mode, forked from org-page."
   '((cl-lib "1.0")
     (ht "1.5")
