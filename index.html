@@ -156,7 +156,7 @@ CAUTION: 直接 clone emacs-china 后，需要 checkout master 和 source 后才
                  <span style="color: #b0c4de; font-weight: bold;">:ignore-file-name-regexp</span> <span style="color: #7fffd4; font-style: italic;">"readme.org"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26377;&#20123;&#19981;&#24819;&#21457;&#24067;&#25104; html &#30340; org &#25991;&#20214;&#65288;&#20294;&#26159;&#21448;&#24819;&#34987;&#23548;&#20837; git &#36827;&#34892;&#31649;&#29702;&#65289;&#65292;&#21487;&#20197;&#29992;&#36825;&#31181;&#27491;&#21017;&#34920;&#36798;&#30340;&#26041;&#24335;&#25490;&#38500;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:web-server-docroot</span> <span style="color: #7fffd4; font-style: italic;">"~/webRoot/emacs-china.github.io"</span> <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#30446;&#24405;</span>
                  <span style="color: #b0c4de; font-weight: bold;">:web-server-port</span> 5432)<span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#26412;&#22320;&#27979;&#35797;&#30340;&#31471;&#21475;</span>
-               )) <span style="color: #66cdaa; font-style: italic;">; </span><span style="color: #66cdaa; font-style: italic;">&#29992;&#31449;&#28857;&#21517;&#31216;&#21306;&#20998;&#35774;&#32622;</span>
+               ))
 </pre>
 </div>
 
@@ -291,7 +291,7 @@ M-x ego/do-publication
           (p (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"Action:  [Yes] Test, [No] Tested Publish. "</span>))
           (f (y-or-n-p (format <span style="color: #7fffd4; font-style: italic;">"Publish all org files of \"%s\" project? "</span> j)))
           (b (<span style="color: #00ffff; font-weight: bold;">unless</span> f (read-string <span style="color: #7fffd4; font-style: italic;">"Base git commit: "</span> <span style="color: #7fffd4; font-style: italic;">"HEAD~1"</span>)))
-          (c (y-or-n-p <span style="color: #7fffd4; font-style: italic;">"checkin all changed files? (input 'n' if you have done it)"</span>))
+          (c (read-string <span style="color: #7fffd4; font-style: italic;">"checkin message (won't show in 'git log' if you have committed all): "</span>))
           (a nil))
      (list j p f b c a)))
   <span style="color: #66cdaa; font-style: italic;">;; </span><span style="color: #66cdaa; font-style: italic;">set ego remote push (publish-config) &#36828;&#31471;&#21457;&#24067;&#30340;&#35774;&#32622;</span>
