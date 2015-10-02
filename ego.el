@@ -201,7 +201,6 @@
       (run-hooks 'preparation-function)))
   (setq ego/item-cache nil)
   (let* ((repo-dir (ego/get-repository-directory))
-         (repo-files-function (ego/get-config-option :repo-files-function))
          (addition-files-function (ego/get-config-option :addition-files-function))
          (test-dir (expand-file-name (ego/get-config-option :web-server-docroot)))
          (store-dir "~/.ego-tmp/") ; TODO customization

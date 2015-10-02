@@ -44,6 +44,8 @@ CAUTION: 直接 clone emacs-china 后，需要 checkout master 和 source 后才
                    :ignore-file-name-regexp "readme.org" ; 有些不想发布成 html 的 org 文件（但是又想被导入 git 进行管理），可以用这种正则表达的方式排除
                    :web-server-docroot "~/webRoot/emacs-china.github.io" ; 本地测试的目录
                    :web-server-port 5432); 本地测试的端口
+
+                   ;; 你可以在此添加更多的站点设置
                  ))
 #+END_SRC
 
