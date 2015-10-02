@@ -122,6 +122,11 @@
                       "~/.ego-tmp/")) ; TODO customization
          (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
+    
+    (unless (or publish-config test-and-not-publish)
+             (setq publish-config
+                   (ego/git-get-publish-config repo-dir org-branch html-branch)))
+    
     (message "Git branch operation and get changed files")
     (ego/git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
     (unless (equal org-branch (ego/git-branch-name repo-dir))
@@ -174,9 +179,7 @@
                                                     "committed by EGO."))
            (ego/git-change-branch repo-dir orig-branch)
            (message "Local Publication finished, see *EGO output* buffer to get more information.")
-           (unless publish-config
-             (setq publish-config
-                   (ego/git-get-publish-config repo-dir org-branch html-branch)))
+           
            (when publish-config
              (ego/git-push-remote repo-dir
                                   (car publish-config)
