@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; several utility functions
+;; ego-util.el contains several utility functions
 
 ;;; Code:
 

@@ -179,7 +179,7 @@ And here is an example: (There are some important point so that you had better s
             (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
-            (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
+            (c (read-string "checkin message (won't show in 'git log' if you have committed all): "))
             (a nil))
        (list j p f b c a)))
     ;; set ego remote push (publish-config)
