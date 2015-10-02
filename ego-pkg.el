@@ -7,4 +7,5 @@
     (htmlize "1.47")
     (org "8.0")
     (dash "2.0.0")
-    (web-server "0.1")))
+    (simple-httpd "1.4.5")
+    (ido "")))

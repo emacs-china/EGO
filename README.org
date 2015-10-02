@@ -307,4 +307,9 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
   The link is assigned to class "ego_link" with label "span", you can customize it in CSS.
 
 - [ ] More themes
+
+  Just main a list of hyperlinks to the other themes except default.
+
 - [ ] upload to melpa
+  
+  Temporarily don't consider it, for EGO is used for minor crowd.

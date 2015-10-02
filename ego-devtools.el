@@ -38,7 +38,7 @@
      :repository-directory ,ego/load-directory
      :site-domain "http://emacs-china.github.io/EGO"
      :site-main-title "EGO"
-     :site-sub-title "Static site senerator based on Emacs, Git and Org-mode"
+     :site-sub-title "Static site generator based on Emacs, Git and Org-mode"
      :theme (default)
      :force-absolute-url t
      :source-browse-url ("GitHub" "https://github.com/emacs-china/ego")

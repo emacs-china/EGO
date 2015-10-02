@@ -236,7 +236,7 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 也即是说，删除发布后的 html 文件比较麻烦。（使用传统的 git 操作模式）
 
 * 待完成事项
-目前只有一个 default 主题，希望能有一个好的主题收集办法。
+目前只有一个 default 主题，试试看能否公开招募到新主题，然后维护一个主题的超链接列表。
 
 * Tips in English[fn:1]
 ** How to install EGO in manual way
