@@ -1,4 +1,4 @@
-;;; ego.el --- static site generator based on org mode
+;;; ego.el --- static site generator based on Emacs, Git and Org-mode
 
 ;; Copyright (C)  2015 Feng Shu, Kuangdash
 ;;                2012, 2013, 2014, 2015 Kelvin Hu
@@ -84,18 +84,18 @@
 3) publish org files to html,
    if TEST-AND-NOT-PUBLISH is t, test the generated html files by the web-server,
    otherwise html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
-4) CHECKIN-ALL will checkin all the org-files, input 'n' if you have done it or don't want to checkin all.
+4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive
    (let* ((j (or ego/default-project-name
-                 (completing-read "Which project do you want to publish? "
-                                  (delete-dups
-                                   (mapcar 'car ego/project-config-alist))
-                                  nil t nil nil ego/last-project-name)))
+                 (ido-completing-read "Which project do you want to publish? "
+                                      (delete-dups
+                                       (mapcar 'car ego/project-config-alist))
+                                      nil t nil nil ego/last-project-name)))
           (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
-          (c (y-or-n-p "checkin all changed files? (input 'n' if you have done it)"))
+          (c (read-string "checkin message (won't show in 'git log' if you have committed all): "))
           (a nil))
      (list j p f b c a)))
 
@@ -122,9 +122,13 @@
                       "~/.ego-tmp/")) ; TODO customization
          (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
+    
+    (unless (or publish-config test-and-not-publish)
+             (setq publish-config
+                   (ego/git-get-publish-config repo-dir org-branch html-branch)))
+    
     (message "Git branch operation and get changed files")
-    (when checkin-all
-      (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
+    (ego/git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
     (unless (equal org-branch (ego/git-branch-name repo-dir))
       (ego/git-change-branch repo-dir org-branch))
     (setq repo-files
@@ -135,8 +139,7 @@
     (setq addition-files
           (when (functionp addition-files-function)
             (funcall addition-files-function repo-dir)))
-    (when checkin-all
-      (ego/git-commit-changes repo-dir "checkin all changed files by EGO"))
+    (ego/git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
     (setq ego/publish-to-repository to-repo) ;make relative-to-absolute link
     (when (or (not (equal base-git-commit-test ego/publish-without-org-to-html))
               test-and-not-publish)
@@ -176,9 +179,7 @@
                                                     "committed by EGO."))
            (ego/git-change-branch repo-dir orig-branch)
            (message "Local Publication finished, see *EGO output* buffer to get more information.")
-           (unless publish-config
-             (setq publish-config
-                   (ego/git-get-publish-config repo-dir org-branch html-branch)))
+           
            (when publish-config
              (ego/git-push-remote repo-dir
                                   (car publish-config)
@@ -203,7 +204,6 @@
       (run-hooks 'preparation-function)))
   (setq ego/item-cache nil)
   (let* ((repo-dir (ego/get-repository-directory))
-         (repo-files-function (ego/get-config-option :repo-files-function))
          (addition-files-function (ego/get-config-option :addition-files-function))
          (test-dir (expand-file-name (ego/get-config-option :web-server-docroot)))
          (store-dir "~/.ego-tmp/") ; TODO customization
@@ -404,7 +404,7 @@ responsibility to guarantee the two parameters are valid."
                       (file-name-as-directory category)))
          (path (concat dir filename)))
     (if (file-exists-p path)
-        (error "Post `%s' already exists." path))
+        v        (error "Post `%s' already exists." path))
     (unless (file-directory-p dir)
       (mkdir dir t))
     (switch-to-buffer (find-file path))

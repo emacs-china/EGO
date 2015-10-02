@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; several utility functions
+;; ego-util.el contains several utility functions
 
 ;;; Code:
 
@@ -220,9 +220,29 @@ alternative to `ht-from-plist'."
             (value (cadr pair)))
         (ht-set h key value)))))
 
-(defun ego/car-compare (project-config-a project-config-b)
-  "For EGO/PROJECT-CONFIG-ALIST"
-  (equal (car project-config-a) (car project-config-b)))
+(defun ego/add-to-alist (alist-var new-alist)
+  "Add NEW-ALIST to the ALIST-VAR.
+If an element with the same key as the key of an element of
+NEW-ALIST is already present in ALIST-VAR, add the new values to
+it; if a matching element is not already present, append the new
+element to ALIST-VAR."
+  ;; Loop over all elements of NEW-ALIST.
+  (while new-alist
+    (let* ((new-element (car new-alist))
+	   ;; Get the element of ALIST-VAR with the same key of the current
+	   ;; element of NEW-ALIST, if any.
+	   (old-element (assoc (car new-element) (symbol-value alist-var))))
+      (if old-element
+	  (progn
+	    (set alist-var (delete old-element (symbol-value alist-var)))
+	    ;; Append to `old-element' the values of the current element of
+	    ;; NEW-ALIST.
+	    (mapc (lambda (elt) (add-to-list 'old-element elt t))
+		  (cdr new-element))
+	    (set alist-var (add-to-list alist-var old-element t)))
+	(add-to-list alist-var new-element t)))
+    ;; Next element of NEW-ALIST.
+    (setq new-alist (cdr new-alist))))
 
 (defun ego/ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
   "Read multiple items with ido-completing-read. Reading stops

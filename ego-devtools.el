@@ -24,17 +24,18 @@
 
 ;;; Commentary:
 
-;; ego-config.el contains functions used to develop EGO.
+;; ego-devtools.el contains functions used to develop EGO.
 
 ;;; Code:
 (require 'org)
 (require 'ego-config)
+(require 'ego-util)
 
-(defun ego/devtools-update-ego-config ()
+(defun ego/devtools-update-config ()
   (interactive)
-  (add-to-list
+  (ego/add-to-alist
    'ego/project-config-alist
-   `("EGO"
+   `(("EGO"
      :repository-directory ,ego/load-directory
      :site-domain "http://emacs-china.github.io/EGO"
      :site-main-title "EGO"
@@ -48,11 +49,9 @@
      :confound-email nil
      :ignore-file-name-regexp "readme.org"
      :web-server-docroot ,(expand-file-name "~/webRoot/EGO")
-     :web-server-port 4321)
-   t
-   'ego/car-compare))
+     :web-server-port 4321))))
 
-(ego/devtools-update-ego-config)
+(ego/devtools-update-config)
 
 (provide 'ego-devtools)
 
