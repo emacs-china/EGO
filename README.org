@@ -310,7 +310,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 
 - [ ] More themes
 
-  Just main a list of hyperlinks to the other themes except default.
+  Just maintain a list of hyperlinks to the other themes except default.
 
 - [ ] upload to melpa
   

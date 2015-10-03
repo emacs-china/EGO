@@ -259,7 +259,7 @@ After that, please remember to add this location to your emacs'
 
 NOTE: This is NOT recommended way for emacs beginner.
 
-** COMMENT How to install org-webpage Through package management system
+** COMMENT How to install EGO Through package management system
 
 # this headline is left for EGO to improve
 
