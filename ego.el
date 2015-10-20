@@ -156,7 +156,7 @@
            (unless (file-directory-p test-dir)
              (make-directory test-dir t))
            ;; when (called-interactively-p 'any)
-           f(if (not base-git-commit)
+           (if (not base-git-commit)
                (setq ego/publish-without-org-to-html 2)
              (copy-directory store-dir test-dir t t t)
              (setq ego/publish-without-org-to-html 1))
