@@ -92,7 +92,7 @@
                                       (delete-dups
                                        (mapcar 'car ego/project-config-alist))
                                       nil t nil nil ego/last-project-name)))
-          (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. "))
+          (p (y-or-n-p "Publish to:  [Yes] Web server to test, [No] Original repo."))
           (f (y-or-n-p (format "Publish all org files of \"%s\" project? (input 'n' if you want to publish partially)" j)))
           (b (unless f (read-string "Base git commit: " "HEAD~1")))
           (c (read-string "checkin message (won't show in 'git log' if you have committed all): "))
@@ -122,10 +122,6 @@
                       "~/.ego-tmp/")) ; TODO customization
          (base-git-commit-test (if base-git-commit 1 2))
          repo-files addition-files changed-files remote-repos)
-
-    (unless (or publish-config test-and-not-publish)
-      (setq publish-config
-            (ego/git-get-publish-config repo-dir org-branch html-branch)))
 
     (message "Git branch operation and get changed files")
     (ego/git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
@@ -180,11 +176,16 @@
            (ego/git-change-branch repo-dir orig-branch)
            (message "Local Publication finished, see *EGO output* buffer to get more information.")
 
+           ;; publish remote
+           (unless (or publish-config test-and-not-publish)
+             (setq publish-config
+                   (ego/git-get-publish-config repo-dir org-branch html-branch)))
            (when publish-config
              (ego/git-push-remote repo-dir
                                   (car publish-config)
                                   (cdr publish-config))
-             (message "Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))))
+             (message "Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))
+           ))
     (setq ego/current-project-name nil)))
 
 (defun ego/test-current-page (project-name)

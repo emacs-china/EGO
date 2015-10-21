@@ -210,7 +210,7 @@ presented by REPO-DIR, return nil if there is no remote repository."
         (if (not remote-repos)
             (error "No valid remote repository found.")
           (if (> (length remote-repos) 1)
-              (setq repo (ido-completing-read "Which remote to push: "
+              (setq repo (ido-completing-read "Which remote to push?: (if you don't want to push remote, [C-g])"
                                               remote-repos nil t))
             (setq repo (car remote-repos)))
           (setq branchs
