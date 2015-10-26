@@ -66,6 +66,7 @@
 
 (defconst ego-version "0.9")
 
+;;;###autoload
 (defun ego/do-publication (&optional project-name
                                      test-and-not-publish
                                      force-all
@@ -188,6 +189,7 @@
            ))
     (setq ego/current-project-name nil)))
 
+;;;###autoload
 (defun ego/test-current-page (project-name)
   "Test the current opening org-file!"
   (interactive
@@ -234,6 +236,7 @@
     (httpd-serve-directory test-dir)
     (browse-url (format "http://%s:%d%s" system-name httpd-port test-uri))))
 
+;;;###autoload
 (defun ego/new-repository (repo-dir)
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by EGO. In order to construct a real repository,
@@ -372,6 +375,7 @@ month and day): " (unless (string= i "")
            org-export-with-emphasize
            org-export-with-timestamps)))
 
+;;;###autoload
 (defun ego/new-post (&optional project-name category filename insert-fallback-template)
   "Setup a new post.
 
