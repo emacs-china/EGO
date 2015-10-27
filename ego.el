@@ -337,7 +337,7 @@ month and day): " (unless (string= i "")
                                    (?t . ,(ego/encode-string-to-url i)))))))
           (a (read-string "Tags(separated by comma and space [, ]): "))
           (d (read-string "Description: ")))
-     (list i u k a d)))
+     (list i u a d)))
   (if (not (bolp)) (newline))
   (insert (format
            "#+TITLE:       %s
