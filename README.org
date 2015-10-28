@@ -286,7 +286,10 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 9. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
-
+- *caution* when there are opened directories in the repository (which 
+  don't contain the repository itself), =ego/git-change-branch= will
+  mess up the files in the repository. So, close all opened directories
+  in the repository before =ego/do-publication= .
 - Currently the deletion change handler has not been implemented so
   if you deleted some org sources, you may have to manually delete
   corresponding generated html files.
