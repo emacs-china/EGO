@@ -127,7 +127,7 @@ render from a default hash table."
                                      (string= cat "about")
                                      (not (plist-get (cdr (or (assoc cat
                                                                      ego/category-config-alist)
-                                                              (ego/get-category-setting default-category)))
+                                                              (ego/get-category-setting (ego/get-config-option :default-category))))
                                                      :category-index))))
                              (ego/get-category nil))
                             'string-lessp))))
