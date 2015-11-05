@@ -751,6 +751,7 @@ PUB-BASE-DIR is the root publication directory."
                       ((eq format 'html) (ego-link-type-process-html path desc))
                       ((eq format 'latex) "This ego-link haven't been implementted"))))
 
+;;;###autoload
 (defun ego-link-type-process-html (path desc)
   "Generate EGO-LINK for html export, WARNING: EGO-LINK can only be linked to files in the repository directory"
   (let* ((default-directory (ego/get-repository-directory))
@@ -766,6 +767,7 @@ PUB-BASE-DIR is the root publication directory."
     (or visiting (kill-buffer file-buffer))
     (format "<span class=\"ego_link\"><a href=\"%s\">%s</a></span>" webpath desc)))
 
+;;;###autoload
 (defun org-ego-link-complete-link (&optional arg)
   "Completion function for EGO-LINK. ARG does nothing."
   (let* ((org-file (file-relative-name (ido-read-file-name "enter file: " nil nil t)))
