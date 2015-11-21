@@ -46,7 +46,7 @@
      :repository-org-branch "master"
      :repository-html-branch "gh-pages"
      :summary nil
-     :confound-email nil
+     :confound-email t
      :ignore-file-name-regexp "readme.org"
      :web-server-docroot ,(expand-file-name "~/webRoot/EGO")
      :web-server-port 4321))))
