@@ -104,7 +104,7 @@ Create a new branch named BRANCH-NAME if BRANCH-NAME doesn't exist."
                   (concat "env LC_ALL=C git checkout -b " branch-name)
                   t))
     (cond ((string-match "Switched to a new branch" output)
-           (message "Create a new branch with name '%s'." branch-name))
+           (message "EGO: Create a new branch with name '%s'." branch-name))
           ((string-match "already exists" output)
            (setq output (ego/shell-command
                          repo-dir

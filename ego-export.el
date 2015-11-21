@@ -168,7 +168,7 @@ content of the buffer will be converted into html."
             (setq asset-abs-path
                   (expand-file-name asset-path (file-name-directory filename)))
             (if (not (file-exists-p asset-abs-path))
-                (message "[WARN] File %s in hyper link does not exist, org \
+                (message "EGO: [WARN] File %s in hyper link does not exist, org \
 file: %s." asset-path filename)
               (unless (file-directory-p assets-dir)
                 (mkdir assets-dir t))
@@ -176,7 +176,7 @@ file: %s." asset-path filename)
               (setq pub-abs-path (concat assets-dir
                                          (file-name-nondirectory asset-path)))
               (unless (string-prefix-p pub-root-dir pub-abs-path)
-                (message "[WARN] The publication root directory %s is not an \
+                (message "EGO: [WARN] The publication root directory %s is not an \
 ancestor directory of assets directory %s." pub-root-dir assets-dir))
               (setq converted-path
                     (concat "/" (file-relative-name pub-abs-path pub-root-dir)))
@@ -304,7 +304,7 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
       (mustache-render
        (ego/get-cache-create
         :container-template
-        (message "Read container.mustache from file")
+        (message "EGO: Read container.mustache from file")
         (ego/file-to-string (ego/get-template-file "container.mustache")))
        component-table)
      (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
@@ -377,7 +377,7 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
              (mustache-render
               (ego/get-cache-create
                :container-template
-               (message "Read container.mustache from file")
+               (message "EGO: Read container.mustache from file")
                (ego/file-to-string (ego/get-template-file "container.mustache")))
               (ht ("header"
                    (ego/render-header
@@ -439,7 +439,7 @@ publication directory."
       (mustache-render
        (ego/get-cache-create
         :container-template
-        (message "Read container.mustache from file")
+        (message "EGO: Read container.mustache from file")
         (ego/file-to-string (ego/get-template-file "container.mustache")))
        (ht ("header"
             (ego/render-header
@@ -495,7 +495,7 @@ is the root publication directory."
       (mustache-render
        (ego/get-cache-create
         :container-template
-        (message "Read container.mustache from file")
+        (message "EGO: Read container.mustache from file")
         (ego/file-to-string (ego/get-template-file "container.mustache")))
        (ht ("header"
             (ego/render-header
@@ -577,7 +577,7 @@ TODO: improve this function."
       (mustache-render
        (ego/get-cache-create
         :container-template
-        (message "Read container.mustache from file")
+        (message "EGO: Read container.mustache from file")
         (ego/file-to-string (ego/get-template-file "container.mustache")))
        (ht ("header"
             (ego/render-header
@@ -654,7 +654,7 @@ TODO: improve this function."
            (mustache-render
             (ego/get-cache-create
              :container-template
-             (message "Read container.mustache from file")
+             (message "EGO: Read container.mustache from file")
              (ego/file-to-string (ego/get-template-file "container.mustache")))
             (ht ("header"
                  (ego/render-header
@@ -784,7 +784,7 @@ PUB-BASE-DIR is the root publication directory."
                               (local-unset-key "l")
                               (save-buffer)
                               (exit-recursive-edit)))
-        (message "Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
+        (message "EGO: Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
         (recursive-edit))
       (or visiting (kill-buffer file-buffer))
       )

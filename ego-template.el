@@ -86,7 +86,7 @@ a hash table accordint to current buffer."
   (mustache-render
    (ego/get-cache-create
     :header-template
-    (message "Read header.mustache from file")
+    (message "EGO: Read header.mustache from file")
     (ego/file-to-string (ego/get-template-file "header.mustache")))
    (or param-table
        (ht ("page-title" (concat (funcall (ego/get-config-option :get-title-function))
@@ -105,11 +105,11 @@ render from a default hash table."
   (let ((site-domain (ego/get-site-domain)))
     (ego/get-cache-create
      :nav-bar-html
-     (message "Render navigation bar from template")
+     (message "EGO: Render navigation bar from template")
      (mustache-render
       (ego/get-cache-create
        :nav-bar-template
-       (message "Read nav.mustache from file")
+       (message "EGO: Read nav.mustache from file")
        (ego/file-to-string (ego/get-template-file "nav.mustache")))
       (or param-table
           (ht ("site-main-title" (ego/get-config-option :site-main-title))
@@ -195,7 +195,7 @@ similar to `ego/render-header'."
   (mustache-render
    (ego/get-cache-create
     :footer-template
-    (message "Read footer.mustache from file")
+    (message "EGO: Read footer.mustache from file")
     (ego/file-to-string (ego/get-template-file "footer.mustache")))
    (or param-table
        (let* ((filename (buffer-file-name))
