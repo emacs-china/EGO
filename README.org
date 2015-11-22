@@ -149,11 +149,14 @@ M-x ego/do-publication
 This command will ask you some questions:
 
 1) Which project do you want to publish?
-2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote.
-3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) 
-4) (when (3) is n) Base git commit: HEAD~1 ? 
-5) Checkin all changed files? (input 'n' if you have done it)
-6) (when (2) is n) There will be some questions for "publish-config"
+2) Choose a job from the jobs below:
+   "1. Test partial publish"
+   "2. Partial publish"
+   "3. Test full publish"
+   "4. Full publish"
+3) (when (2) is partial) Base git commit: HEAD~1 ?
+4) Input checkin messages. (The message won't be inputted if you have checkined before.)
+5) (when (2) is not "test") There will be some questions for "publish-config"
 
 CAUTION: When untested publication, anything modified won't be published.If you want modified contents to be published, just test it before publication.
 
