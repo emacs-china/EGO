@@ -89,19 +89,24 @@ M-x ego/do-publication
 #+END_EXAMPLE
 
 这条命令会问你如下几个问题：
-
 1) Which project do you want to publish? \\
    ~ *发布哪个站点？*
-2) Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. \\
-   ~ *测试发布（y）还是真正发布到远端（n）？*
-3) Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) \\
-   ~ *发布全部（y）还是改变的那些文件（n）？*
-4) (when (3) is n) Base git commit: HEAD~1 ? \\
-   ~ *将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可）*
-5) checkin all changed files? (input 'n' if you have done it) \\
-   ~ *将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布。*
-6) (when (2) is n) There will be some questions for "publish-config" \\
-   ~ *对发布到远端的设置进行具体询问（在第二项是 n 时出现）*
+2) Choose a job from the jobs below: \\
+   "1. Test partial publish" \\
+   "2. Partial publish" \\
+   "3. Test full publish" \\
+   "4. Full publish" \\
+   *从以下四个选项里选择一种发布方式：* \\
+   "1. 增量发布测试" \\
+   "2. 增量发布" \\
+   "3. 完全发布测试" \\
+   "4. 完全发布" \\
+   测试即意味着发布到 web-server-docroot 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。
+3) (when (2) is partial) Base git commit: HEAD~1 ? \\
+   ~ *将哪些提交视为改变文件？（当第三项选了带了 “partial” 字符串时出现的选项，不懂得话回车即可）*
+4) Input checkin messages. (The message won't be inputted if you have checkined before.) \\
+5) (when (2) is not "test") There will be some questions for "publish-config" \\
+   ~ *对发布到远端的设置进行具体询问（在第二项没有 “test” 字符串时出现）*
 
 *注意*: 当进行没测试过的发布时，任何未经测试的内容变化都不会被发布。也即，任何内容变化在真正发布之前必须经过测试发布。
 
@@ -243,154 +248,4 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 * 待完成事项
 目前只有一个 default 主题，试试看能否公开招募到新主题，然后维护一个主题的超链接列表。
 
-* Tips in English[fn:1]
-** How to install EGO in manual way
-
-To install EGO manually you should first install all
-dependencies listed in *README.org*. Once this has been completed,
-clone the repo:
-
-#+BEGIN_EXAMPLE
-git clone https://github.com/emacs-china/EGO.git
-#+END_EXAMPLE
-
-After that, please remember to add this location to your emacs'
-=load-path= variable so that emacs can find the package.
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/path/to/EGO")
-(require 'EGO)
-#+END_SRC
-
-NOTE: This is NOT recommended way for emacs beginner.
-
-** COMMENT How to install EGO Through package management system
-
-# this headline is left for EGO to improve
-
-1. Setting melpa repository, see: http://melpa.org/#/getting-started
-2. Run the following command
-   #+BEGIN_EXAMPLE
-   M-x package-install RET ego RET
-   #+END_EXAMPLE
-
-3. Add the following to your =~/.emacs= file:
-   #+BEGIN_EXAMPLE
-   (require 'ego)
-   #+END_EXAMPLE
-
-** How to quickly build a EGO git repository
-
-If you find that initializing a repository manually is too much trouble,
-you can run:
-#+BEGIN_EXAMPLE
-M-x ego/new-repository
-#+END_EXAMPLE
-
-** How to quickly add a new post
-#+BEGIN_EXAMPLE
-M-x ego/new-post
-#+END_EXAMPLE
-
-This command will ask you the follow question:
-1. Which project do you want post?
-2. Category?
-3. Filename?
-
-** How to quickly insert EGO post template
-
-#+BEGIN_EXAMPLE
-M-x ego/insert-options-template
-#+END_EXAMPLE
-
-** How to configure the default slogan
-Add the follow two lines to you config alist.
-
-#+BEGIN_EXAMPLE
-:site-main-title "your main slogan"
-:site-sub-title "your sub slogan"
-#+END_EXAMPLE
-
-** How to add an avatar to the page?
-Add the follow line to you config alist.
-
-#+BEGIN_EXAMPLE
-:personal-avatar "URL to an image"
-#+END_EXAMPLE
-
-Image URL example:
-1. =http:/XXXXX.com/XXXX.jpg=
-2. /media/img/XXXXX.jpg
-3. /assets/XXX/XXX.jpg
-
-** How to change org source files branch to "master"?
-Add the follow line to you config alist.
-
-#+BEGIN_EXAMPLE
-:repository-org-branch "master"
-#+END_EXAMPLE
-
-** How to save html file to branch: "gh-pages"?
-Add the follow line to you config alist.
-
-#+BEGIN_EXAMPLE
-:repository-org-branch "gh-pages"
-#+END_EXAMPLE
-
-** How to add a github link
-Add the follow line to you config alist.
-
-#+BEGIN_EXAMPLE
-:source-browse-url ("GitHub" "https://github.io/<username>/<project-name>")
-#+END_EXAMPLE
-
-** How to do site traffic analytics with Google Analytics?
-
-Add the follow line to you config alist.
-
-#+BEGIN_EXAMPLE
-:personal-google-analytics-id "your google analytics id"
-#+END_EXAMPLE
-
-** How to disable commenting for posts under certain category?
-
-# category is not recommended for use
-
-#+BEGIN_SRC emacs-lisp
-(setq owp/category-config-alist
-      (cons '("photography" ;; category name goes here
-              :show-comment nil)
-            ego/category-config-alist))
-#+END_SRC
-
-Other config items:
-
-1. =:show-meta=: show post meta info at the bottom of post?
-2. =:uri-generator=: the function used to generate uri for posts
-   under that category (however, it is not recommended to
-   customize except you are an expert)
-3. =:uri-template=: the template used to generate uri
-4. =:sort-by=: how to sort posts on category index page, by
-5. =:date= or by =:mod-date=  (:mod-date is last modification date)?
-6. =:category-index=: generate an index page for this category?
-
-** How to disable commenting for posts under certain summary?
-Feature left for improvement.
-
-* Change Logs
-** v0.1
-
-- Initial version, org-webpage which tumashu forks from org-page.
-- Use org-publish style config.
-- Increment Theme support.
-
-** v0.9
-
-- Initial version, EGO which kuangdash forks from org-webpage
-- More stability.
-- New theme.
-- Add some feature.
-
-* Footnotes
-
-[fn:1] 这些暂时为英文，相信中学英语水平即可。
+如有问题请移步 [[https://github.com/emacs-china/EGO/issues][Issues]] 提问
