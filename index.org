@@ -92,19 +92,20 @@ M-x ego/do-publication
 1) Which project do you want to publish? \\
    ~ *发布哪个站点？*
 2) Choose a job from the jobs below: \\
-   "1. Test partial publish" \\
-   "2. Partial publish" \\
-   "3. Test full publish" \\
-   "4. Full publish" \\
-   *从以下四个选项里选择一种发布方式：* \\
-   "1. 增量发布测试" \\
-   "2. 增量发布" \\
-   "3. 完全发布测试" \\
-   "4. 完全发布" \\
-   测试即意味着发布到 web-server-docroot 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。
+   ~ "1. Test partial publish" \\
+   ~ "2. Partial publish" \\
+   ~ "3. Test full publish" \\
+   ~ "4. Full publish" \\
+   ~ *从以下四个选项里选择一种发布方式：* \\
+   ~ "1. 增量发布测试" \\
+   ~ "2. 增量发布" \\
+   ~ "3. 完全发布测试" \\
+   ~ "4. 完全发布" \\
+   ~ 测试即意味着发布到 web-server-docroot 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。
 3) (when (2) is partial) Base git commit: HEAD~1 ? \\
    ~ *将哪些提交视为改变文件？（当第三项选了带了 “partial” 字符串时出现的选项，不懂得话回车即可）*
 4) Input checkin messages. (The message won't be inputted if you have checkined before.) \\
+   ~ *输入 checkin 信息，了解 git 的话应该知道*
 5) (when (2) is not "test") There will be some questions for "publish-config" \\
    ~ *对发布到远端的设置进行具体询问（在第二项没有 “test” 字符串时出现）*
 
