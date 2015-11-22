@@ -73,28 +73,6 @@
 <li><a href="#orgheadline11">一些特点</a></li>
 <li><a href="#orgheadline12">一些缺点</a></li>
 <li><a href="#orgheadline13">待完成事项</a></li>
-<li><a href="#orgheadline26">Tips in English</a>
-<ul>
-<li><a href="#orgheadline14">How to install EGO in manual way</a></li>
-<li><a href="#orgheadline15">How to quickly build a EGO git repository</a></li>
-<li><a href="#orgheadline16">How to quickly add a new post</a></li>
-<li><a href="#orgheadline17">How to quickly insert EGO post template</a></li>
-<li><a href="#orgheadline18">How to configure the default slogan</a></li>
-<li><a href="#orgheadline19">How to add an avatar to the page?</a></li>
-<li><a href="#orgheadline20">How to change org source files branch to "master"?</a></li>
-<li><a href="#orgheadline21">How to save html file to branch: "gh-pages"?</a></li>
-<li><a href="#orgheadline22">How to add a github link</a></li>
-<li><a href="#orgheadline23">How to do site traffic analytics with Google Analytics?</a></li>
-<li><a href="#orgheadline24">How to disable commenting for posts under certain category?</a></li>
-<li><a href="#orgheadline25">How to disable commenting for posts under certain summary?</a></li>
-</ul>
-</li>
-<li><a href="#orgheadline29">Change Logs</a>
-<ul>
-<li><a href="#orgheadline27">v0.1</a></li>
-<li><a href="#orgheadline28">v0.9</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -235,20 +213,26 @@ M-x ego/do-publication
 <p>
 这条命令会问你如下几个问题：
 </p>
-
 <ol class="org-ol">
 <li>Which project do you want to publish? <br  />
 ~ <b>发布哪个站点？</b></li>
-<li>Publish to:  [Yes] Web server to test, [No] Original repo and publish remote. <br  />
-~ <b>测试发布（y）还是真正发布到远端（n）？</b></li>
-<li>Publish all org files of \"%s\" project? (input 'n' if you want to publish partially) <br  />
-~ <b>发布全部（y）还是改变的那些文件（n）？</b></li>
-<li>(when (3) is n) Base git commit: HEAD~1 ? <br  />
-~ <b>将哪些提交视为改变文件？（当第三项是 n 时出现的选项，不懂得话回车即可）</b></li>
-<li>checkin all changed files? (input 'n' if you have done it) <br  />
-~ <b>将所有改变的文件放入版本管理之下么？注意：只有放入版本管理之下的文件才能被发布。</b></li>
-<li>(when (2) is n) There will be some questions for "publish-config" <br  />
-~ <b>对发布到远端的设置进行具体询问（在第二项是 n 时出现）</b></li>
+<li>Choose a job from the jobs below: <br  />
+~ "1. Test partial publish" <br  />
+~ "2. Partial publish" <br  />
+~ "3. Test full publish" <br  />
+~ "4. Full publish" <br  />
+~ <b>从以下四个选项里选择一种发布方式：</b> <br  />
+~ "1. 增量发布测试" <br  />
+~ "2. 增量发布" <br  />
+~ "3. 完全发布测试" <br  />
+~ "4. 完全发布" <br  />
+~ 测试即意味着发布到 web-server-docroot 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。</li>
+<li>(when (2) is partial) Base git commit: HEAD~1 ? <br  />
+~ <b>将哪些提交视为改变文件？（当第三项选了带了 “partial” 字符串时出现的选项，不懂得话回车即可）</b></li>
+<li>Input checkin messages. (The message won't be inputted if you have checkined before.) <br  />
+~ <b>输入 checkin 信息，了解 git 的话应该知道</b></li>
+<li>(when (2) is not "test") There will be some questions for "publish-config" <br  />
+~ <b>对发布到远端的设置进行具体询问（在第二项没有 “test” 字符串时出现）</b></li>
 </ol>
 
 <p>
@@ -441,247 +425,13 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 <p>
 目前只有一个 default 主题，试试看能否公开招募到新主题，然后维护一个主题的超链接列表。
 </p>
-</div>
-</div>
-
-<div id="outline-container-orgheadline26" class="outline-2">
-<h2 id="orgheadline26">Tips in English<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></h2>
-<div class="outline-text-2" id="text-orgheadline26">
-</div><div id="outline-container-orgheadline14" class="outline-3">
-<h3 id="orgheadline14">How to install EGO in manual way</h3>
-<div class="outline-text-3" id="text-orgheadline14">
-<p>
-To install EGO manually you should first install all
-dependencies listed in <b>README.org</b>. Once this has been completed,
-clone the repo:
-</p>
-
-<pre class="example">
-git clone https://github.com/emacs-china/EGO.git
-</pre>
 
 <p>
-After that, please remember to add this location to your emacs'
-<code>load-path</code> variable so that emacs can find the package.
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span>add-to-list 'load-path <span style="color: #e67128;">"/path/to/EGO"</span><span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">EGO</span><span style="color: #8c8c8c;">)</span>
-</pre>
-</div>
-
-<p>
-NOTE: This is NOT recommended way for emacs beginner.
+如有问题请移步 <a href="https://github.com/emacs-china/EGO/issues">Issues</a> 提问
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline15" class="outline-3">
-<h3 id="orgheadline15">How to quickly build a EGO git repository</h3>
-<div class="outline-text-3" id="text-orgheadline15">
-<p>
-If you find that initializing a repository manually is too much trouble,
-you can run:
-</p>
-<pre class="example">
-M-x ego/new-repository
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline16" class="outline-3">
-<h3 id="orgheadline16">How to quickly add a new post</h3>
-<div class="outline-text-3" id="text-orgheadline16">
-<pre class="example">
-M-x ego/new-post
-</pre>
-
-<p>
-This command will ask you the follow question:
-</p>
-<ol class="org-ol">
-<li>Which project do you want post?</li>
-<li>Category?</li>
-<li>Filename?</li>
-</ol>
-</div>
-</div>
-
-<div id="outline-container-orgheadline17" class="outline-3">
-<h3 id="orgheadline17">How to quickly insert EGO post template</h3>
-<div class="outline-text-3" id="text-orgheadline17">
-<pre class="example">
-M-x ego/insert-options-template
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline18" class="outline-3">
-<h3 id="orgheadline18">How to configure the default slogan</h3>
-<div class="outline-text-3" id="text-orgheadline18">
-<p>
-Add the follow two lines to you config alist.
-</p>
-
-<pre class="example">
-:site-main-title "your main slogan"
-:site-sub-title "your sub slogan"
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline19" class="outline-3">
-<h3 id="orgheadline19">How to add an avatar to the page?</h3>
-<div class="outline-text-3" id="text-orgheadline19">
-<p>
-Add the follow line to you config alist.
-</p>
-
-<pre class="example">
-:personal-avatar "URL to an image"
-</pre>
-
-<p>
-Image URL example:
-</p>
-<ol class="org-ol">
-<li><code>http:/XXXXX.com/XXXX.jpg</code></li>
-<li>/media/img/XXXXX.jpg</li>
-<li>/assets/XXX/XXX.jpg</li>
-</ol>
-</div>
-</div>
-
-<div id="outline-container-orgheadline20" class="outline-3">
-<h3 id="orgheadline20">How to change org source files branch to "master"?</h3>
-<div class="outline-text-3" id="text-orgheadline20">
-<p>
-Add the follow line to you config alist.
-</p>
-
-<pre class="example">
-:repository-org-branch "master"
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline21" class="outline-3">
-<h3 id="orgheadline21">How to save html file to branch: "gh-pages"?</h3>
-<div class="outline-text-3" id="text-orgheadline21">
-<p>
-Add the follow line to you config alist.
-</p>
-
-<pre class="example">
-:repository-org-branch "gh-pages"
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline22" class="outline-3">
-<h3 id="orgheadline22">How to add a github link</h3>
-<div class="outline-text-3" id="text-orgheadline22">
-<p>
-Add the follow line to you config alist.
-</p>
-
-<pre class="example">
-:source-browse-url ("GitHub" "https://github.io/&lt;username&gt;/&lt;project-name&gt;")
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline23" class="outline-3">
-<h3 id="orgheadline23">How to do site traffic analytics with Google Analytics?</h3>
-<div class="outline-text-3" id="text-orgheadline23">
-<p>
-Add the follow line to you config alist.
-</p>
-
-<pre class="example">
-:personal-google-analytics-id "your google analytics id"
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgheadline24" class="outline-3">
-<h3 id="orgheadline24">How to disable commenting for posts under certain category?</h3>
-<div class="outline-text-3" id="text-orgheadline24">
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> owp/category-config-alist
-      <span style="color: #93a8c6;">(</span>cons '<span style="color: #b0b1a3;">(</span><span style="color: #e67128;">"photography"</span> <span style="color: #74af68;">;; </span><span style="color: #74af68;">category name goes here</span>
-              <span style="color: #23d7d7;">:show-comment</span> nil<span style="color: #b0b1a3;">)</span>
-            ego/category-config-alist<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
-</pre>
-</div>
-
-<p>
-Other config items:
-</p>
-
-<ol class="org-ol">
-<li><code>:show-meta</code>: show post meta info at the bottom of post?</li>
-<li><code>:uri-generator</code>: the function used to generate uri for posts
-under that category (however, it is not recommended to
-customize except you are an expert)</li>
-<li><code>:uri-template</code>: the template used to generate uri</li>
-<li><code>:sort-by</code>: how to sort posts on category index page, by</li>
-<li><code>:date</code> or by <code>:mod-date</code>  (:mod-date is last modification date)?</li>
-<li><code>:category-index</code>: generate an index page for this category?</li>
-</ol>
-</div>
-</div>
-
-<div id="outline-container-orgheadline25" class="outline-3">
-<h3 id="orgheadline25">How to disable commenting for posts under certain summary?</h3>
-<div class="outline-text-3" id="text-orgheadline25">
-<p>
-Feature left for improvement.
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgheadline29" class="outline-2">
-<h2 id="orgheadline29">Change Logs</h2>
-<div class="outline-text-2" id="text-orgheadline29">
-</div><div id="outline-container-orgheadline27" class="outline-3">
-<h3 id="orgheadline27">v0.1</h3>
-<div class="outline-text-3" id="text-orgheadline27">
-<ul class="org-ul">
-<li>Initial version, org-webpage which tumashu forks from org-page.</li>
-<li>Use org-publish style config.</li>
-<li>Increment Theme support.</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-orgheadline28" class="outline-3">
-<h3 id="orgheadline28">v0.9</h3>
-<div class="outline-text-3" id="text-orgheadline28">
-<ul class="org-ul">
-<li>Initial version, EGO which kuangdash forks from org-webpage</li>
-<li>More stability.</li>
-<li>New theme.</li>
-<li>Add some feature.</li>
-</ul>
-</div>
-</div>
-</div>
-<div id="footnotes">
-<h2 class="footnotes">&#33050;&#27880;: </h2>
-<div id="text-footnotes">
-
-<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
-这些暂时为英文，相信中学英语水平即可。
-</p></div></div>
-
-
-</div>
-</div>
 </div>
 </div>
 <div>
@@ -690,7 +440,7 @@ Feature left for improvement.
   <div class="footer">
     <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
     <p>
-      Copyright &copy; 2014 - <span id="footerYear"></span> <a href="mailto:kuangdash@163.com">皐月中二</a>
+      Copyright &copy; 2014 - <span id="footerYear"></span> <a href="mailto:kuangdash &lt;at&gt; 163 &lt;dot&gt; com">皐月中二</a>
       &nbsp;&nbsp;-&nbsp;&nbsp;
       Powered by <a href="https://github.com/emacs-china/ego" target="_blank">EGO</a><br/>
       <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" style="border-width:0" alt="Creative Commons License" class="center"></a>
