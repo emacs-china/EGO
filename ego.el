@@ -61,7 +61,6 @@
 (require 'ego-export)
 (require 'browse-url)
 (require 'simple-httpd)
-(require 'impatient-mode)
 (require 'cl-lib)
 (require 'seq)
 
