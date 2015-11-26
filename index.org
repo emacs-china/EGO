@@ -236,7 +236,7 @@ M-x ego/do-publication
 EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松很多。这里只点一下要点：
 
 #+BEGIN_SRC emacs-lisp
-:theme (haru emacs_love)
+  :theme (haru emacs_love)
 #+END_SRC
 
 =haru= 是在 =emacs_love= 上修改的主题。实际上 =:theme= 对应的括号里可以有很多主题，形成一个主题链（越开头越优先）。

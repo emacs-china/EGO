@@ -112,7 +112,7 @@ Create a new branch named BRANCH-NAME if BRANCH-NAME doesn't exist."
                          t)))
           (t (error "Failed to change branch to '%s' of repository '%s'."
                     branch-name repo-dir)))
-    (when (string-match "\\(\\`error\\|[[:space:]]error[[:space:]]\\)" output)
+    (when (string-match "\\(\\`error\\|[^a-zA-Z]error\\)" output)
       (error "Failed to change branch to '%s' of repository '%s'."
              branch-name repo-dir))))
 
