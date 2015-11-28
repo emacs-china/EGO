@@ -93,7 +93,7 @@
                                       (delete-dups
                                        (mapcar 'car ego/project-config-alist))
                                       nil t nil nil ego/last-project-name)))
-          (jobs (ido-completing-read "Which job do you want to active: "
+          (jobs (ido-completing-read "Which job do you want to activate: "
                                      '("1. Test partial publish"
                                        "2. Partial publish"
                                        "3. Test full publish"

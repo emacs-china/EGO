@@ -90,8 +90,7 @@ presented by REPO-DIR."
 
 (defun ego/git-change-branch (repo-dir branch-name)
   "This function will change branch to BRANCH-NAME of git repository presented
-by REPO-DIR only if there is nothing uncommitted in the current branch.
-Create a new branch named BRANCH-NAME if BRANCH-NAME doesn't exist."
+by REPO-DIR only if there is nothing uncommitted in the current branch."
   (let ((repo-dir (file-name-as-directory repo-dir))
         (output (ego/shell-command
                  repo-dir
@@ -101,17 +100,8 @@ Create a new branch named BRANCH-NAME if BRANCH-NAME doesn't exist."
       (error "The branch have something uncommitted, recheck it!"))
     (setq output (ego/shell-command
                   repo-dir
-                  (concat "env LC_ALL=C git checkout -b " branch-name)
+                  (concat "env LC_ALL=C git checkout " branch-name)
                   t))
-    (cond ((string-match "Switched to a new branch" output)
-           (message "EGO: Create a new branch with name '%s'." branch-name))
-          ((string-match "already exists" output)
-           (setq output (ego/shell-command
-                         repo-dir
-                         (concat "env LC_ALL=C git checkout " branch-name)
-                         t)))
-          (t (error "Failed to change branch to '%s' of repository '%s'."
-                    branch-name repo-dir)))
     (when (string-match "\\(\\`error\\|[^a-zA-Z]error\\)" output)
       (error "Failed to change branch to '%s' of repository '%s'."
              branch-name repo-dir))))
