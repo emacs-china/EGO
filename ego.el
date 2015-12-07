@@ -234,7 +234,6 @@
     (message "EGO: converting the org file needed to be test, waiting...")
     (ego/publish-changes org-file-to-test addition-files changed-files store-dir)
     (message "EGO: test finished, output directory: %s." store-dir)
-    (setq ego/publish-without-org-to-html nil)
     (unless (file-directory-p test-dir)
       (make-directory test-dir t))
     (copy-directory store-dir test-dir t t t)
