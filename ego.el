@@ -202,7 +202,7 @@
   "Test the current opening org-file!"
   (interactive
    (let* ((j (or ego/default-project-name
-                 (ido-completing-read "Which project do you want to publish? "
+                 (ido-completing-read "Which project theme do you want to use? "
                                       (delete-dups
                                        (mapcar 'car ego/project-config-alist))
                                       nil t nil nil ego/last-project-name))))
