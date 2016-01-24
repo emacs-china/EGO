@@ -244,7 +244,7 @@
     (browse-url (format "http://%s:%d%s" system-name httpd-port test-uri))))
 
 ;;;###autoload
-(defun ego/new-repository (repo-dir &optional source-branch html-branch)
+(defun ego/new-repository (repo-dir &optional html-branch source-branch)
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by EGO. In order to construct a real repository,
 you must customize the variable `ego/project-config-alist' according to the readme file of EGO project."
@@ -422,6 +422,7 @@ responsibility to guarantee the two parameters are valid."
     (unless (file-directory-p dir)
       (mkdir dir t))
     (switch-to-buffer (find-file path))
+    (erase-buffer)
     (if (and (not insert-fallback-template)
              (called-interactively-p 'any))
         (call-interactively 'ego/insert-options-template)

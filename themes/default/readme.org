@@ -3,7 +3,7 @@
 The theme is created for a static sate generator: ego --- which is served for [[http://emacs-china.github.io][emacs-china]].
 
 * Introduction
-Referring to [[http://kuangdash.github.io/tags/org-page/][How to use org-page]] (written in chinese).
+
 
 * If there is problem:
 Open an issue.
