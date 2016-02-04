@@ -65,12 +65,14 @@
 		  (push (list nil (vector title author description category )) entries))))
 	(reverse entries)))
 
-(defun ego-mode-edit ()
-  (interactive)
+(defun ego-mode--get-file-path ()
   (save-excursion
 	(move-beginning-of-line nil)
-	(let ((file (get-text-property (point) 'help-echo))) ;help-echo is also the file path
-	  (find-file-other-window file))))
+	(get-text-property (point) 'help-echo)));help-echo is also the file path
+
+(defun ego-mode-edit ()
+  (interactive)
+  (find-file-other-window (ego-mode--get-file-path)))
 
 (defun ego-mode-do-publication ()
   (interactive)
@@ -78,6 +80,7 @@
 
 (defun ego-mode-test-current-page ()
   (interactive)
+  (find-file-other-window (ego-mode--get-file-path))
   (ego/test-current-page ego/current-project-name))
 
 (define-derived-mode ego-mode tabulated-list-mode "ego-mode"
