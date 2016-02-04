@@ -117,14 +117,14 @@ content of the buffer will be converted into html."
     (setq tags (ego/read-org-option "TAGS"))
     (when tags
       (plist-put
-       attr-plist :tags (delete "" (mapcar 'ego/trim-string
+       attr-plist :tags (delete "" (mapcar 'string-trim
                                            (split-string tags "[:,]+" t))))
       (plist-put
        attr-plist :year (format "%.4s" (plist-get attr-plist :date))))
     (setq authors (ego/read-org-option "AUTHOR"))
     (when authors
       (plist-put
-       attr-plist :authors (delete "" (mapcar 'ego/trim-string
+       attr-plist :authors (delete "" (mapcar 'string-trim
                                               (split-string authors "[:,]+" t)))))
     (setq category (ego/get-category filename))
     (plist-put attr-plist :category category)

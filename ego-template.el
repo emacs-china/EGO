@@ -210,7 +210,7 @@ similar to `ego/render-header'."
                          #'(lambda (tag-name)
                              (ht ("link" (ego/generate-summary-uri "tags" tag-name))
                                  ("name" tag-name)))
-                         (delete "" (mapcar 'ego/trim-string (split-string tags "[:,]+" t))))))
+                         (delete "" (mapcar 'string-trim (split-string tags "[:,]+" t))))))
               (category (ego/get-category filename))
               (config (cdr (or (assoc category ego/category-config-alist)
                                (ego/get-category-setting default-category))))

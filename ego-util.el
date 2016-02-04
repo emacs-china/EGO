@@ -64,9 +64,8 @@ For examples:
 Any \"day of week\", or \"time\" info, or any other parts of the string, are
 discarded.
 Code detail: URL `http://xahlee.org/emacs/elisp_parse_time.html'"
-  (let ((date-str date-string)
+  (let ((date-str (string-trim date-string))
         date-list year month date yyyy mm dd)
-    (setq date-str (replace-regexp-in-string "^ *\\(.+\\) *$" "\\1" date-str))
     (cond
      ;; USA convention of mm/dd/yyyy
      ((string-match
@@ -153,32 +152,6 @@ name@domain.com => name <at> domain <dot> com"
      " +" " " (replace-regexp-in-string
                "@" " <at> " (replace-regexp-in-string "\\." " <dot> " email)))))
 
-(defun ego/string-suffix-p (str1 str2 &optional ignore-case)
-  "Return non-nil if STR1 is a suffix of STR2.
-If IGNORE-CASE is non-nil, the comparison is done without paying attention
-to case differences."
-  (let ((pos (- (length str2) (length str1))))
-    (if (< pos 0) nil (eq t (compare-strings str1 nil nil
-                                             str2 pos nil ignore-case)))))
-
-(defun ego/trim-string-left (str)
-  "Remove whitespace at the beginning of STR."
-  (if (string-match "\\`[ \t\n\r]+" str)
-      (replace-match "" t t str)
-    str))
-
-(defun ego/trim-string-right (str)
-  "Remove whitespace at the end of STR."
-  (if (string-match "[ \t\n\r]+\\'" str)
-      (replace-match "" t t str)
-    str))
-
-(defun ego/trim-string (str)
-  "Remove whitespace at the beginning and end of STR.
-The function is copied from https://github.com/magnars/s.el, because I do not
-want to make ego depend on other libraries, so I copied the function here,
-so do `ego/trim-string-left' and `ego/trim-string-right'."
-  (ego/trim-string-left (ego/trim-string-right str)))
 
 (defun ego/encode-string-to-url (string)
   "Encode STRING to legal URL. Why we do not use `url-encode-url' to encode the
@@ -199,15 +172,15 @@ encoded ones, like %3E, but we do NOT want this kind of url."
 (defun ego/string-to-file (string file &optional mode)
   "Write STRING into FILE, only when FILE is writable. If MODE is a valid major
 mode, format the string with MODE's format settings."
-  (with-temp-buffer
-    (insert string)
-    (set-buffer-file-coding-system 'utf-8-unix)
-    (when (and mode (functionp mode))
-      (funcall mode)
-      (flush-lines "^[ \\t]*$" (point-min) (point-max))
-      (delete-trailing-whitespace (point-min) (point-max))
-      (indent-region (point-min) (point-max)))
-    (when (file-writable-p file)
+  (when (file-writable-p file)
+	(with-temp-buffer
+	  (insert string)
+	  (set-buffer-file-coding-system 'utf-8-unix)
+	  (when (and mode (functionp mode))
+		(funcall mode)
+		(flush-lines "^[ \\t]*$" (point-min) (point-max))
+		(delete-trailing-whitespace (point-min) (point-max))
+		(indent-region (point-min) (point-max)))
       (write-region (point-min) (point-max) file))))
 
 (defun ego/convert-plist-to-hashtable (plist)
@@ -229,18 +202,18 @@ element to ALIST-VAR."
   ;; Loop over all elements of NEW-ALIST.
   (while new-alist
     (let* ((new-element (car new-alist))
-	   ;; Get the element of ALIST-VAR with the same key of the current
-	   ;; element of NEW-ALIST, if any.
-	   (old-element (assoc (car new-element) (symbol-value alist-var))))
+		   ;; Get the element of ALIST-VAR with the same key of the current
+		   ;; element of NEW-ALIST, if any.
+		   (old-element (assoc (car new-element) (symbol-value alist-var))))
       (if old-element
-	  (progn
-	    (set alist-var (delete old-element (symbol-value alist-var)))
-	    ;; Append to `old-element' the values of the current element of
-	    ;; NEW-ALIST.
-	    (mapc (lambda (elt) (add-to-list 'old-element elt t))
-		  (cdr new-element))
-	    (set alist-var (add-to-list alist-var old-element t)))
-	(add-to-list alist-var new-element t)))
+		  (progn
+			(set alist-var (delete old-element (symbol-value alist-var)))
+			;; Append to `old-element' the values of the current element of
+			;; NEW-ALIST.
+			(mapc (lambda (elt) (add-to-list 'old-element elt t))
+				  (cdr new-element))
+			(set alist-var (add-to-list alist-var old-element t)))
+		(add-to-list alist-var new-element t)))
     ;; Next element of NEW-ALIST.
     (setq new-alist (cdr new-alist))))
 
