@@ -103,3 +103,5 @@
   (switch-to-buffer (get-buffer-create "*ego-manager*"))
   (ego-mode)
   (tabulated-list-print t))
+
+(provide 'ego-mode)
