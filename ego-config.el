@@ -316,7 +316,7 @@ You can see fallback value of above option in `ego/config-fallback'"
    (load-file-name (file-name-directory load-file-name))
    ((symbol-file 'ego/temp-buffer-name)
     (file-name-directory (symbol-file 'ego/temp-buffer-name)))
-   ((string= (file-name-nondirectory buffer-file-name) "ego-vars.el")
+   ((string= (file-name-nondirectory buffer-file-name) "ego-config.el")
     (file-name-directory buffer-file-name))
    (t nil))
   "The directory where ego is loaded from.")

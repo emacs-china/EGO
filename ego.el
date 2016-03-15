@@ -411,7 +411,7 @@ responsibility to guarantee the two parameters are valid."
       (setq category (ego/get-config-option :default-category)))
   (if (string= filename "")
       (setq filename "new-post.org"))
-  (unless (ego/string-suffix-p ".org" filename)
+  (unless (string-suffix-p ".org" filename)
     (setq filename (concat filename ".org")))
   (let* ((repo-dir (ego/get-repository-directory))
          (dir (concat (file-name-as-directory repo-dir)
