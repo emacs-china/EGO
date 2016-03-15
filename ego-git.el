@@ -63,7 +63,7 @@ instead of pointer HEAD."
                          (or branch "HEAD"))
                  t)))
     (delq nil (mapcar #'(lambda (line)
-                          (when (ego/string-suffix-p ".org" line t)
+                          (when (string-suffix-p ".org" line t)
                             (expand-file-name line repo-dir)))
                       (split-string output "\n")))))
 
@@ -75,7 +75,7 @@ presented by REPO-DIR."
                  (concat "env LC_ALL=C git ls-files --others --ignored --exclude-standard --directory")
                  t)))
     (delq nil (mapcar #'(lambda (line)
-                          (when (ego/string-suffix-p ".org" line t)
+                          (when (string-suffix-p ".org" line t)
                             (expand-file-name line repo-dir)))
                       (split-string output "\n")))))
 
