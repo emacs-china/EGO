@@ -91,6 +91,8 @@ The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you
   (ego/add-to-alist 'ego/project-config-alist
                  `(("emacs-china"
                    :repository-directory "~/github/emacs-china.github.io"
+                   :repository-org-branch "master" ; 源文件所在 branch
+                   :repository-html-branch "master" ; html 文件所在 branch
                    :site-domain "http://emacs-china.github.io/"
                    :site-main-title "EMACS-CHINA"
                    :site-sub-title "=============>集思广益"

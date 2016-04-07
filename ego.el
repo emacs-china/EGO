@@ -62,7 +62,6 @@
 (require 'browse-url)
 (require 'simple-httpd)
 (require 'cl-lib)
-(require 'seq)
 
 (defconst ego-version "0.9")
 
@@ -137,7 +136,7 @@
     (unless (equal org-branch (ego/git-branch-name repo-dir))
       (ego/git-change-branch repo-dir org-branch))
     (setq repo-files
-          (seq-filter `(lambda (string)
+          (-filter `(lambda (string)
                          (not (string-match ,(ego/get-config-option :ignore-file-name-regexp) string)))
                       (when (functionp repo-files-function)
                         (funcall repo-files-function repo-dir))))
