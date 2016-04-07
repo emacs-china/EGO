@@ -301,12 +301,12 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (ego/string-to-file
-      (mustache-render
-       (ego/get-cache-create
-        :container-template
-        (message "EGO: Read container.mustache from file")
-        (ego/file-to-string (ego/get-template-file "container.mustache")))
-       component-table)
+     (mustache-render
+      (ego/get-cache-create
+       :container-template
+       (message "EGO: Read container.mustache from file")
+       (ego/file-to-string (ego/get-template-file "container.mustache")))
+      component-table)
      (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
      )))
 
@@ -374,58 +374,58 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
            (unless (file-directory-p cat-dir)
              (mkdir cat-dir t))
            (ego/string-to-file
-             (mustache-render
-              (ego/get-cache-create
-               :container-template
-               (message "EGO: Read container.mustache from file")
-               (ego/file-to-string (ego/get-template-file "container.mustache")))
-              (ht ("header"
-                   (ego/render-header
-                    (ht ("page-title" (concat (capitalize (car cat-list))
-                                              " Index - "
-                                              (ego/get-config-option :site-main-title)))
-                        ("author" (or user-full-name "Unknown Author")))))
-                  ("nav" (ego/render-navigation-bar))
-                  ("content"
-                   (ego/render-content
-                    "category-index.mustache"
-                    (ht ("cat-name" (capitalize (car cat-list)))
-                        ("posts"
-                         (mapcar
-                          #'(lambda (attr-plist)
-                              (let ((tags-multi (mapcar
-                                                 #'(lambda (tag-name)
-                                                     (ht ("link" (ego/generate-summary-uri "tags" tag-name))
-                                                         ("name" tag-name)))
-                                                 (plist-get attr-plist :tags))))
-                                (ht ("date"
+            (mustache-render
+             (ego/get-cache-create
+              :container-template
+              (message "EGO: Read container.mustache from file")
+              (ego/file-to-string (ego/get-template-file "container.mustache")))
+             (ht ("header"
+                  (ego/render-header
+                   (ht ("page-title" (concat (capitalize (car cat-list))
+                                             " Index - "
+                                             (ego/get-config-option :site-main-title)))
+                       ("author" (or user-full-name "Unknown Author")))))
+                 ("nav" (ego/render-navigation-bar))
+                 ("content"
+                  (ego/render-content
+                   "category-index.mustache"
+                   (ht ("cat-name" (capitalize (car cat-list)))
+                       ("posts"
+                        (mapcar
+                         #'(lambda (attr-plist)
+                             (let ((tags-multi (mapcar
+                                                #'(lambda (tag-name)
+                                                    (ht ("link" (ego/generate-summary-uri "tags" tag-name))
+                                                        ("name" tag-name)))
+                                                (plist-get attr-plist :tags))))
+                               (ht ("date"
+                                    (plist-get
+                                     attr-plist
                                      (plist-get
-                                      attr-plist
-                                      (plist-get
-                                       (cdr (or (assoc
-                                                 (plist-get attr-plist :category)
-                                                 ego/category-config-alist)
-                                                (ego/get-category-setting default-category)))
-                                       :sort-by)))
-                                    ("post-uri" (plist-get attr-plist :uri))
-                                    ("post-title" (plist-get attr-plist :title))
-                                    ("tag-links" (if (not tags-multi) "N/A"
-                                                   (mapconcat
-                                                    #'(lambda (tag)
-                                                        (mustache-render
-                                                         "<a href=\"{{link}}\">{{name}}</a>" tag))
-                                                    tags-multi " : "))))))
-                          (cdr cat-list))))))
-                  ("footer"
-                   (ego/render-footer
-                    (ht ("show-meta" nil)
-                        ("show-comment" nil)
-                        ;; ("author" "ego")
-                        ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
-                        ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
-                        ("creator-info" (ego/get-html-creator-string))
-                        ;; ("email" (ego/confound-email-address "ego@emacs-china.org"))
-                        )))))
+                                      (cdr (or (assoc
+                                                (plist-get attr-plist :category)
+                                                ego/category-config-alist)
+                                               (ego/get-category-setting default-category)))
+                                      :sort-by)))
+                                   ("post-uri" (plist-get attr-plist :uri))
+                                   ("post-title" (plist-get attr-plist :title))
+                                   ("tag-links" (if (not tags-multi) "N/A"
+                                                  (mapconcat
+                                                   #'(lambda (tag)
+                                                       (mustache-render
+                                                        "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                                   tags-multi " : "))))))
+                         (cdr cat-list))))))
+                 ("footer"
+                  (ego/render-footer
+                   (ht ("show-meta" nil)
+                       ("show-comment" nil)
+                       ;; ("author" "ego")
+                       ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
+                       ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
+                       ("creator-info" (ego/get-html-creator-string))
+                       ;; ("email" (ego/confound-email-address "ego@emacs-china.org"))
+                       )))))
             (concat cat-dir "index.html") 'html-mode)))
      sort-alist)))
 
@@ -436,48 +436,48 @@ publication directory."
   (let ((sort-alist (ego/rearrange-category-sorted file-attr-list))
         (id 0))
     (ego/string-to-file
-      (mustache-render
-       (ego/get-cache-create
-        :container-template
-        (message "EGO: Read container.mustache from file")
-        (ego/file-to-string (ego/get-template-file "container.mustache")))
-       (ht ("header"
-            (ego/render-header
-             (ht ("page-title" (concat "Index - " (ego/get-config-option :site-main-title)))
-                 ("author" (or user-full-name "Unknown Author")))))
-           ("nav" (ego/render-navigation-bar))
-           ("content"
-            (ego/render-content
-             "index.mustache"
-             (ht ("categories"
-                  (mapcar
-                   #'(lambda (cell)
-                       (ht ("id" (setq id (+ id 1)))
-                           ("category" (car cell))
-                           ("posts" (mapcar
-                                     #'(lambda (plist)
-                                         (ht ("post-uri"
-                                              (plist-get plist :uri))
-                                             ("post-title"
-                                              (plist-get plist :title))
-                                             ("post-desc"
-                                              (plist-get plist :description))
-                                             ("post-date"
-                                              (plist-get plist :date))
-                                             ("post-thumb"
-                                              (or (plist-get plist :thumb) ""))))
-                                     (cdr cell)))))
-                   sort-alist)))))
-           ("footer"
-            (ego/render-footer
-             (ht ("show-meta" nil)
-                 ("show-comment" nil)
-                 ("author" (or user-full-name "Unknown Author"))
-                 ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
-                 ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
-                 ("creator-info" (ego/get-html-creator-string))
-                 ("email" (ego/confound-email-address (or user-mail-address
-                                                          "Unknown Email"))))))))
+     (mustache-render
+      (ego/get-cache-create
+       :container-template
+       (message "EGO: Read container.mustache from file")
+       (ego/file-to-string (ego/get-template-file "container.mustache")))
+      (ht ("header"
+           (ego/render-header
+            (ht ("page-title" (concat "Index - " (ego/get-config-option :site-main-title)))
+                ("author" (or user-full-name "Unknown Author")))))
+          ("nav" (ego/render-navigation-bar))
+          ("content"
+           (ego/render-content
+            "index.mustache"
+            (ht ("categories"
+                 (mapcar
+                  #'(lambda (cell)
+                      (ht ("id" (setq id (+ id 1)))
+                          ("category" (car cell))
+                          ("posts" (mapcar
+                                    #'(lambda (plist)
+                                        (ht ("post-uri"
+                                             (plist-get plist :uri))
+                                            ("post-title"
+                                             (plist-get plist :title))
+                                            ("post-desc"
+                                             (plist-get plist :description))
+                                            ("post-date"
+                                             (plist-get plist :date))
+                                            ("post-thumb"
+                                             (or (plist-get plist :thumb) ""))))
+                                    (cdr cell)))))
+                  sort-alist)))))
+          ("footer"
+           (ego/render-footer
+            (ht ("show-meta" nil)
+                ("show-comment" nil)
+                ("author" (or user-full-name "Unknown Author"))
+                ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
+                ("creator-info" (ego/get-html-creator-string))
+                ("email" (ego/confound-email-address (or user-mail-address
+                                                         "Unknown Email"))))))))
      (concat (file-name-as-directory pub-base-dir) "index.html") 'html-mode)))
 
 (defun ego/generate-default-about (pub-base-dir)
@@ -492,30 +492,30 @@ is the root publication directory."
     (unless (file-directory-p pub-dir)
       (mkdir pub-dir t))
     (ego/string-to-file
-      (mustache-render
-       (ego/get-cache-create
-        :container-template
-        (message "EGO: Read container.mustache from file")
-        (ego/file-to-string (ego/get-template-file "container.mustache")))
-       (ht ("header"
-            (ego/render-header
-             (ht ("page-title" (concat "About - " (ego/get-config-option :site-main-title)))
-                 ("author" (or user-full-name "Unknown Author")))))
-           ("nav" (ego/render-navigation-bar))
-           ("content"
-            (ego/render-content
-             "about.mustache"
-             (ht ("author" (or user-full-name "Unknown Author")))))
-           ("footer"
-            (ego/render-footer
-             (ht ("show-meta" nil)
-                 ("show-comment" nil)
-                 ("author" (or user-full-name "Unknown Author"))
-                 ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
-                 ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
-                 ("creator-info" (ego/get-html-creator-string))
-                 ("email" (ego/confound-email-address (or user-mail-address
-                                                          "Unknown Email"))))))))
+     (mustache-render
+      (ego/get-cache-create
+       :container-template
+       (message "EGO: Read container.mustache from file")
+       (ego/file-to-string (ego/get-template-file "container.mustache")))
+      (ht ("header"
+           (ego/render-header
+            (ht ("page-title" (concat "About - " (ego/get-config-option :site-main-title)))
+                ("author" (or user-full-name "Unknown Author")))))
+          ("nav" (ego/render-navigation-bar))
+          ("content"
+           (ego/render-content
+            "about.mustache"
+            (ht ("author" (or user-full-name "Unknown Author")))))
+          ("footer"
+           (ego/render-footer
+            (ht ("show-meta" nil)
+                ("show-comment" nil)
+                ("author" (or user-full-name "Unknown Author"))
+                ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
+                ("creator-info" (ego/get-html-creator-string))
+                ("email" (ego/confound-email-address (or user-mail-address
+                                                         "Unknown Email"))))))))
      (concat pub-dir "index.html") 'html-mode)))
 
 (defun ego/generate-summary-uri (summary-name summary-item-name)
@@ -545,7 +545,7 @@ TODO: improve this function."
                  (elem (plist-get attr-plist summary-attr)))
             (if (listp elem) elem (list elem)))))
      file-attr-list)
-    (when (equal summary-name (caar (seq-filter #'(lambda (element) (equal :tags (cadr element)))
+    (when (equal summary-name (caar (-filter #'(lambda (element) (equal :tags (cadr element)))
                                                 (ego/get-config-option :summary))))
       (setq summary-name "tags")
       (setq summary-base-dir (expand-file-name
@@ -574,74 +574,75 @@ TODO: improve this function."
                         0)))))
      summary-alist); sort the summary post list according to the date
     (ego/string-to-file
-      (mustache-render
-       (ego/get-cache-create
-        :container-template
-        (message "EGO: Read container.mustache from file")
-        (ego/file-to-string (ego/get-template-file "container.mustache")))
-       (ht ("header"
-            (ego/render-header
-             (ht ("page-title" (concat (capitalize summary-name)
-                                       " Index - "
-                                       (ego/get-config-option :site-main-title)))
-                 ("author" (or user-full-name "Unknown Author")))))
-           ("nav" (ego/render-navigation-bar))
-           ("content"
-            (ego/render-content
-             "summary-index.mustache"
-             (ht ("summary-name" (capitalize summary-name))
-                 ("updates-p" (numberp summary-update-number))
-                 ("updates"
-                  (when (numberp summary-update-number)
-                    (mapcar
-                     #'(lambda (attr-plist)
-                         (let ((tags-multi (mapcar
-                                            #'(lambda (tag-name)
-                                                (ht ("link" (ego/generate-summary-uri "tags" tag-name))
-                                                    ("name" tag-name)))
-                                            (plist-get attr-plist :tags))))
-                           (ht ("post-uri" (plist-get attr-plist :uri))
-                               ("post-title" (plist-get attr-plist :title))
-                               ("post-date" (plist-get attr-plist :mod-date))
-                               ("tag-links" (if (not tags-multi) "N/A"
-                                              (mapconcat
-                                               #'(lambda (tag)
-                                                   (mustache-render
-                                                    "<a href=\"{{link}}\">{{name}}</a>" tag))
-                                               tags-multi " : "))))))
-                     (seq-uniq (seq-take
-                                (sort (do ((k summary-alist (cdr k))
-                                           (result-k nil (append (cdr (car k)) result-k)))
-                                          ((equal k nil) result-k))
-                                      #'(lambda (plist1 plist2)
-                                          (< (ego/compare-standard-date
-                                              (ego/fix-timestamp-string
-                                               (plist-get
-                                                plist1
-                                                :mod-date))
-                                              (ego/fix-timestamp-string
-                                               (plist-get
-                                                plist2
-                                                :mod-date)))
-                                             0)))
-                                summary-update-number)))))
-                 ("summary"
-                  (mapcar
-                   #'(lambda (summary-list)
-                       (ht ("summary-item-name" (car summary-list))
-                           ("summary-item-uri" (ego/generate-summary-uri summary-name (car summary-list)))
-                           ("count" (number-to-string (length (cdr summary-list))))))
-                   summary-alist)))))
-           ("footer"
-            (ego/render-footer
-             (ht ("show-meta" nil)
-                 ("show-comment" nil)
-                 ;; ("author" "ego")
-                 ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
-                 ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
-                 ("creator-info" (ego/get-html-creator-string))
-                 ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
-                 )))))
+     (mustache-render
+      (ego/get-cache-create
+       :container-template
+       (message "EGO: Read container.mustache from file")
+       (ego/file-to-string (ego/get-template-file "container.mustache")))
+      (ht ("header"
+           (ego/render-header
+            (ht ("page-title" (concat (capitalize summary-name)
+                                      " Index - "
+                                      (ego/get-config-option :site-main-title)))
+                ("author" (or user-full-name "Unknown Author")))))
+          ("nav" (ego/render-navigation-bar))
+          ("content"
+           (ego/render-content
+            "summary-index.mustache"
+            (ht ("summary-name" (capitalize summary-name))
+                ("updates-p" (numberp summary-update-number))
+                ("updates"
+                 (when (numberp summary-update-number)
+                   (mapcar
+                    #'(lambda (attr-plist)
+                        (let ((tags-multi (mapcar
+                                           #'(lambda (tag-name)
+                                               (ht ("link" (ego/generate-summary-uri "tags" tag-name))
+                                                   ("name" tag-name)))
+                                           (plist-get attr-plist :tags))))
+                          (ht ("post-uri" (plist-get attr-plist :uri))
+                              ("post-title" (plist-get attr-plist :title))
+                              ("post-date" (plist-get attr-plist :mod-date))
+                              ("tag-links" (if (not tags-multi) "N/A"
+                                             (mapconcat
+                                              #'(lambda (tag)
+                                                  (mustache-render
+                                                   "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                              tags-multi " : "))))))
+                    (-uniq (-take
+                            summary-update-number
+                            (sort (do ((k summary-alist (cdr k))
+                                       (result-k nil (append (cdr (car k)) result-k)))
+                                      ((equal k nil) result-k))
+                                  #'(lambda (plist1 plist2)
+                                      (< (ego/compare-standard-date
+                                          (ego/fix-timestamp-string
+                                           (plist-get
+                                            plist1
+                                            :mod-date))
+                                          (ego/fix-timestamp-string
+                                           (plist-get
+                                            plist2
+                                            :mod-date)))
+                                         0)))
+                            )))))
+                ("summary"
+                 (mapcar
+                  #'(lambda (summary-list)
+                      (ht ("summary-item-name" (car summary-list))
+                          ("summary-item-uri" (ego/generate-summary-uri summary-name (car summary-list)))
+                          ("count" (number-to-string (length (cdr summary-list))))))
+                  summary-alist)))))
+          ("footer"
+           (ego/render-footer
+            (ht ("show-meta" nil)
+                ("show-comment" nil)
+                ;; ("author" "ego")
+                ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
+                ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
+                ("creator-info" (ego/get-html-creator-string))
+                ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
+                )))))
      (concat summary-base-dir "index.html") 'html-mode)
     (mapc
      #'(lambda (summary-list)
@@ -651,57 +652,57 @@ TODO: improve this function."
          (unless (file-directory-p summary-dir)
            (mkdir summary-dir t))
          (ego/string-to-file
-           (mustache-render
-            (ego/get-cache-create
-             :container-template
-             (message "EGO: Read container.mustache from file")
-             (ego/file-to-string (ego/get-template-file "container.mustache")))
-            (ht ("header"
-                 (ego/render-header
-                  (ht ("page-title" (concat (capitalize summary-name) ": " (car summary-list)
-                                            " - " (ego/get-config-option :site-main-title)))
-                      ("author" "ego"))))
-                ("nav" (ego/render-navigation-bar))
-                ("content"
-                 (ego/render-content
-                  "summary.mustache"
-                  (ht ("summary-name" (capitalize summary-name))
-                      ("summary-item-name" (car summary-list))
-                      ("summary"
-                       (mapcar
-                        #'(lambda (summary-list)
-                            (ht ("summary-item-name" (car summary-list))
-                                ("summary-item-uri" (ego/generate-summary-uri summary-name (car summary-list)))
-                                ("count" (number-to-string (length (cdr summary-list))))))
-                        summary-alist))
-                      ("posts"
-                       (mapcar
-                        #'(lambda (attr-plist)
-                            (let ((tags-multi (mapcar
-                                               #'(lambda (tag-name)
-                                                   (ht ("link" (ego/generate-summary-uri "tags" tag-name))
-                                                       ("name" tag-name)))
-                                               (plist-get attr-plist :tags))))
-                              (ht ("post-uri" (plist-get attr-plist :uri))
-                                  ("post-title" (plist-get attr-plist :title))
-                                  ("post-date" (plist-get attr-plist :date))
-                                  ("tag-links" (if (not tags-multi) "N/A"
-                                                 (mapconcat
-                                                  #'(lambda (tag)
-                                                      (mustache-render
-                                                       "<a href=\"{{link}}\">{{name}}</a>" tag))
-                                                  tags-multi " : "))))))
-                        (cdr summary-list))))))
-                ("footer"
-                 (ego/render-footer
-                  (ht ("show-meta" nil)
-                      ("show-comment" nil)
-                      ;; ("author" "ego")
-                      ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
-                      ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
-                      ("creator-info" (ego/get-html-creator-string))
-                      ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
-                      )))))
+          (mustache-render
+           (ego/get-cache-create
+            :container-template
+            (message "EGO: Read container.mustache from file")
+            (ego/file-to-string (ego/get-template-file "container.mustache")))
+           (ht ("header"
+                (ego/render-header
+                 (ht ("page-title" (concat (capitalize summary-name) ": " (car summary-list)
+                                           " - " (ego/get-config-option :site-main-title)))
+                     ("author" "ego"))))
+               ("nav" (ego/render-navigation-bar))
+               ("content"
+                (ego/render-content
+                 "summary.mustache"
+                 (ht ("summary-name" (capitalize summary-name))
+                     ("summary-item-name" (car summary-list))
+                     ("summary"
+                      (mapcar
+                       #'(lambda (summary-list)
+                           (ht ("summary-item-name" (car summary-list))
+                               ("summary-item-uri" (ego/generate-summary-uri summary-name (car summary-list)))
+                               ("count" (number-to-string (length (cdr summary-list))))))
+                       summary-alist))
+                     ("posts"
+                      (mapcar
+                       #'(lambda (attr-plist)
+                           (let ((tags-multi (mapcar
+                                              #'(lambda (tag-name)
+                                                  (ht ("link" (ego/generate-summary-uri "tags" tag-name))
+                                                      ("name" tag-name)))
+                                              (plist-get attr-plist :tags))))
+                             (ht ("post-uri" (plist-get attr-plist :uri))
+                                 ("post-title" (plist-get attr-plist :title))
+                                 ("post-date" (plist-get attr-plist :date))
+                                 ("tag-links" (if (not tags-multi) "N/A"
+                                                (mapconcat
+                                                 #'(lambda (tag)
+                                                     (mustache-render
+                                                      "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                                 tags-multi " : "))))))
+                       (cdr summary-list))))))
+               ("footer"
+                (ego/render-footer
+                 (ht ("show-meta" nil)
+                     ("show-comment" nil)
+                     ;; ("author" "ego")
+                     ("google-analytics" (ego/get-config-option :personal-google-analytics-id))
+                     ("google-analytics-id" (ego/get-config-option :personal-google-analytics-id))
+                     ("creator-info" (ego/get-html-creator-string))
+                     ;;("email" (ego/confound-email-address "ego@emacs-china.org"))
+                     )))))
           (concat summary-dir "index.html") 'html-mode))
      summary-alist)))
 
@@ -731,17 +732,17 @@ PUB-BASE-DIR is the root publication directory."
     (unless (file-directory-p rss-base-dir)
       (mkdir rss-base-dir t))
     (ego/string-to-file
-      (mustache-render
-       ego/rss-template
-       (ht ("title" (ego/get-config-option :site-main-title))
-           ("link" (ego/get-site-domain))
-           ("description" (ego/get-config-option :site-sub-title))
-           ("date" (format-time-string "%a, %d %b %Y %T %Z"))
-           ("items" (--map (ht ("item-title" (plist-get it :title))
-                               ("item-link" (ego/get-full-url (plist-get it :uri)))
-                               ("item-description" (plist-get it :description))
-                               ("item-update-date" (plist-get it :mod-date)))
-                           last-10-posts))))
+     (mustache-render
+      ego/rss-template
+      (ht ("title" (ego/get-config-option :site-main-title))
+          ("link" (ego/get-site-domain))
+          ("description" (ego/get-config-option :site-sub-title))
+          ("date" (format-time-string "%a, %d %b %Y %T %Z"))
+          ("items" (--map (ht ("item-title" (plist-get it :title))
+                              ("item-link" (ego/get-full-url (plist-get it :uri)))
+                              ("item-description" (plist-get it :description))
+                              ("item-update-date" (plist-get it :mod-date)))
+                          last-10-posts))))
      rss-file)))
 
 (org-add-link-type "ego-link"
@@ -763,7 +764,7 @@ PUB-BASE-DIR is the root publication directory."
     (with-current-buffer (setq file-buffer
                                (or visiting (find-file org-file)))
       (setq webpath (plist-get (car (ego/get-org-file-options default-directory nil))
-                              :uri)))
+                               :uri)))
     (or visiting (kill-buffer file-buffer))
     (format "<span class=\"ego_link\"><a href=\"%s\">%s</a></span>" webpath desc)))
 
@@ -776,7 +777,7 @@ PUB-BASE-DIR is the root publication directory."
     (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")
       (setq visiting (find-buffer-visiting org-file))
       (with-current-buffer (switch-to-buffer (setq file-buffer
-                                 (or visiting (find-file org-file))))
+                                                   (or visiting (find-file org-file))))
         (setq next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t))
         (local-set-key "l" `(lambda ()
                               (interactive)

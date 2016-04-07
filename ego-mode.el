@@ -1,12 +1,8 @@
 ;;; ego-mode.el --- a major mode for managing posts in ego
 
-;; Copyright (C)  2015 Feng Shu, Kuangdash, DarkSun
-;;                2012, 2013, 2014, 2015 Kelvin Hu
+;; Copyright (C)  2016 DarkSun
 
-;; Author: Kelvin Hu <ini DOT kelvin AT gmail DOT com>
-;;         Feng Shu  <tumashu AT 163.com>
-;;         Kuangdash <kuangdash AT 163.com>
-;;         DarkSun   <lujun9972@gmail.com>
+;; Author:   DarkSun   <lujun9972@gmail.com>
 ;; Keywords: org-mode, convenience, beautify
 ;; Homepage: https://github.com/emacs-china/EGO
 
@@ -29,7 +25,6 @@
 
 ;;; Code:
 
-(require 'seq)
 (require 'ego)
 
 (defun ego-mode--select-current-project ()
@@ -47,7 +42,7 @@
   (let* ((repo-dir (ego/get-repository-directory))
          (repo-files-function (ego/get-config-option :repo-files-function))
          (ignore-file-name-regexp (ego/get-config-option :ignore-file-name-regexp))
-         (repo-files (seq-filter (lambda (string)
+         (repo-files (-filter (lambda (string)
                                    (not (string-match ignore-file-name-regexp string)))
                                  (when (functionp repo-files-function)
                                    (funcall repo-files-function repo-dir))))
