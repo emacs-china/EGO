@@ -124,6 +124,7 @@ You can find some example about how to use =async.el= package here : [[https://g
 And here is an example: (There are some important point so that you had better see it.)
 
 #+BEGIN_SRC emacs-lisp
+  (require 'ego)
   (require 'async)
   (defun ego/async-do-publish (&optional project-name
                                          test-and-not-publish
@@ -132,11 +133,11 @@ And here is an example: (There are some important point so that you had better s
                                          checkin-all
                                          publish-config)
     (interactive
-     (let* ((j (or ego/default-project-name
+     (let* ((j (or ego--default-project-name
                    (completing-read "Which project do you want to publish? "
                                     (delete-dups
                                      (mapcar 'car ego/project-config-alist))
-                                    nil t nil nil ego/last-project-name)))
+                                    nil t nil nil ego--last-project-name)))
             (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
@@ -145,12 +146,12 @@ And here is an example: (There are some important point so that you had better s
        (list j p f b c a)))
     ;; set ego remote push (publish-config)
     (unless test-and-not-publish
-      (setq ego/current-project-name project-name)
-      (setq ego/last-project-name project-name)
+      (setq ego--current-project-name project-name)
+      (setq ego--last-project-name project-name)
       (setq publish-config
-            (ego/git-get-publish-config (ego/get-repository-directory)
-                                        (ego/get-config-option :repository-org-branch)
-                                        (ego/get-config-option :repository-html-branch))))
+            (ego--git-get-publish-config (ego--get-repository-directory)
+                                        (ego--get-config-option :repository-org-branch)
+                                        (ego--get-config-option :repository-html-branch))))
 
     (message "See *EGO OUTPUT* buffer and *emacs* buffer for information")
     (async-start
@@ -204,8 +205,8 @@ And here is an example: (There are some important point so that you had better s
         ;; without org-to-html if possible
         (unless ,test-and-not-publish
           (if ,base-git-commit
-              (setq ego/publish-without-org-to-html 1)
-            (setq ego/publish-without-org-to-html 2)))
+              (setq ego--publish-without-org-to-html 1)
+            (setq ego--publish-without-org-to-html 2)))
 
         ;; ego/do-publication here
         (ego/do-publication ,project-name
@@ -216,15 +217,15 @@ And here is an example: (There are some important point so that you had better s
                             ',publish-config)
 
         ;; waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually
-        (while (not ego/async-publish-success)
+        (while (not ego--async-publish-success)
           (sit-for 1))
 
         ;; return the result
-        (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
+        (with-current-buffer (get-buffer-create ,ego--temp-buffer-name)
           (buffer-string))
         )
      `(lambda (result)
-        (with-current-buffer (get-buffer-create ego/temp-buffer-name)
+        (with-current-buffer (get-buffer-create ego--temp-buffer-name)
           (insert (format "*EGO output* should be :\n %s \nego/async-do-publish done!" result))))))
 #+END_SRC
 
@@ -244,7 +245,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 
 * Known issues
 - *caution* when there are opened directories in the repository (which 
-  don't contain the repository itself), =ego/git-change-branch= will
+  don't contain the repository itself), =ego--git-change-branch= will
   mess up the files in the repository. So, close all opened directories
   in the repository before =ego/do-publication= .
 - Currently the deletion change handler has not been implemented so
