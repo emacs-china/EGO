@@ -28,20 +28,20 @@
 (require 'ego)
 
 (defun ego-mode--select-current-project ()
-  (setq ego/current-project-name
-        (or ego/default-project-name
+  (setq ego--current-project-name
+        (or ego--default-project-name
             (ido-completing-read "Which project do you want to publish? "
                                  (delete-dups
                                   (mapcar 'car ego/project-config-alist))
-                                 nil t nil nil ego/last-project-name))))
+                                 nil t nil nil ego--last-project-name))))
 
 ;; (ego-mode-list-all-posts)
 (defun ego-mode-list-all-posts ()
   "list all posts"
   (ego-mode--select-current-project)
-  (let* ((repo-dir (ego/get-repository-directory))
-         (repo-files-function (ego/get-config-option :repo-files-function))
-         (ignore-file-name-regexp (ego/get-config-option :ignore-file-name-regexp))
+  (let* ((repo-dir (ego--get-repository-directory))
+         (repo-files-function (ego--get-config-option :repo-files-function))
+         (ignore-file-name-regexp (ego--get-config-option :ignore-file-name-regexp))
          (repo-files (-filter (lambda (string)
                                    (not (string-match ignore-file-name-regexp string)))
                                  (when (functionp repo-files-function)
@@ -51,12 +51,12 @@
 	  (with-temp-buffer
 		(insert-file-contents file)
 		(goto-char (point-min))
-		(let ((title (propertize (ego/get-title) 'help-echo file))
-			  (author (or (ego/read-org-option "AUTHOR")
+		(let ((title (propertize (ego--get-title) 'help-echo file))
+			  (author (or (ego--read-org-option "AUTHOR")
 						  user-full-name "Unknown Author"))
-			  (description  (or (ego/read-org-option "DESCRIPTION")
+			  (description  (or (ego--read-org-option "DESCRIPTION")
 								"No DESCRIPTION"))
-			  (category (ego/get-category file)))
+			  (category (ego--get-category file)))
 		  (push (list nil (vector title author description category )) entries))))
 	(reverse entries)))
 
@@ -71,12 +71,12 @@
 
 (defun ego-mode-do-publication ()
   (interactive)
-  (ego/do-publication ego/current-project-name))
+  (ego/do-publication ego--current-project-name))
 
 (defun ego-mode-test-current-page ()
   (interactive)
   (find-file-other-window (ego-mode--get-file-path))
-  (ego/test-current-page ego/current-project-name))
+  (ego/test-current-page ego--current-project-name))
 
 (define-derived-mode ego-mode tabulated-list-mode "ego-mode"
   "mode for managing ego post"
@@ -95,7 +95,7 @@
   (define-key ego-mode-map (kbd "a") 'ego/new-post))
 
 ;;;###autoload
-(defun ego-list-posts ()
+(defun ego/list-posts ()
   "list posts"
   (interactive)
   (switch-to-buffer (get-buffer-create "*ego-manager*"))

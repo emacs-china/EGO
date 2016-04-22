@@ -36,7 +36,7 @@
   :tag "Org static page generator"
   :group 'org)
 
-(defcustom ego/default-project-name nil
+(defcustom ego--default-project-name nil
   "If set, `ego/do-publication' will directly publish this project
 and `ego/new-post' will directly add new post to this project."
   :group 'ego
@@ -242,7 +242,7 @@ the file whose name(include path) match the regexp won't be exported.
 A function used to retrieve an org file's Title, it has no parameter and
 run org file buffer.
 1. Type: function
-2. Example1: ego/get-title
+2. Example1: ego--get-title
 
 
   `:retrieve-category-function'
@@ -250,14 +250,14 @@ run org file buffer.
 A function used to retrieve an org file's category, its parameter is the
 org file's path, if parameter is nil, it should return all categories.
 1. Type: function
-2. Example1: ego/get-file-category
+2. Example1: ego--get-file-category
 
 
    `:org-export-function'
 
 Set the default function by which ego export org file to html.
 1. Type: function
-2. Example1: ego/default-org-export
+2. Example1: ego--default-org-export
 
 
   `:html-creator-string'
@@ -271,7 +271,7 @@ Information about the creator of the HTML document.
 
 The function used to get all org files exported.
 1. Type: function
-2. Example1: ego/git-all-files
+2. Example1: ego--git-all-files
 
 
   `:addition-files-function'
@@ -279,7 +279,7 @@ The function used to get all org files exported.
 The function used to get addition org files exported, for example:
 org files ignored by git, which are generated from other files.
 1. Type: function
-2. Example1: ego/addition-all-files
+2. Example1: ego--addition-all-files
 
 
   `:web-server-docroot'
@@ -298,72 +298,72 @@ set the server port.
 2. Example1: 9876
 
 
-You can see fallback value of above option in `ego/config-fallback'"
+You can see fallback value of above option in `ego--config-fallback'"
 :group 'ego
 :type 'alist)
 
-(defcustom ego/get-config-option-function
-  'ego/get-config-option-from-alist
+(defcustom ego--get-config-option-function
+  'ego--get-config-option-from-alist
   "The function used to get config option."
   :group 'ego
   :type 'function)
 
-(defconst ego/temp-buffer-name "*EGO Output*"
+(defconst ego--temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
 
 (defconst ego/load-directory
   (cond
    (load-file-name (file-name-directory load-file-name))
-   ((symbol-file 'ego/temp-buffer-name)
-    (file-name-directory (symbol-file 'ego/temp-buffer-name)))
+   ((symbol-file 'ego--temp-buffer-name)
+    (file-name-directory (symbol-file 'ego--temp-buffer-name)))
    ((string= (file-name-nondirectory buffer-file-name) "ego-config.el")
     (file-name-directory buffer-file-name))
    (t nil))
   "The directory where ego is loaded from.")
 
-(defvar ego/category-config-alist
+(defvar ego--category-config-alist
   '(("blog"
      :show-meta t
      :show-comment t
-     :uri-generator ego/generate-uri
+     :uri-generator ego--generate-uri
      :uri-template "/blog/%y/%m/%d/%t/"
      :sort-by :date     ;; how to sort the posts
      :category-index nil) ;; generate category index or not
     ("index"
      :show-meta nil
      :show-comment nil
-     :uri-generator ego/generate-uri
+     :uri-generator ego--generate-uri
      :uri-template "/"
      :sort-by :date
      :category-index nil)
     ("about"
      :show-meta nil
      :show-comment nil
-     :uri-generator ego/generate-uri
+     :uri-generator ego--generate-uri
      :uri-template "/about/"
      :sort-by :date
      :category-index nil))
   "Configurations for different categories, can and should be customized.")
 
-(defvar ego/category-show-list nil
+(defvar ego--category-show-list nil
   "the list of category names(string) which will be showed in the navigation-bar")
 
-(defvar ego/current-project-name nil)
-(defvar ego/last-project-name nil)
+(defvar ego--current-project-name nil)
+(defvar ego--last-project-name nil)
 
-(defvar ego/publish-without-org-to-html nil
+(defvar ego--publish-without-org-to-html nil
   "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")
 
-(defvar ego/publish-to-repository nil
+(defvar ego--publish-to-repository nil
   "Mainly used in converting relative-url to absolute-url")
 
-(defvar ego/item-cache nil
+(defvar ego--item-cache nil
   "The cache for general purpose.")
 
-(defvar ego/async-publish-success nil
+(defvar ego--async-publish-success nil
   "When push remote success: t")
 
-(defconst ego/rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+(defconst ego--rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <rss version=\"2.0\">
   <channel>
     <title>{{title}}</title>
@@ -387,7 +387,7 @@ You can see fallback value of above option in `ego/config-fallback'"
 </rss>"
   "Template for RSS rendering.")
 
-(defvar ego/config-fallback
+(defvar ego--config-fallback
       `(:repository-directory nil
         :site-domain nil
         :site-main-title "ego"
@@ -410,11 +410,11 @@ You can see fallback value of above option in `ego/config-fallback'"
         :confound-email t
         :force-absolute-url t
         :preparation-function nil
-        :get-title-function ego/get-title
-        :retrieve-category-function ego/get-file-category
-        :repo-files-function ego/git-all-files
+        :get-title-function ego--get-title
+        :retrieve-category-function ego--get-file-category
+        :repo-files-function ego--git-all-files
         :addition-files-function nil
-        :org-export-function ego/default-org-export
+        :org-export-function ego--default-org-export
         :web-server-docroot "~/.emacs.d/ego-server/default"
         :web-server-port 9876
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
@@ -425,32 +425,32 @@ You can see fallback value of above option in `ego/config-fallback'"
   "Unknown Version"))
 "If User don't set an option, ego will use fallback value of this option."))
 
-(defun ego/get-config-option (option)
+(defun ego--get-config-option (option)
   "The function used to read ego config"
-  (when (functionp ego/get-config-option-function)
-    (funcall ego/get-config-option-function option)))
+  (when (functionp ego--get-config-option-function)
+    (funcall ego--get-config-option-function option)))
 
-(defun ego/get-config-option-from-alist (option)
+(defun ego--get-config-option-from-alist (option)
   "The default ego config read function,
 which can read `option' from `ego/project-config-alist'
 if `option' is not found, get fallback value from
-`ego/config-fallback'."
-  (let ((project-plist (cdr (assoc ego/current-project-name
+`ego--config-fallback'."
+  (let ((project-plist (cdr (assoc ego--current-project-name
                                    ego/project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
-      (plist-get ego/config-fallback option))))
+      (plist-get ego--config-fallback option))))
 
-(defun ego/get-repository-directory ()
+(defun ego--get-repository-directory ()
   "The function, which can return repository directory string."
-  (let ((dir (ego/get-config-option :repository-directory)))
+  (let ((dir (ego--get-config-option :repository-directory)))
     (when dir
       (file-name-as-directory
        (expand-file-name dir)))))
 
-(defun ego/get-site-domain ()
+(defun ego--get-site-domain ()
   "The function, which can return site-domain string."
-  (let ((site-domain (ego/get-config-option :site-domain)))
+  (let ((site-domain (ego--get-config-option :site-domain)))
     (when site-domain
       (if (or (string-prefix-p "http://"  site-domain)
               (string-prefix-p "https://" site-domain))
@@ -460,7 +460,7 @@ if `option' is not found, get fallback value from
          (file-name-as-directory
           (concat "http://" site-domain)))))))
 
-(defun ego/get-theme-dirs (&optional root-dir theme type)
+(defun ego--get-theme-dirs (&optional root-dir theme type)
   "The function ,return ego theme type paths list.
 
 ego organizes its themes by directory:
@@ -477,18 +477,18 @@ ego organizes its themes by directory:
   `(\"path/to/dir1\" \"path/to/dir2\" \"path/to/dir3\")'
   `(theme1 theme2 theme3)'
 
-At this time, `ego/get-theme-dirs' will find *all possible*
+At this time, `ego--get-theme-dirs' will find *all possible*
 <type> directorys by permutation way and return a list with
 multi path."
   (let* ((themes (delete-dups
                   (if theme
                       (list theme)
-                    `(,@(ego/get-config-option :theme) default))))
+                    `(,@(ego--get-config-option :theme) default))))
          (theme-root-dirs (delete-dups
                            (if root-dir
                                (list root-dir)
-                             `(,@(ego/get-config-option :theme-root-directory)
-                               ,(concat (ego/get-repository-directory) "themes/")
+                             `(,@(ego--get-config-option :theme-root-directory)
+                               ,(concat (ego--get-repository-directory) "themes/")
                                ,(concat ego/load-directory "themes/")))))
          theme-dir theme-dirs)
     (dolist (theme themes)
@@ -503,17 +503,17 @@ multi path."
           (push theme-dir theme-dirs))))
     (reverse theme-dirs)))
 
-(defun ego/get-html-creator-string ()
+(defun ego--get-html-creator-string ()
   "The function, which can return creator string."
-  (or (ego/get-config-option :html-creator-string) ""))
+  (or (ego--get-config-option :html-creator-string) ""))
 
-(defun ego/get-category-setting (category)
+(defun ego--get-category-setting (category)
   "The function , which can return category config of `category'"
-  (or (assoc category ego/category-config-alist)
+  (or (assoc category ego--category-config-alist)
       `(,category
         :show-meta t
         :show-comment t
-        :uri-generator ego/generate-uri
+        :uri-generator ego--generate-uri
         :uri-template ,(format "/%s/%%t/" category)
         :sort-by :date
         :category-index t)))

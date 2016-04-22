@@ -32,7 +32,7 @@
 (require 'ego-config)
 (require 'ido)
 
-(defun ego/compare-standard-date (date1 date2)
+(defun ego--compare-standard-date (date1 date2)
   "Compare two standard ISO 8601 format dates, format is as below:
 2012-08-17
 1. if date1 is earlier than date2, returns 1
@@ -54,7 +54,7 @@
                             ((> day1 day2) -1)
                             (t 0))))))))
 
-(defun ego/fix-timestamp-string (date-string)
+(defun ego--fix-timestamp-string (date-string)
   "This is a piece of code copied from Xah Lee (I modified a little):
 Returns yyyy-mm-dd format of date-string
 For examples:
@@ -143,33 +143,33 @@ T[0-9][0-9]:[0-9][0-9]" date-str)
           (setq dd (if date (format "%02d" date) ""))
           (concat yyyy "-" mm "-" dd))))))
 
-(defun ego/confound-email-address (email)
+(defun ego--confound-email-address (email)
   "Confound email to prevent spams using simple rule:
 replace . with <dot>, @ with <at>, e.g.
 name@domain.com => name <at> domain <dot> com"
-  (if (not (ego/get-config-option :confound-email)) email
+  (if (not (ego--get-config-option :confound-email)) email
     (replace-regexp-in-string
      " +" " " (replace-regexp-in-string
                "@" " <at> " (replace-regexp-in-string "\\." " <dot> " email)))))
 
 
-(defun ego/encode-string-to-url (string)
+(defun ego--encode-string-to-url (string)
   "Encode STRING to legal URL. Why we do not use `url-encode-url' to encode the
 string, is that `url-encode-url' will convert all not allowed characters into
 encoded ones, like %3E, but we do NOT want this kind of url."
   (downcase (replace-regexp-in-string "[ :/\\]+" "-" string)))
 
-(defun ego/get-full-url (uri)
+(defun ego--get-full-url (uri)
   "Get the full url of URI, by joining site-domain with URI."
-  (concat (replace-regexp-in-string "/?$" "" (ego/get-site-domain)) uri))
+  (concat (replace-regexp-in-string "/?$" "" (ego--get-site-domain)) uri))
 
-(defun ego/file-to-string (file)
+(defun ego--file-to-string (file)
   "Read the content of FILE and return it as a string."
   (with-temp-buffer
     (insert-file-contents file)
     (buffer-string)))
 
-(defun ego/string-to-file (string file &optional mode)
+(defun ego--string-to-file (string file &optional mode)
   "Write STRING into FILE, only when FILE is writable. If MODE is a valid major
 mode, format the string with MODE's format settings."
   (when (file-writable-p file)
@@ -183,7 +183,7 @@ mode, format the string with MODE's format settings."
 		(indent-region (point-min) (point-max)))
       (write-region (point-min) (point-max) file))))
 
-(defun ego/convert-plist-to-hashtable (plist)
+(defun ego--convert-plist-to-hashtable (plist)
   "Convert normal property list PLIST into hash table, keys of PLIST should be
 in format :key, and it will be converted into \"key\" in hash table. This is an
 alternative to `ht-from-plist'."
@@ -217,7 +217,7 @@ element to ALIST-VAR."
     ;; Next element of NEW-ALIST.
     (setq new-alist (cdr new-alist))))
 
-(defun ego/ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
+(defun ego--ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
   "Read multiple items with ido-completing-read. Reading stops
   when the user enters SENTINEL. By default, SENTINEL is
   \"*done*\". SENTINEL is disambiguated with clashing completions

@@ -34,10 +34,10 @@
 (require 'ego-util)
 (require 'ego-config)
 
-(defun ego/prepare-theme-resources (pub-root-dir)
+(defun ego--prepare-theme-resources (pub-root-dir)
   "Copy theme resources files to PUB-ROOT-DIR."
   (let ((pub-theme-dir (expand-file-name "media/" pub-root-dir))
-        (theme-dirs (reverse (ego/get-theme-dirs nil nil 'resources))))
+        (theme-dirs (reverse (ego--get-theme-dirs nil nil 'resources))))
     (when (file-directory-p pub-theme-dir)
       (delete-directory pub-theme-dir t))
     (dolist (theme-dir theme-dirs)
