@@ -25,55 +25,6 @@ EGO provides features below:
 13) Include a tiny emacs web server, which can be used to test publish.
 14) Manage multi-site configs in an emacs session easily.
 
-* Workflow
-
-The files-flow of EGO is showed on Graph below:
-
-:                                               
-:           +-----------<-------------+----<---------------+-----------<--------------<-------------------------+
-:           |                         |                    |                                                    |
-:           | re-test or        if you want to re-test...  |-tested publish if you think test is OK             |
-:           | untested publish                             v                                                    |
-:           |                                                                     |-all html files test         |
-:           |                        > Web Test Dir ------------------------->----+-->-Web-Test-Dir-->----------+
-:           |                      / |                                          \       /
-:           |    all org files --/-  |                                           \     /- partial html files test
-:           v                  /-    |                                            v   ^
-:                            /-      |                                             \ /
-: EGO Repo  -+-------------->     org-to-html                                       X
-:            |               \-      |                                             / \
-:            |                 \-    |                                            ^   v
-:            | changed org files-\-  |                                           /     \- all html files publish
-:            |                     \ |                                          /       \       
-:       git gets changed files      >"~/.ego-tmp/"Dir ----------------------->-----+->-Publish-Repository-->-up-load-flies
-:                                                                                  |-partial html files publish
-:                                                                                                                                         
-:                                                                            
-
-MENTION: The global variable =ego/publish-without-org-to-html=
-
-1) partial org-files publish without org-to-html: it equals 1
-2) all org-files publish without org-to-html: it equals 2
-
-CAUTION: When untested publication, anything modified won't be published.If you want modified contents to be published, just test it before publication.
-
-Now, here is the workflow:
-
-1. Specify a git repo where the org source
-   files will be on the "source" branch and the generated html files
-   will be on the "master" branch (the branch names can be
-   customized). Repos may be created manually or by
-   EGO's =ego/new-repository= command.
-2. Specify a "base commit" (the most recent prior commit will be used if
-   omitted). EGO will read changes between the latest commit
-   and the specified base commit on branch "source". The changes
-   will then be marked for publication.
-3. EGO does preparation jobs.
-4. Publish the changes read in step 2. A change can be an addition,
-   a modification, or a deletion.  *EGO is designed to handle all of these kinds of changes but since deletion does not happen often, EGO has not implemented it yet.*
-5. Update the index page for each category and tag.
-6. Publication finished.
-
 * Usage
 
 ** Installation
@@ -139,6 +90,7 @@ Using the following command to test current opening org-file:
 #+BEGIN_EXAMPLE
 M-x ego/test-current-page
 #+END_EXAMPLE
+
 You can see the html version of the org-file in browser.
 
 ** Publication

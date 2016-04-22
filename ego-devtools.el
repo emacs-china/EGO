@@ -31,7 +31,7 @@
 (require 'ego-config)
 (require 'ego-util)
 
-(defun ego/devtools-update-config ()
+(defun ego--devtools-update-config ()
   (interactive)
   (ego/add-to-alist
    'ego/project-config-alist
@@ -42,7 +42,7 @@
      :site-sub-title "Static site generator based on Emacs, Git and Org-mode"
      :theme (default)
      :force-absolute-url t
-     :source-browse-url ("GitHub" "https://github.com/emacs-china/ego")
+     :source-browse-url ("GitHub" "https://github.com/emacs-china/EGO")
      :repository-org-branch "master"
      :repository-html-branch "gh-pages"
      :summary nil
@@ -51,7 +51,7 @@
      :web-server-docroot ,(expand-file-name "~/webRoot/EGO")
      :web-server-port 4321))))
 
-(ego/devtools-update-config)
+(ego--devtools-update-config)
 
 (provide 'ego-devtools)
 
