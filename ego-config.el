@@ -298,7 +298,7 @@ set the server port.
 2. Example1: 9876
 
 
-You can see fallback value of above option in `ego--config-fallback'"
+You can see fallback value of above option in `ego/config-fallback'"
 :group 'ego
 :type 'alist)
 
@@ -387,7 +387,7 @@ You can see fallback value of above option in `ego--config-fallback'"
 </rss>"
   "Template for RSS rendering.")
 
-(defvar ego--config-fallback
+(defvar ego/config-fallback
       `(:repository-directory nil
         :site-domain nil
         :site-main-title "ego"
@@ -434,12 +434,12 @@ You can see fallback value of above option in `ego--config-fallback'"
   "The default ego config read function,
 which can read `option' from `ego/project-config-alist'
 if `option' is not found, get fallback value from
-`ego--config-fallback'."
+`ego/config-fallback'."
   (let ((project-plist (cdr (assoc ego--current-project-name
                                    ego/project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
-      (plist-get ego--config-fallback option))))
+      (plist-get ego/config-fallback option))))
 
 (defun ego--get-repository-directory ()
   "The function, which can return repository directory string."

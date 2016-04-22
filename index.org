@@ -121,38 +121,39 @@ M-x ego/do-publication
 这里是一个例子: (你当然不能直接使用它，但是可以参考它进行自己的设置，就当是一个使用 async 的作业吧)
 
 #+BEGIN_SRC emacs-lisp
+  (require 'ego)
   (require 'async)
   (defun ego/async-do-publish (&optional project-name
                                          test-and-not-publish
                                          force-all
                                          base-git-commit
                                          checkin-all
-                                         publish-all)
+                                         publish-config)
     (interactive
-     (let* ((j (or ego/default-project-name
+     (let* ((j (or ego--default-project-name
                    (completing-read "Which project do you want to publish? "
                                     (delete-dups
                                      (mapcar 'car ego/project-config-alist))
-                                    nil t nil nil ego/last-project-name)))
+                                    nil t nil nil ego--last-project-name)))
             (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
             (b (unless f (read-string "Base git commit: " "HEAD~1")))
             (c (read-string "checkin message (won't show in 'git log' if you have committed all): "))
             (a nil))
        (list j p f b c a)))
-    ;; set ego remote push (publish-config) 远端发布的设置
+    ;; set ego remote push (publish-config)
     (unless test-and-not-publish
-      (setq ego/current-project-name project-name)
-      (setq ego/last-project-name project-name)
+      (setq ego--current-project-name project-name)
+      (setq ego--last-project-name project-name)
       (setq publish-config
-            (ego/git-get-publish-config (ego/get-repository-directory)
-                                        (ego/get-config-option :repository-org-branch)
-                                        (ego/get-config-option :repository-html-branch))))
-    (message "See *EGO OUTPUT* buffer and *emacs* buffer for information")
+            (ego--git-get-publish-config (ego--get-repository-directory)
+                                        (ego--get-config-option :repository-org-branch)
+                                        (ego--get-config-option :repository-html-branch))))
 
+    (message "See *EGO OUTPUT* buffer and *emacs* buffer for information")
     (async-start
      `(lambda ()
-        ;; load packages and set load-path 这里开始调用新进程，在新进程的发布开始之前，需要配置新进程使得 ego/do-publication 命令正常工作
+        ;; load packages and set load-path
         (setq package-user-dir ,(expand-file-name "~/.emacs.d/elpa/"))
         (package-initialize)
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
@@ -201,27 +202,27 @@ M-x ego/do-publication
         ;; without org-to-html if possible
         (unless ,test-and-not-publish
           (if ,base-git-commit
-              (setq ego/publish-without-org-to-html 1)
-            (setq ego/publish-without-org-to-html 2)))
+              (setq ego--publish-without-org-to-html 1)
+            (setq ego--publish-without-org-to-html 2)))
 
-        ;; ego/do-publication here 注意：这里开始是新进程的发布命令
+        ;; ego/do-publication here
         (ego/do-publication ,project-name
                             ,test-and-not-publish
                             ,force-all
                             ,base-git-commit
                             ,checkin-all
-                            ,publish-all)
+                            ',publish-config)
 
         ;; waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually
-        (while (not ego/async-publish-success)
+        (while (not ego--async-publish-success)
           (sit-for 1))
 
-        ;; return the result 返回结果
-        (with-current-buffer (get-buffer-create ,ego/temp-buffer-name)
+        ;; return the result
+        (with-current-buffer (get-buffer-create ,ego--temp-buffer-name)
           (buffer-string))
         )
      `(lambda (result)
-        (with-current-buffer (get-buffer-create ego/temp-buffer-name)
+        (with-current-buffer (get-buffer-create ego--temp-buffer-name)
           (insert (format "*EGO output* should be :\n %s \nego/async-do-publish done!" result))))))
 #+END_SRC
 
