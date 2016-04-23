@@ -229,7 +229,9 @@ M-x ego/do-publication
 你可以在 *emacs* buffer 和 *EGO OUTPUT* buffer 里跟踪整个过程。
 
 * 注意事项
-在我最新编译的 emacs 里，发现如果用 dired 打开了 repository 里面一些目录，这时 EGO 自带的 git change branch 无法正确地切换 branch。造成 repository 里文件混乱。
+EGO 只支持 emacs 24.5 及以后的版本。
+
+在我最新编译的 emacs-25 里，发现如果用 dired 打开了 repository 里面一些目录，这时 EGO 自带的 git change branch 无法正确地切换 branch。造成 repository 里文件混乱。
 
 解决办法：关闭那些被打开的 repository 内部目录的 buffer。（repository 这个目录倒是没什么关系。）
 
