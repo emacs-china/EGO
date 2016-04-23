@@ -29,26 +29,6 @@
 ;; 1. Sources:   https://github.com/emacs-china/EGO
 ;; 2. Documents: http://emacs-china.github.io/EGO
 
-;; EGO is a fork of Kelvin H's org-page (https://github.com/kelvinh/org-page),
-;; and provides similar features as org-page, the main differents is as follow:
-
-;; 1. org-page focus on personal blog while EGO is main used to
-;;    generate small project website.
-;; 2. org-page use many customizable variables to configure org-page
-;;    while EGO use an `org-publish-project-alist' style
-;;    alist to adjust EGO's behaver.
-
-;;    Managing multi-site configs in an emacs session with EGO is more
-;;    simple than with org-page.
-;; 3. EGO can deal with "increment" or "inherit" themes.
-;;
-;;    A "increment" theme is a mod theme which only include changed template,
-;;    css and other files, the files same with base theme doesn't include.
-
-;;    EGO autosearch the same files from base theme when use "increment"
-;;    theme.
-;; 4. EGO include a tiny emacs web server, which can be used to test publish.
-
 
 ;;; Code:
 

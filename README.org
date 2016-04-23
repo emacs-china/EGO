@@ -25,6 +25,8 @@ EGO provides features below:
 13) Include a tiny emacs web server, which can be used to test publish.
 14) Manage multi-site configs in an emacs session easily.
 
+"Emacs-version >= 24.5" is required.
+
 * Usage
 
 ** Installation
@@ -233,15 +235,14 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 
 * Dependencies
 
-1. [[http://www.gnu.org/software/emacs/][emacs]]: this is an "of-course" dependency
+1. [[http://www.gnu.org/software/emacs/][emacs]]: this is an "of-course" dependency, "version >= 24.5" is required.
 2. [[http://orgmode.org/][org mode]]: v8.0 is required, please use =M-x org-version <RET>= to make sure you org mode version is not less than 8.0
 3. [[http://git-scm.com][git]]: a free and open source version control system
 4. [[https://github.com/Wilfred/mustache.el][mustache.el]]: a mustache templating library for Emacs
 5. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
-6. ido.el: the library Emacs has contained
-7. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
-8. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
-9. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
+6. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
+7. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
+8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
 - *caution* when there are opened directories in the repository (which 
