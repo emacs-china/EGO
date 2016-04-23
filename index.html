@@ -3,9 +3,9 @@
 <head>
   <title>EGO 使用手册 - EGO</title>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
   <meta name="author" content="皐月中二" />
   <meta name="description" content="EGO Manual" />
   <style>
@@ -14,14 +14,8 @@
    #ds-thread #ds-reset .ds-comment-body p a:hover {color: #0ff;}
    #disqus_thread a {color: #00ffff;}
   </style>
-  <link rel="stylesheet" href="http://emacs-china.github.io/EGO/media/css/main.css" type="text/css">
-  <link rel="stylesheet" href="http://emacs-china.github.io/EGO/media/css/comment.css" type="text/css">
-  <script type="text/javascript"
-          src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG">
-  </script>
-  <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });
-  </script>
+  <link rel="stylesheet" href="http://emacs-china.github.io/EGO/media/css/main.css" type="text/css"/>
+  <link rel="stylesheet" href="http://emacs-china.github.io/EGO/media/css/comment.css" type="text/css"/>
 </head>
 
   <body><div class="container">
@@ -39,7 +33,7 @@
       </div>
       <ul class="trigger">
         <li><a href="http://emacs-china.github.io/EGO/about/">About</a></li>
-        <li><a href="https://github.com/emacs-china/ego">GitHub</a></li>
+        <li><a href="https://github.com/emacs-china/EGO">GitHub</a></li>
         <li><a href="http://emacs-china.github.io/EGO/rss.xml">RSS</a></li>
       </ul>
     </nav>
@@ -57,29 +51,29 @@
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">介绍</a></li>
-<li><a href="#orgheadline9">使用方法</a>
+<li><a href="#orga28152f">介绍</a></li>
+<li><a href="#org8cf62a">使用方法</a>
 <ul>
-<li><a href="#orgheadline2">安装</a></li>
-<li><a href="#orgheadline3">设置</a></li>
-<li><a href="#orgheadline4">新建 Repository</a></li>
-<li><a href="#orgheadline5">新建文章</a></li>
-<li><a href="#orgheadline6">测试单独文章的 html 页面</a></li>
-<li><a href="#orgheadline7">发布</a></li>
-<li><a href="#orgheadline8">异步发布</a></li>
+<li><a href="#org8aa3dfd">安装</a></li>
+<li><a href="#orgc736077">设置</a></li>
+<li><a href="#org55073d3">新建 Repository</a></li>
+<li><a href="#org3907d31">新建文章</a></li>
+<li><a href="#org8de9e15">测试单独文章的 html 页面</a></li>
+<li><a href="#org8a9f3f3">发布</a></li>
+<li><a href="#org2166cd">异步发布</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline10">注意事项</a></li>
-<li><a href="#orgheadline11">一些特点</a></li>
-<li><a href="#orgheadline12">一些缺点</a></li>
-<li><a href="#orgheadline13">待完成事项</a></li>
+<li><a href="#orgaa0c4f4">注意事项</a></li>
+<li><a href="#orgfa896c2">一些特点</a></li>
+<li><a href="#orga2be6e9">一些缺点</a></li>
+<li><a href="#org9fed8a3">待完成事项</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">介绍</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-orga28152f" class="outline-2">
+<h2 id="orga28152f">介绍</h2>
+<div class="outline-text-2" id="text-orga28152f">
 <p>
 EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 <a href="https://github.com/tumashu/org-webpage">org-webpage</a> 派生出来的项目，是一个基于 Emacs、git 服务和 org-mode 的一个静态站点生成器。（什么是静态站点生成器？google、bing 或者百度一下）
 </p>
@@ -90,21 +84,21 @@ EGO 是一个由 <a href="https://github.com/kelvinh/org-page">org-page</a> 和 
 </div>
 </div>
 
-<div id="outline-container-orgheadline9" class="outline-2">
-<h2 id="orgheadline9">使用方法</h2>
-<div class="outline-text-2" id="text-orgheadline9">
-</div><div id="outline-container-orgheadline2" class="outline-3">
-<h3 id="orgheadline2">安装</h3>
-<div class="outline-text-3" id="text-orgheadline2">
+<div id="outline-container-org8cf62a" class="outline-2">
+<h2 id="org8cf62a">使用方法</h2>
+<div class="outline-text-2" id="text-org8cf62a">
+</div><div id="outline-container-org8aa3dfd" class="outline-3">
+<h3 id="org8aa3dfd">安装</h3>
+<div class="outline-text-3" id="text-org8aa3dfd">
 <p>
 暂时不支持 melpa 安装，请用 <code>git clone</code> 后处理。
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">设置</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-orgc736077" class="outline-3">
+<h3 id="orgc736077">设置</h3>
+<div class="outline-text-3" id="text-orgc736077">
 <p>
 下面是 emacs-china 的设置，安装好 <a href="https://github.com/emacs-china/EGO">EGO</a> 后，将该设置写入配置即可管理 emacs-china。
 </p>
@@ -156,9 +150,9 @@ C-h v ego/config-fallback
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">新建 Repository</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org55073d3" class="outline-3">
+<h3 id="org55073d3">新建 Repository</h3>
+<div class="outline-text-3" id="text-org55073d3">
 <p>
 通过以下方式创建新的 Repository（也就是一个新站点了）：
 </p>
@@ -173,9 +167,9 @@ M-x ego/new-repository
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">新建文章</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-org3907d31" class="outline-3">
+<h3 id="org3907d31">新建文章</h3>
+<div class="outline-text-3" id="text-org3907d31">
 <p>
 用以下方式创建新文章：
 </p>
@@ -186,9 +180,9 @@ M-x ego/new-post
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">测试单独文章的 html 页面</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-org8de9e15" class="outline-3">
+<h3 id="org8de9e15">测试单独文章的 html 页面</h3>
+<div class="outline-text-3" id="text-org8de9e15">
 <p>
 使用以下命令可以生成当前 org 文件所对应的 html 文件，并浏览：
 </p>
@@ -199,9 +193,9 @@ M-x ego/test-current-page
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">发布</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-org8a9f3f3" class="outline-3">
+<h3 id="org8a9f3f3">发布</h3>
+<div class="outline-text-3" id="text-org8a9f3f3">
 <p>
 用以下命令生成 html 文件，并按需传送到远程端：
 </p>
@@ -245,9 +239,9 @@ M-x ego/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-3">
-<h3 id="orgheadline8">异步发布</h3>
-<div class="outline-text-3" id="text-orgheadline8">
+<div id="outline-container-org2166cd" class="outline-3">
+<h3 id="org2166cd">异步发布</h3>
+<div class="outline-text-3" id="text-org2166cd">
 <p>
 你可以使用 <code>async.el</code> 包来包裹 <code>ego/do-publication</code> 命令，使得该命令异步执行。
 </p>
@@ -262,39 +256,40 @@ M-x ego/do-publication
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">async</span><span style="color: #8c8c8c;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #8c8c8c;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">ego</span><span style="color: #8c8c8c;">)</span>
+<span style="color: #8c8c8c;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">async</span><span style="color: #8c8c8c;">)</span>
 <span style="color: #8c8c8c;">(</span><span style="color: #ffad29; font-weight: bold;">defun</span> <span style="color: #00ede1; font-weight: bold;">ego/async-do-publish</span> <span style="color: #93a8c6;">(</span><span style="color: #34cae2;">&amp;optional</span> project-name
                                        test-and-not-publish
                                        force-all
                                        base-git-commit
                                        checkin-all
-                                       publish-all<span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span><span style="color: #ffad29; font-weight: bold;">interactive</span>
-   <span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">let*</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>j <span style="color: #b0b0b3;">(</span><span style="color: #ffad29; font-weight: bold;">or</span> ego/default-project-name
+                                       publish-config<span style="color: #93a8c6;">)</span>
+  <span style="color: #93a8c6;">(</span>interactive
+   <span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">let*</span> <span style="color: #97b098;">(</span><span style="color: #aebed8;">(</span>j <span style="color: #b0b0b3;">(</span>or ego--default-project-name
                  <span style="color: #90a890;">(</span>completing-read <span style="color: #e67128;">"Which project do you want to publish? "</span>
                                   <span style="color: #a2b6da;">(</span>delete-dups
                                    <span style="color: #9cb6ad;">(</span>mapcar 'car ego/project-config-alist<span style="color: #9cb6ad;">)</span><span style="color: #a2b6da;">)</span>
-                                  nil t nil nil ego/last-project-name<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
+                                  nil t nil nil ego--last-project-name<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
           <span style="color: #aebed8;">(</span>p <span style="color: #b0b0b3;">(</span>y-or-n-p <span style="color: #e67128;">"Action:  [Yes] Test, [No] Tested Publish. "</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
           <span style="color: #aebed8;">(</span>f <span style="color: #b0b0b3;">(</span>y-or-n-p <span style="color: #90a890;">(</span>format <span style="color: #e67128;">"Publish all org files of \"%s\" project? "</span> j<span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
           <span style="color: #aebed8;">(</span>b <span style="color: #b0b0b3;">(</span><span style="color: #ffad29; font-weight: bold;">unless</span> f <span style="color: #90a890;">(</span>read-string <span style="color: #e67128;">"Base git commit: "</span> <span style="color: #e67128;">"HEAD~1"</span><span style="color: #90a890;">)</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
           <span style="color: #aebed8;">(</span>c <span style="color: #b0b0b3;">(</span>read-string <span style="color: #e67128;">"checkin message (won't show in 'git log' if you have committed all): "</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span>
           <span style="color: #aebed8;">(</span>a nil<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
      <span style="color: #97b098;">(</span>list j p f b c a<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #74af68;">;; </span><span style="color: #74af68;">set ego remote push (publish-config) &#36828;&#31471;&#21457;&#24067;&#30340;&#35774;&#32622;</span>
+  <span style="color: #74af68;">;; </span><span style="color: #74af68;">set ego remote push (publish-config)</span>
   <span style="color: #93a8c6;">(</span><span style="color: #ffad29; font-weight: bold;">unless</span> test-and-not-publish
-    <span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> ego/current-project-name project-name<span style="color: #b0b1a3;">)</span>
-    <span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> ego/last-project-name project-name<span style="color: #b0b1a3;">)</span>
-    <span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> publish-config
-          <span style="color: #97b098;">(</span>ego/git-get-publish-config <span style="color: #aebed8;">(</span>ego/get-repository-directory<span style="color: #aebed8;">)</span>
-                                      <span style="color: #aebed8;">(</span>ego/get-config-option <span style="color: #23d7d7;">:repository-org-branch</span><span style="color: #aebed8;">)</span>
-                                      <span style="color: #aebed8;">(</span>ego/get-config-option <span style="color: #23d7d7;">:repository-html-branch</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
-  <span style="color: #93a8c6;">(</span>message <span style="color: #e67128;">"See *EGO OUTPUT* buffer and *emacs* buffer for information"</span><span style="color: #93a8c6;">)</span>
+    <span style="color: #b0b1a3;">(</span>setq ego--current-project-name project-name<span style="color: #b0b1a3;">)</span>
+    <span style="color: #b0b1a3;">(</span>setq ego--last-project-name project-name<span style="color: #b0b1a3;">)</span>
+    <span style="color: #b0b1a3;">(</span>setq publish-config
+          <span style="color: #97b098;">(</span>ego--git-get-publish-config <span style="color: #aebed8;">(</span>ego--get-repository-directory<span style="color: #aebed8;">)</span>
+                                      <span style="color: #aebed8;">(</span>ego--get-config-option <span style="color: #23d7d7;">:repository-org-branch</span><span style="color: #aebed8;">)</span>
+                                      <span style="color: #aebed8;">(</span>ego--get-config-option <span style="color: #23d7d7;">:repository-html-branch</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>
 
-  <span style="color: #93a8c6;">(</span><span style="color: #ffad29; font-weight: bold;">async-start</span>
+  <span style="color: #93a8c6;">(</span>message <span style="color: #e67128;">"See *EGO OUTPUT* buffer and *emacs* buffer for information"</span><span style="color: #93a8c6;">)</span>
+  <span style="color: #93a8c6;">(</span>async-start
    `<span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">lambda</span> <span style="color: #97b098;">()</span>
-      <span style="color: #74af68;">;; </span><span style="color: #74af68;">load packages and set load-path &#36825;&#37324;&#24320;&#22987;&#35843;&#29992;&#26032;&#36827;&#31243;&#65292;&#22312;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#24320;&#22987;&#20043;&#21069;&#65292;&#38656;&#35201;&#37197;&#32622;&#26032;&#36827;&#31243;&#20351;&#24471; ego/do-publication &#21629;&#20196;&#27491;&#24120;&#24037;&#20316;</span>
-      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> package-user-dir ,<span style="color: #aebed8;">(</span>expand-file-name <span style="color: #e67128;">"~/.emacs.d/elpa/"</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
+      <span style="color: #74af68;">;; </span><span style="color: #74af68;">load packages and set load-path</span>
+      <span style="color: #97b098;">(</span>setq package-user-dir ,<span style="color: #aebed8;">(</span>expand-file-name <span style="color: #e67128;">"~/.emacs.d/elpa/"</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span>package-initialize<span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span>add-to-list 'load-path ,<span style="color: #aebed8;">(</span>expand-file-name <span style="color: #e67128;">"~/github/org-mode/lisp"</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span>add-to-list 'load-path ,<span style="color: #aebed8;">(</span>expand-file-name <span style="color: #e67128;">"~/github/org-mode/contrib/lisp"</span> t<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
@@ -310,13 +305,13 @@ M-x ego/do-publication
       <span style="color: #97b098;">(</span>set-terminal-coding-system 'utf-8-unix<span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span>set-keyboard-coding-system 'utf-8-unix<span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span>prefer-coding-system 'utf-8-unix<span style="color: #97b098;">)</span>
-      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> save-buffer-coding-system 'utf-8-unix
+      <span style="color: #97b098;">(</span>setq save-buffer-coding-system 'utf-8-unix
             coding-system-for-write 'utf-8-unix<span style="color: #97b098;">)</span>
 
       <span style="color: #74af68;">;; </span><span style="color: #74af68;">pre-set ego configurations</span>
       <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">cl-lib</span><span style="color: #97b098;">)</span>
       <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">ego</span><span style="color: #97b098;">)</span>
-      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> ego/project-config-alist ',ego/project-config-alist<span style="color: #97b098;">)</span>
+      <span style="color: #97b098;">(</span>setq ego/project-config-alist ',ego/project-config-alist<span style="color: #97b098;">)</span>
 
       <span style="color: #74af68;">;; </span><span style="color: #74af68;">Make EGO show svg images</span>
       <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">require</span> '<span style="color: #008b8b;">ox-html</span><span style="color: #97b098;">)</span>
@@ -342,27 +337,27 @@ M-x ego/do-publication
       <span style="color: #74af68;">;; </span><span style="color: #74af68;">without org-to-html if possible</span>
       <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">unless</span> ,test-and-not-publish
         <span style="color: #aebed8;">(</span><span style="color: #ffad29; font-weight: bold;">if</span> ,base-git-commit
-            <span style="color: #b0b0b3;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> ego/publish-without-org-to-html <span style="color: #008b8b;">1</span><span style="color: #b0b0b3;">)</span>
-          <span style="color: #b0b0b3;">(</span><span style="color: #ffad29; font-weight: bold;">setq</span> ego/publish-without-org-to-html <span style="color: #008b8b;">2</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
+            <span style="color: #b0b0b3;">(</span>setq ego--publish-without-org-to-html <span style="color: #008b8b;">1</span><span style="color: #b0b0b3;">)</span>
+          <span style="color: #b0b0b3;">(</span>setq ego--publish-without-org-to-html <span style="color: #008b8b;">2</span><span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
 
-      <span style="color: #74af68;">;; </span><span style="color: #74af68;">ego/do-publication here &#27880;&#24847;&#65306;&#36825;&#37324;&#24320;&#22987;&#26159;&#26032;&#36827;&#31243;&#30340;&#21457;&#24067;&#21629;&#20196;</span>
+      <span style="color: #74af68;">;; </span><span style="color: #74af68;">ego/do-publication here</span>
       <span style="color: #97b098;">(</span>ego/do-publication ,project-name
                           ,test-and-not-publish
                           ,force-all
                           ,base-git-commit
                           ,checkin-all
-                          ,publish-all<span style="color: #97b098;">)</span>
+                          ',publish-config<span style="color: #97b098;">)</span>
 
       <span style="color: #74af68;">;; </span><span style="color: #74af68;">waiting for push remote success or just wait http-server in which case you have to close *emacs* buffer manually</span>
-      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">while</span> <span style="color: #aebed8;">(</span>not ego/async-publish-success<span style="color: #aebed8;">)</span>
+      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">while</span> <span style="color: #aebed8;">(</span>not ego--async-publish-success<span style="color: #aebed8;">)</span>
         <span style="color: #aebed8;">(</span>sit-for <span style="color: #008b8b;">1</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
 
-      <span style="color: #74af68;">;; </span><span style="color: #74af68;">return the result &#36820;&#22238;&#32467;&#26524;</span>
-      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">with-current-buffer</span> <span style="color: #aebed8;">(</span>get-buffer-create ,ego/temp-buffer-name<span style="color: #aebed8;">)</span>
+      <span style="color: #74af68;">;; </span><span style="color: #74af68;">return the result</span>
+      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">with-current-buffer</span> <span style="color: #aebed8;">(</span>get-buffer-create ,ego--temp-buffer-name<span style="color: #aebed8;">)</span>
         <span style="color: #aebed8;">(</span>buffer-string<span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span>
       <span style="color: #b0b1a3;">)</span>
    `<span style="color: #b0b1a3;">(</span><span style="color: #ffad29; font-weight: bold;">lambda</span> <span style="color: #97b098;">(</span>result<span style="color: #97b098;">)</span>
-      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">with-current-buffer</span> <span style="color: #aebed8;">(</span>get-buffer-create ego/temp-buffer-name<span style="color: #aebed8;">)</span>
+      <span style="color: #97b098;">(</span><span style="color: #ffad29; font-weight: bold;">with-current-buffer</span> <span style="color: #aebed8;">(</span>get-buffer-create ego--temp-buffer-name<span style="color: #aebed8;">)</span>
         <span style="color: #aebed8;">(</span>insert <span style="color: #b0b0b3;">(</span>format <span style="color: #e67128;">"*EGO output* should be :\n %s \nego/async-do-publish done!"</span> result<span style="color: #b0b0b3;">)</span><span style="color: #aebed8;">)</span><span style="color: #97b098;">)</span><span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>
 </pre>
 </div>
@@ -374,11 +369,15 @@ M-x ego/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline10" class="outline-2">
-<h2 id="orgheadline10">注意事项</h2>
-<div class="outline-text-2" id="text-orgheadline10">
+<div id="outline-container-orgaa0c4f4" class="outline-2">
+<h2 id="orgaa0c4f4">注意事项</h2>
+<div class="outline-text-2" id="text-orgaa0c4f4">
 <p>
-在我最新编译的 emacs 里，发现如果用 dired 打开了 repository 里面一些目录，这时 EGO 自带的 git change branch 无法正确地切换 branch。造成 repository 里文件混乱。
+EGO 只支持 emacs 24.5 及以后的版本。
+</p>
+
+<p>
+在我最新编译的 emacs-25 里，发现如果用 dired 打开了 repository 里面一些目录，这时 EGO 自带的 git change branch 无法正确地切换 branch。造成 repository 里文件混乱。
 </p>
 
 <p>
@@ -387,9 +386,9 @@ M-x ego/do-publication
 </div>
 </div>
 
-<div id="outline-container-orgheadline11" class="outline-2">
-<h2 id="orgheadline11">一些特点</h2>
-<div class="outline-text-2" id="text-orgheadline11">
+<div id="outline-container-orgfa896c2" class="outline-2">
+<h2 id="orgfa896c2">一些特点</h2>
+<div class="outline-text-2" id="text-orgfa896c2">
 <p>
 EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松很多。这里只点一下要点：
 </p>
@@ -406,9 +405,9 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 </div>
 </div>
 
-<div id="outline-container-orgheadline12" class="outline-2">
-<h2 id="orgheadline12">一些缺点</h2>
-<div class="outline-text-2" id="text-orgheadline12">
+<div id="outline-container-orga2be6e9" class="outline-2">
+<h2 id="orga2be6e9">一些缺点</h2>
+<div class="outline-text-2" id="text-orga2be6e9">
 <p>
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。
 </p>
@@ -419,9 +418,9 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 </div>
 </div>
 
-<div id="outline-container-orgheadline13" class="outline-2">
-<h2 id="orgheadline13">待完成事项</h2>
-<div class="outline-text-2" id="text-orgheadline13">
+<div id="outline-container-org9fed8a3" class="outline-2">
+<h2 id="org9fed8a3">待完成事项</h2>
+<div class="outline-text-2" id="text-org9fed8a3">
 <p>
 目前只有一个 default 主题，试试看能否公开招募到新主题，然后维护一个主题的超链接列表。
 </p>
@@ -438,7 +437,7 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
   <script src="http://emacs-china.github.io/EGO/media/js/jquery-2.1.3.min.js"></script>
   <script src="http://emacs-china.github.io/EGO/media/js/main.js"></script>
   <div class="footer">
-    <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+    <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.x(<a href="http://orgmode.org">Org mode</a> 8.x)</p>
     <p>
       Copyright &copy; 2014 - <span id="footerYear"></span> <a href="mailto:kuangdash &lt;at&gt; 163 &lt;dot&gt; com">皐月中二</a>
       &nbsp;&nbsp;-&nbsp;&nbsp;
@@ -448,6 +447,12 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
     </p>
   </div>
     </div>
+    <script type="text/javascript"
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG">
+    </script>
+    <script type="text/x-mathjax-config">
+     MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });
+    </script>
 
   </div></body>
 </html>
