@@ -37,12 +37,12 @@
   :group 'org)
 
 (defcustom ego--default-project-name nil
-  "If set, `ego/do-publication' will directly publish this project
-and `ego/new-post' will directly add new post to this project."
+  "If set, `ego-do-publication' will directly publish this project
+and `ego-new-post' will directly add new post to this project."
   :group 'ego
   :type 'string)
 
-(defcustom ego/project-config-alist nil
+(defcustom ego-project-config-alist nil
   "Association list to control ego publishing behavior.
 
 Each element of the alist is a ego 'project.'  The CAR of
@@ -148,7 +148,7 @@ The personal github link.
 The link to an avatar image.
 1. Type: string
 2. Example1: \"/media/img/horse.jpg\"
-2. Example2: \"http://tumashu.github.com/ego/media/img/horse.jpg\"
+2. Example2: \"http://tumashu.github.com/ego-media/img/horse.jpg\"
 
 
   `:personal-disqus-shortname'
@@ -287,7 +287,7 @@ org files ignored by git, which are generated from other files.
 ego can start a web server to test publish, this
 set the server document root.
 1. Type: string
-2. Example1: \"~/.emacs.d/org-website-server/ego/\"
+2. Example1: \"~/.emacs.d/org-website-server/ego-\"
 
 
   `:web-server-port'
@@ -298,7 +298,7 @@ set the server port.
 2. Example1: 9876
 
 
-You can see fallback value of above option in `ego/config-fallback'"
+You can see fallback value of above option in `ego-config-fallback'"
 :group 'ego
 :type 'alist)
 
@@ -311,7 +311,7 @@ You can see fallback value of above option in `ego/config-fallback'"
 (defconst ego--temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
 
-(defconst ego/load-directory
+(defconst ego-load-directory
   (cond
    (load-file-name (file-name-directory load-file-name))
    ((symbol-file 'ego--temp-buffer-name)
@@ -387,7 +387,7 @@ You can see fallback value of above option in `ego/config-fallback'"
 </rss>"
   "Template for RSS rendering.")
 
-(defvar ego/config-fallback
+(defvar ego-config-fallback
       `(:repository-directory nil
         :site-domain nil
         :site-main-title "ego"
@@ -432,14 +432,14 @@ You can see fallback value of above option in `ego/config-fallback'"
 
 (defun ego--get-config-option-from-alist (option)
   "The default ego config read function,
-which can read `option' from `ego/project-config-alist'
+which can read `option' from `ego-project-config-alist'
 if `option' is not found, get fallback value from
-`ego/config-fallback'."
+`ego-config-fallback'."
   (let ((project-plist (cdr (assoc ego--current-project-name
-                                   ego/project-config-alist))))
+                                   ego-project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
-      (plist-get ego/config-fallback option))))
+      (plist-get ego-config-fallback option))))
 
 (defun ego--get-repository-directory ()
   "The function, which can return repository directory string."
@@ -489,7 +489,7 @@ multi path."
                                (list root-dir)
                              `(,@(ego--get-config-option :theme-root-directory)
                                ,(concat (ego--get-repository-directory) "themes/")
-                               ,(concat ego/load-directory "themes/")))))
+                               ,(concat ego-load-directory "themes/")))))
          theme-dir theme-dirs)
     (dolist (theme themes)
       (dolist (root-dir theme-root-dirs)

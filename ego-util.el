@@ -193,7 +193,7 @@ alternative to `ht-from-plist'."
             (value (cadr pair)))
         (ht-set h key value)))))
 
-(defun ego/add-to-alist (alist-var new-alist)
+(defun ego-add-to-alist (alist-var new-alist)
   "Add NEW-ALIST to the ALIST-VAR.
 If an element with the same key as the key of an element of
 NEW-ALIST is already present in ALIST-VAR, add the new values to

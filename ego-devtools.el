@@ -33,10 +33,10 @@
 
 (defun ego--devtools-update-config ()
   (interactive)
-  (ego/add-to-alist
-   'ego/project-config-alist
+  (ego-add-to-alist
+   'ego-project-config-alist
    `(("EGO"
-     :repository-directory ,ego/load-directory
+     :repository-directory ,ego-load-directory
      :site-domain "http://emacs-china.github.io/EGO"
      :site-main-title "EGO"
      :site-sub-title "Static site generator based on Emacs, Git and Org-mode"

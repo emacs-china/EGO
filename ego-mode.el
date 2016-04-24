@@ -32,7 +32,7 @@
         (or ego--default-project-name
             (ido-completing-read "Which project do you want to publish? "
                                  (delete-dups
-                                  (mapcar 'car ego/project-config-alist))
+                                  (mapcar 'car ego-project-config-alist))
                                  nil t nil nil ego--last-project-name))))
 
 ;; (ego-mode-list-all-posts)
@@ -71,12 +71,12 @@
 
 (defun ego-mode-do-publication ()
   (interactive)
-  (ego/do-publication ego--current-project-name))
+  (ego-do-publication ego--current-project-name))
 
 (defun ego-mode-test-current-page ()
   (interactive)
   (find-file-other-window (ego-mode--get-file-path))
-  (ego/test-current-page ego--current-project-name))
+  (ego-test-current-page ego--current-project-name))
 
 (define-derived-mode ego-mode tabulated-list-mode "ego-mode"
   "mode for managing ego post"
@@ -91,11 +91,11 @@
   (define-key ego-mode-map (kbd "<down-mouse-1>") 'ego-mode-edit)
   (define-key ego-mode-map (kbd "p") 'ego-mode-do-publication)
   (define-key ego-mode-map (kbd "t") 'ego-mode-test-current-page)
-  (define-key ego-mode-map (kbd "+") 'ego/new-post)
-  (define-key ego-mode-map (kbd "a") 'ego/new-post))
+  (define-key ego-mode-map (kbd "+") 'ego-new-post)
+  (define-key ego-mode-map (kbd "a") 'ego-new-post))
 
 ;;;###autoload
-(defun ego/list-posts ()
+(defun ego-list-posts ()
   "list posts"
   (interactive)
   (switch-to-buffer (get-buffer-create "*ego-manager*"))
