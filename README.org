@@ -41,7 +41,7 @@ The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you
 
   (require 'ego)
 
-  (ego/add-to-alist 'ego/project-config-alist
+  (ego-add-to-alist 'ego-project-config-alist
                  `(("emacs-china"
                    :repository-directory "~/github/emacs-china.github.io"
                    :repository-org-branch "master" ; 源文件所在 branch
@@ -67,30 +67,30 @@ The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you
 You can find more config options and theirs default values by commands:
 
 #+BEGIN_EXAMPLE
-C-h v ego/project-config-alist
-C-h v ego/config-fallback
+C-h v ego-project-config-alist
+C-h v ego-config-fallback
 #+END_EXAMPLE
 
 ** Create New Repository
 Using the following command to create a new repository:
 
 #+BEGIN_EXAMPLE
-M-x ego/new-repository
+M-x ego-new-repository
 #+END_EXAMPLE
 
-The repository is preliminary, you have to configure the =ego/project-config-alist= to make it work!
+The repository is preliminary, you have to configure the =ego-project-config-alist= to make it work!
 
 ** Create New Post
 Using the following command to create a new post:
 
 #+BEGIN_EXAMPLE
-M-x ego/new-post
+M-x ego-new-post
 #+END_EXAMPLE
 
 ** Test Post
 Using the following command to test current opening org-file:
 #+BEGIN_EXAMPLE
-M-x ego/test-current-page
+M-x ego-test-current-page
 #+END_EXAMPLE
 
 You can see the html version of the org-file in browser.
@@ -99,7 +99,7 @@ You can see the html version of the org-file in browser.
 The simplest way is run:
 
 #+BEGIN_EXAMPLE
-M-x ego/do-publication
+M-x ego-do-publication
 #+END_EXAMPLE
 
 This command will ask you some questions:
@@ -119,7 +119,7 @@ CAUTION: When untested publication, anything modified won't be published.If you 
 you can track the process in *message* buffer and *EGO OUTPUT* buffer.
 
 ** Async Publication
-You can use =async.el= package to wrap the command =ego/do-publication= in order to publish the static site without a wait.
+You can use =async.el= package to wrap the command =ego-do-publication= in order to publish the static site without a wait.
 
 You can find some example about how to use =async.el= package here : [[https://github.com/jwiegley/emacs-async][Async]].
 
@@ -128,7 +128,7 @@ And here is an example: (There are some important point so that you had better s
 #+BEGIN_SRC emacs-lisp
   (require 'ego)
   (require 'async)
-  (defun ego/async-do-publish (&optional project-name
+  (defun ego-async-do-publish (&optional project-name
                                          test-and-not-publish
                                          force-all
                                          base-git-commit
@@ -138,7 +138,7 @@ And here is an example: (There are some important point so that you had better s
      (let* ((j (or ego--default-project-name
                    (completing-read "Which project do you want to publish? "
                                     (delete-dups
-                                     (mapcar 'car ego/project-config-alist))
+                                     (mapcar 'car ego-project-config-alist))
                                     nil t nil nil ego--last-project-name)))
             (p (y-or-n-p "Action:  [Yes] Test, [No] Tested Publish. "))
             (f (y-or-n-p (format "Publish all org files of \"%s\" project? " j)))
@@ -163,7 +163,7 @@ And here is an example: (There are some important point so that you had better s
         (package-initialize)
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/lisp"))
         (add-to-list 'load-path ,(expand-file-name "~/github/org-mode/contrib/lisp" t))
-        (add-to-list 'load-path ,ego/load-directory)
+        (add-to-list 'load-path ,ego-load-directory)
 
         ;;set color-theme
         (add-to-list 'load-path ,(expand-file-name "~/.emacs.d/color-theme-6.6.0"))
@@ -181,7 +181,7 @@ And here is an example: (There are some important point so that you had better s
         ;; pre-set ego configurations
         (require 'cl-lib)
         (require 'ego)
-        (setq ego/project-config-alist ',ego/project-config-alist)
+        (setq ego-project-config-alist ',ego-project-config-alist)
 
         ;; Make EGO show svg images
         (require 'ox-html)
@@ -210,8 +210,8 @@ And here is an example: (There are some important point so that you had better s
               (setq ego--publish-without-org-to-html 1)
             (setq ego--publish-without-org-to-html 2)))
 
-        ;; ego/do-publication here
-        (ego/do-publication ,project-name
+        ;; ego-do-publication here
+        (ego-do-publication ,project-name
                             ,test-and-not-publish
                             ,force-all
                             ,base-git-commit
@@ -228,7 +228,7 @@ And here is an example: (There are some important point so that you had better s
         )
      `(lambda (result)
         (with-current-buffer (get-buffer-create ego--temp-buffer-name)
-          (insert (format "*EGO output* should be :\n %s \nego/async-do-publish done!" result))))))
+          (insert (format "*EGO output* should be :\n %s \nego-async-do-publish done!" result))))))
 #+END_SRC
 
 you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
@@ -248,7 +248,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 - *caution* when there are opened directories in the repository (which 
   don't contain the repository itself), =ego--git-change-branch= will
   mess up the files in the repository. So, close all opened directories
-  in the repository before =ego/do-publication= .
+  in the repository before =ego-do-publication= .
 - Currently the deletion change handler has not been implemented so
   if you deleted some org sources, you may have to manually delete
   corresponding generated html files.
