@@ -30,7 +30,7 @@ EGO provides features below:
 * Usage
 
 ** Installation
-EGO is temporarily not available from the famous emacs package repo [[http://melpa.milkbox.net/][melpa]]. so the recommended way is to clone this git repository.
+Use package repo [[http://melpa.milkbox.net/][melpa]]. or =git clone= it manually.
 
 ** Configuration
 The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you can paste and adjust it to your =.emacs= file:

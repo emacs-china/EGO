@@ -15,7 +15,7 @@ EGO 是一个由 [[https://github.com/kelvinh/org-page][org-page]] 和 [[https:/
 * 使用方法
 
 ** 安装
-暂时不支持 melpa 安装，请用 =git clone= 后处理。
+可以从 [[http://melpa.milkbox.net/][melpa]] 安装，或者用 =git clone= 后处理。
 
 ** 设置
 
