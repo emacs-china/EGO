@@ -123,7 +123,7 @@ You can use =async.el= package to wrap the command =ego-do-publication= in order
 
 You can find some example about how to use =async.el= package here : [[https://github.com/jwiegley/emacs-async][Async]].
 
-And here is an example: (There are some important point so that you had better see it.)
+And here is an example: (There are some important points so that you had better see it.)
 
 #+BEGIN_SRC emacs-lisp
   (require 'ego)
@@ -259,7 +259,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
   file for you so you need to delete the old html file related to
   the old URI manually.
 
-* Roadmap [1/3]
+* Roadmap [2/3]
 - [X] Next/Previous Page links
 
   Use =M-x org-insert-link= (Normal key binding is =C-c C-l=) and choose =ego-link:= to insert a link to an org file. The link will be exported as hyperlink to the correct html page.
@@ -272,8 +272,8 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 
 - [ ] More themes
 
-  Just maintain a list of hyperlinks to the other themes except default.
+  Just maintain a list of hyperlinks to the other themes except the default.
 
-- [ ] upload to melpa
-  
-  Temporarily don't consider it, for EGO is used for minor crowd.
+  Now considering using 'ego-map.el' which wipes off the restriction of EGO theme customization. But what's the shape it should be?
+
+- [X] upload to melpa
