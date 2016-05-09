@@ -123,7 +123,7 @@ You can use =async.el= package to wrap the command =ego-do-publication= in order
 
 You can find some example about how to use =async.el= package here : [[https://github.com/jwiegley/emacs-async][Async]].
 
-And here is an example: (There are some important point so that you had better see it.)
+And here is an example: (There are some important points so that you had better see it.)
 
 #+BEGIN_SRC emacs-lisp
   (require 'ego)
