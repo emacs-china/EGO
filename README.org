@@ -3,6 +3,8 @@
 #+EMAIL:     emacs-china@googlegroups.com
 #+DATE:      2015-07-02
 
+[[https://melpa.org/#/ego][file:https://melpa.org/packages/ego-badge.svg]]
+
 *中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ~*
 
 * Introduction
