@@ -279,3 +279,10 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
   Now considering using 'ego-map.el' which wipes off the restriction of EGO theme customization. But what's the shape it should be?
 
 - [X] upload to melpa
+* FAQ
+** Why not publish those org files containning chinese charactors?
+Execute src_sh{git ls-tree -r --name-only HEAD} in the repo directory, if the chinese charactor displays like a mass, please execute
+#+BEGIN_SRC sh
+  git config --global core.quotepath false
+#+END_SRC
+and then try again.
