@@ -68,7 +68,7 @@
   (interactive
    (let* ((j (or ego--default-project-name
                  (ego--select-project-from-config-alist ego-project-config-alist)))
-          (jobs (ido-completing-read "Which job do you want to activate: "
+          (jobs (completing-read "Which job do you want to activate: "
                                      '("1. Test partial publish"
                                        "2. Partial publish"
                                        "3. Test full publish"
@@ -226,8 +226,8 @@ you must customize the variable `ego-project-config-alist' according to the read
   (interactive
    (list (read-directory-name
           "Specify a directory to become the repository: " nil nil nil)
-         (ido-completing-read "Input the branch name of 'html' branch: " (list (ego--get-config-option :repository-html-branch)))
-         (ido-completing-read "Input the branch name of 'source' branch: " (list (ego--get-config-option :repository-org-branch)))
+         (completing-read "Input the branch name of 'html' branch: " (list (ego--get-config-option :repository-html-branch)))
+         (completing-read "Input the branch name of 'source' branch: " (list (ego--get-config-option :repository-org-branch)))
          ))
   (ego--git-init-repo repo-dir)
   (ego--git-new-empty-branch repo-dir (if html-branch html-branch (ego--get-config-option :repository-html-branch)))

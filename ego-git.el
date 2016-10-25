@@ -204,11 +204,11 @@ presented by REPO-DIR, return nil if there is no remote repository."
         (if (not remote-repos)
             (error "No valid remote repository found.")
           (if (> (length remote-repos) 1)
-              (setq repo (ido-completing-read "Which remote to push?: (if you don't want to push remote, [C-g])"
+              (setq repo (completing-read "Which remote to push?: (if you don't want to push remote, [C-g])"
                                               remote-repos nil t))
             (setq repo (car remote-repos)))
           (setq branchs
-                (ego--ido-completing-read-multiple "(multiple choices)branchs to push: "
+                (ego--completing-read-multiple "(multiple choices)branchs to push: "
                                                   (list org-branch html-branch) nil t))
           (if (or (not (member repo remote-repos)) (not branchs))
               (error "Invalid remote repository '%s'." repo)
