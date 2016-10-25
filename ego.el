@@ -378,7 +378,7 @@ responsibility to guarantee the two parameters are valid."
   (interactive
    (let* ((p (or ego--default-project-name
                  (completing-read "Which project do you want post? "
-                                  (delete-dups ; It's a destructive function,Is it ok?
+                                  (-uniq
                                    (mapcar 'car ego-project-config-alist))
                                   nil t nil nil ego--last-project-name)))
           (c (let* ((prompt (format "Category of \"%s\" project: " p))
