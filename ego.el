@@ -67,10 +67,7 @@
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive
    (let* ((j (or ego--default-project-name
-                 (ido-completing-read "Which project do you want to publish? "
-                                      (delete-dups
-                                       (mapcar 'car ego-project-config-alist))
-                                      nil t nil nil ego--last-project-name)))
+                 (ego--select-project-from-config-alist ego-project-config-alist)))
           (jobs (ido-completing-read "Which job do you want to activate: "
                                      '("1. Test partial publish"
                                        "2. Partial publish"
@@ -183,10 +180,7 @@
   "Test the current opening org-file!"
   (interactive
    (let* ((j (or ego--default-project-name
-                 (ido-completing-read "Which project theme do you want to use? "
-                                      (delete-dups
-                                       (mapcar 'car ego-project-config-alist))
-                                      nil t nil nil ego--last-project-name))))
+                 (ego--select-project-from-config-alist ego-project-config-alist)))
      (list j)))
   (setq ego--current-project-name project-name)
   (setq ego--last-project-name project-name)
@@ -377,10 +371,7 @@ Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive
    (let* ((p (or ego--default-project-name
-                 (completing-read "Which project do you want post? "
-                                  (-uniq
-                                   (mapcar 'car ego-project-config-alist))
-                                  nil t nil nil ego--last-project-name)))
+                 (ego--select-project-from-config-alist  ego-project-config-alist)))
           (c (let* ((prompt (format "Category of \"%s\" project: " p))
                     (categories (mapcar #'file-name-nondirectory (cl-remove-if-not #'file-directory-p (directory-files (ego--get-config-option :repository-directory) t))))
                     (init-category (unless categories

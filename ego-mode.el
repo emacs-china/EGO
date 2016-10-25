@@ -30,10 +30,7 @@
 (defun ego-mode--select-current-project ()
   (setq ego--current-project-name
         (or ego--default-project-name
-            (ido-completing-read "Which project do you want to publish? "
-                                 (delete-dups
-                                  (mapcar 'car ego-project-config-alist))
-                                 nil t nil nil ego--last-project-name))))
+            (ego--select-project-from-config-alist ego-project-config-alist))))
 
 ;; (ego-mode-list-all-posts)
 (defun ego-mode-list-all-posts ()
