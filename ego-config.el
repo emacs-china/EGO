@@ -350,7 +350,6 @@ You can see fallback value of above option in `ego-config-fallback'"
   "the list of category names(string) which will be showed in the navigation-bar")
 
 (defvar ego--current-project-name nil)
-(defvar ego--last-project-name nil)
 
 (defvar ego--publish-without-org-to-html nil
   "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")
@@ -531,7 +530,8 @@ If only one project defined, return it directly; Otherwise ask user select one"
         (car projects)
       (completing-read "Which project do you want post? "
                        projects
-                       nil t nil nil ego--last-project-name))))
+                       nil t nil nil (or ego--current-project-name
+                                         ego--default-project-name)))))
 
 (provide 'ego-config)
 
