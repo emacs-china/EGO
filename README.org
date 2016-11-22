@@ -280,7 +280,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 
 - [X] upload to melpa
 * FAQ
-** Why not publish those org files containning chinese charactors?
+** Why can't I publish those org files containning chinese charactors?
 Execute src_sh{git ls-tree -r --name-only HEAD} in the repo directory, if the chinese charactor displays like a mass, please execute
 #+BEGIN_SRC sh
   git config --global core.quotepath false
