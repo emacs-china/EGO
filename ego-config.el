@@ -350,7 +350,6 @@ You can see fallback value of above option in `ego-config-fallback'"
   "the list of category names(string) which will be showed in the navigation-bar")
 
 (defvar ego--current-project-name nil)
-(defvar ego--last-project-name nil)
 
 (defvar ego--publish-without-org-to-html nil
   "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")
@@ -426,21 +425,24 @@ You can see fallback value of above option in `ego-config-fallback'"
   "Unknown Version"))
 "If User don't set an option, ego will use fallback value of this option."))
 
-(defun ego--get-config-option (option)
+(defun ego--get-config-option (option &optional project-name project-config-alist config-fallback)
   "The function used to read ego config"
   (when (functionp ego--get-config-option-function)
-    (funcall ego--get-config-option-function option)))
+    (funcall ego--get-config-option-function option project-name project-config-alist config-fallback)))
 
-(defun ego--get-config-option-from-alist (option)
+(defun ego--get-config-option-from-alist (option &optional project-name project-config-alist config-fallback)
   "The default ego config read function,
 which can read `option' from `ego-project-config-alist'
 if `option' is not found, get fallback value from
 `ego-config-fallback'."
-  (let ((project-plist (cdr (assoc ego--current-project-name
-                                   ego-project-config-alist))))
+  (let* ((project-name (or project-name ego--current-project-name))
+         (project-config-alist (or project-config-alist ego-project-config-alist))
+         (config-fallback (or config-fallback ego-config-fallback))
+         (project-plist (cdr (assoc project-name
+                                    project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
-      (plist-get ego-config-fallback option))))
+      (plist-get config-fallback option))))
 
 (defun ego--get-repository-directory ()
   "The function, which can return repository directory string."
@@ -518,6 +520,18 @@ multi path."
         :uri-template ,(format "/%s/%%t/" category)
         :sort-by :date
         :category-index t)))
+
+(defun ego--select-project-from-config-alist (project-config-alist)
+  "Return a project name from PROJECT-CONFIG-ALIST
+
+If only one project defined, return it directly; Otherwise ask user select one"
+  (let ((projects (cl-remove-duplicates (mapcar 'car ego-project-config-alist))))
+    (if (= 1 (length projects))
+        (car projects)
+      (completing-read "Which project do you want post? "
+                       projects
+                       nil t nil nil (or ego--current-project-name
+                                         ego--default-project-name)))))
 
 (provide 'ego-config)
 

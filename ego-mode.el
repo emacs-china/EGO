@@ -28,12 +28,8 @@
 (require 'ego)
 
 (defun ego-mode--select-current-project ()
-  (setq ego--current-project-name
-        (or ego--default-project-name
-            (ido-completing-read "Which project do you want to publish? "
-                                 (delete-dups
-                                  (mapcar 'car ego-project-config-alist))
-                                 nil t nil nil ego--last-project-name))))
+  (ego-switch-to-project (or ego--default-project-name
+                             (ego--select-project-from-config-alist ego-project-config-alist))))
 
 ;; (ego-mode-list-all-posts)
 (defun ego-mode-list-all-posts ()
@@ -43,27 +39,27 @@
          (repo-files-function (ego--get-config-option :repo-files-function))
          (ignore-file-name-regexp (ego--get-config-option :ignore-file-name-regexp))
          (repo-files (-filter (lambda (string)
-                                   (not (string-match ignore-file-name-regexp string)))
-                                 (when (functionp repo-files-function)
-                                   (funcall repo-files-function repo-dir))))
+                                (not (string-match ignore-file-name-regexp string)))
+                              (when (functionp repo-files-function)
+                                (funcall repo-files-function repo-dir))))
          entries)
     (dolist (file repo-files)
-	  (with-temp-buffer
-		(insert-file-contents file)
-		(goto-char (point-min))
-		(let ((title (propertize (ego--get-title) 'help-echo file))
-			  (author (or (ego--read-org-option "AUTHOR")
-						  user-full-name "Unknown Author"))
-			  (description  (or (ego--read-org-option "DESCRIPTION")
-								"No DESCRIPTION"))
-			  (category (ego--get-category file)))
-		  (push (list nil (vector title author description category )) entries))))
-	(reverse entries)))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (let ((title (propertize (ego--get-title) 'help-echo file))
+              (author (or (ego--read-org-option "AUTHOR")
+                          user-full-name "Unknown Author"))
+              (description  (or (ego--read-org-option "DESCRIPTION")
+                                "No DESCRIPTION"))
+              (category (ego--get-category file)))
+          (push (list nil (vector title author description category )) entries))))
+    (reverse entries)))
 
 (defun ego-mode--get-file-path ()
   (save-excursion
-	(move-beginning-of-line nil)
-	(get-text-property (point) 'help-echo)));help-echo is also the file path
+    (move-beginning-of-line nil)
+    (get-text-property (point) 'help-echo)));help-echo is also the file path
 
 (defun ego-mode-edit ()
   (interactive)
@@ -81,10 +77,10 @@
 (define-derived-mode ego-mode tabulated-list-mode "ego-mode"
   "mode for managing ego post"
   (setq tabulated-list-format [("title" 30 nil)
-							   ("author" 10 t)
-							   ("description" 40 t)
-							   ("category" 10 t)]
-		tabulated-list-entries 'ego-mode-list-all-posts)
+                               ("author" 10 t)
+                               ("description" 40 t)
+                               ("category" 10 t)]
+        tabulated-list-entries 'ego-mode-list-all-posts)
   (tabulated-list-init-header)
   (define-key ego-mode-map (kbd "e") 'ego-mode-edit)
   (define-key ego-mode-map (kbd "<RET>") 'ego-mode-edit)
