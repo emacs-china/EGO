@@ -247,7 +247,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
-- *caution* when there are opened directories in the repository (which 
+- *CAUTION* when there are opened directories in the repository (which 
   don't contain the repository itself), =ego--git-change-branch= will
   mess up the files in the repository. So, close all opened directories
   in the repository before =ego-do-publication= .
@@ -256,7 +256,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
   corresponding generated html files.
 - URI path change detection is not available. That is, if you make a
   post with the URI "/blog/2013/03/25/the-old-post-name" and then
-  change this value in your org source, org-webpage would be unable to
+  change this value in your org source, EGO would be unable to
   detect that this has happened. it will only publish a new html
   file for you so you need to delete the old html file related to
   the old URI manually.
