@@ -254,8 +254,8 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 
 如有问题请移步 [[https://github.com/emacs-china/EGO/issues][Issues]] 提问
 * FAQ
-** 为什么没有发布那些包含中文的org文件？
-请在repo目录下手工执行 src_sh{git ls-tree -r --name-only HEAD}, 若发现所有的中文都显示成乱码，那么请执行
+** 为什么没有发布那些包含中文的 org 文件？
+请在 repo 目录下手工执行 src_sh{git ls-tree -r --name-only HEAD}, 若发现所有的中文都显示成乱码，那么请执行
 #+BEGIN_SRC sh
   git config --global core.quotepath false
 #+END_SRC
