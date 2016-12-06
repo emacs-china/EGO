@@ -248,11 +248,6 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
 假若要删除发布后的 html 文件，只能用 git 跳转到 html 所在分支，进行手动删除后，将该分支提交到服务器端。
 
 也即是说，删除发布后的 html 文件比较麻烦。（使用传统的 git 操作模式）
-
-* 待完成事项
-目前只有一个 default 主题，试试看能否公开招募到新主题，然后维护一个主题的超链接列表。
-
-如有问题请移步 [[https://github.com/emacs-china/EGO/issues][Issues]] 提问
 * FAQ
 ** 为什么没有发布那些包含中文的 org 文件？
 请在 repo 目录下手工执行 src_sh{git ls-tree -r --name-only HEAD}, 若发现所有的中文都显示成乱码，那么请执行
@@ -260,3 +255,8 @@ EGO 还支持 “主题继承”，能让多站点管理时的主题修改轻松
   git config --global core.quotepath false
 #+END_SRC
 之后，再重新发布。
+
+* 待完成事项
+目前只有一个 default 主题，试试看能否公开招募到新主题，然后维护一个主题的超链接列表。
+
+如有问题请移步 [[https://github.com/emacs-china/EGO/issues][Issues]] 提问
