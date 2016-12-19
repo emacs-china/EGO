@@ -5,7 +5,7 @@
 
 [[https://melpa.org/#/ego][file:https://melpa.org/packages/ego-badge.svg]]
 
-*中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ~*
+*中文用户可以点击 [[https://emacs-china.github.io/EGO][EGO 中文手册]] ~*
 
 * Introduction
 
