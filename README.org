@@ -5,7 +5,7 @@
 
 [[https://melpa.org/#/ego][file:https://melpa.org/packages/ego-badge.svg]]
 
-*中文用户可以点击 [[http://emacs-china.github.io/EGO][EGO 中文手册]] ~*
+*中文用户可以点击 [[https://emacs-china.github.io/EGO][EGO 中文手册]] ~*
 
 * Introduction
 
@@ -247,7 +247,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
-- *caution* when there are opened directories in the repository (which 
+- *CAUTION* when there are opened directories in the repository (which 
   don't contain the repository itself), =ego--git-change-branch= will
   mess up the files in the repository. So, close all opened directories
   in the repository before =ego-do-publication= .
@@ -256,7 +256,7 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
   corresponding generated html files.
 - URI path change detection is not available. That is, if you make a
   post with the URI "/blog/2013/03/25/the-old-post-name" and then
-  change this value in your org source, org-webpage would be unable to
+  change this value in your org source, EGO would be unable to
   detect that this has happened. it will only publish a new html
   file for you so you need to delete the old html file related to
   the old URI manually.
@@ -279,3 +279,10 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
   Now considering using 'ego-map.el' which wipes off the restriction of EGO theme customization. But what's the shape it should be?
 
 - [X] upload to melpa
+* FAQ
+** Why can't I publish those org files containning chinese charactors?
+Execute src_sh{git ls-tree -r --name-only HEAD} in the repo directory, if the chinese charactor displays like a mass, please execute
+#+BEGIN_SRC sh
+  git config --global core.quotepath false
+#+END_SRC
+and then try again.
