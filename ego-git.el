@@ -246,22 +246,6 @@ it will be created."
                                     (insert "remote push success!")
                                     (setq ego--async-publish-success t)))))))
 
-(defun ego--git-get_first_commit_after_publish (repo-dir &optional org-branch html-branch)
-  "Return the first commit after publish in `REPO-DIR'"
-  (let* ((org-branch (or org-branch
-                         (ego--get-config-option :repository-org-branch)
-                         "source"))
-         (html-branch (or html-branch
-                          (ego--get-config-option :repository-html-branch)
-                          "master"))
-         (publish-time (string-trim (ego--git-command repo-dir
-                                                      (concat "log -n 1 --pretty='%cd' " html-branch))))
-         (commits-after-publish (string-trim (ego--git-command repo-dir
-                                                               (format "log --pretty='%%H' --since '%s' %s" publish-time org-branch))))
-         (commits-after-publish (split-string commits-after-publish))
-         (first-commit-after-publish (car (last commits-after-publish))))
-    first-commit-after-publish))
-
 (provide 'ego-git)
 
 ;;; ego-git.el ends here
