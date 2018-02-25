@@ -41,6 +41,7 @@
 (require 'ego-export)
 (require 'simple-httpd)
 (require 'cl-lib)
+(require 'subr-x)
 
 (defconst ego-version "0.9")
 
@@ -81,7 +82,8 @@
                  (string= jobs "3. Test full publish")))
           (f (or (string= jobs "3. Test full publish")
                  (string= jobs "4. Full publish")))
-          (b (unless f (read-string "Base git commit: " "HEAD~1")))
+          (b (unless f (read-string "Base git commit: " (or (ego--get-first-commit-after-publish repo-dir org-branch html-branch)
+                                                            "HEAD~1"))))
           (c (read-string "checkin message (won't show in 'git log' if you have committed all): "))
           (a nil))
      (list j p f b c a)))
@@ -132,7 +134,9 @@
       (setq changed-files (if force-all
                               `(:update ,repo-files :delete nil)
                             (message "EGO: Getting all changed files, just waiting...")
-                            (ego--git-files-changed repo-dir (or base-git-commit "HEAD~1"))))
+                            (ego--git-files-changed repo-dir (or base-git-commit
+                                                                 (ego--get-first-commit-after-publish repo-dir org-branch html-branch)
+                                                                 "HEAD~1"))))
       (message "EGO: Create necessary directory and prepare theme!")
       (when (file-directory-p store-dir)
         (delete-directory store-dir t t))
@@ -418,6 +422,24 @@ responsibility to guarantee the two parameters are valid."
     (save-buffer))
   (setq ego--current-project-name nil))
 
+(defun ego--get-first-commit-after-publish (&optional repo-dir org-branch html-branch)
+  "Return the first commit after publish in `REPO-DIR',return nil if no commit after publish"
+  (let* ((repo-dir (or repo-dir (ego--get-repository-directory)))
+         (org-branch (or org-branch
+                         (ego--get-config-option :repository-org-branch)
+                         "source"))
+         (html-branch (or html-branch
+                          (ego--get-config-option :repository-html-branch)
+                          "master"))
+         (publish-time (string-trim (ego--git-command repo-dir
+                                                      (concat "log -n 1 --pretty='%cd' " html-branch))))
+         (commits-after-publish (string-trim (ego--git-command repo-dir
+                                                               (format "log --pretty='%%H' --since '%s' %s" publish-time org-branch))))
+         (commits-after-publish (split-string commits-after-publish))
+         (first-commit-after-publish (car (last commits-after-publish))))
+    (if (string-blank-p first-commit-after-publish)
+        nil
+      first-commit-after-publish)))
 
 (provide 'ego)
 
