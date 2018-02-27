@@ -37,7 +37,7 @@
   :tag "Org static page generator"
   :group 'org)
 
-(defcustom ego--default-project-name nil
+(defcustom ego-default-project-name nil
   "If set, `ego-do-publication' will directly publish this project
 and `ego-new-post' will directly add new post to this project."
   :group 'ego

@@ -29,7 +29,7 @@
 
 (defun ego-mode--select-current-project ()
   (setq ego--current-project-name
-        (or ego--default-project-name
+        (or ego-default-project-name
             (ido-completing-read "Which project do you want to publish? "
                                  (delete-dups
                                   (mapcar 'car ego-project-config-alist))

@@ -69,7 +69,7 @@
   (interactive)
 
   (let* ((ego--current-project-name (or project-name
-                                        (or ego--default-project-name
+                                        (or ego-default-project-name
                                             (ido-completing-read "Which project do you want to publish? "
                                                                  (delete-dups
                                                                   (mapcar 'car ego-project-config-alist))
@@ -193,7 +193,7 @@
   "Test the current opening org-file!"
   (interactive)
   (let ((ego--current-project-name (or project-name
-                          (or ego--default-project-name
+                          (or ego-default-project-name
                               (ido-completing-read "Which project theme do you want to use? "
                                                    (delete-dups
                                                     (mapcar 'car ego-project-config-alist))
@@ -386,7 +386,7 @@ Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive)
   (let* ((ego--current-project-name (or project-name
-                                        ego--default-project-name
+                                        ego-default-project-name
                                         (completing-read "Which project do you want post? "
                                                          (-uniq
                                                           (mapcar 'car ego-project-config-alist))
