@@ -89,99 +89,99 @@
                                                                                                        (ego--get-config-option :repository-org-branch)
                                                                                                        (ego--get-config-option :repository-html-branch))
                                                                  "HEAD~1"))))
-         (checkin-all (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
-  (if (and (ignore-errors (symbol-value 'ego--last-project-name))
-           (not (equal ego--current-project-name ego--last-project-name)))
-      (setq ego--publish-without-org-to-html nil))
-  (setq ego--last-project-name project-name)
+         (checkin-all (read-string "checkin message (won't show in 'git log' if you have committed all): ")))
+    (if (and (ignore-errors (symbol-value 'ego--last-project-name))
+             (not (equal ego--current-project-name ego--last-project-name)))
+        (setq ego--publish-without-org-to-html nil))
+    (setq ego--last-project-name project-name)
 
-  (let ((preparation-function
-         (ego--get-config-option :preparation-function)))
-    (when preparation-function
-      (run-hooks 'preparation-function)))
-  (message "EGO: verify configuration")
-  (ego--verify-configuration)
-  (setq ego--item-cache nil)
-  (let* ((repo-dir (ego--get-repository-directory))
-         (org-branch (ego--get-config-option :repository-org-branch))
-         (html-branch (ego--get-config-option :repository-html-branch))
-         (repo-files-function (ego--get-config-option :repo-files-function))
-         (addition-files-function (ego--get-config-option :addition-files-function))
-         (orig-branch (ego--git-branch-name repo-dir))
-         (to-repo (not test-and-not-publish))
-         (test-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
-         (store-dir (if (not base-git-commit)
-                        test-dir
-                      "~/.ego-tmp/")) ; TODO customization
-         (base-git-commit-test (if base-git-commit 1 2))
-         repo-files addition-files changed-files remote-repos)
+    (let ((preparation-function
+           (ego--get-config-option :preparation-function)))
+      (when preparation-function
+        (run-hooks 'preparation-function)))
+    (message "EGO: verify configuration")
+    (ego--verify-configuration)
+    (setq ego--item-cache nil)
+    (let* ((repo-dir (ego--get-repository-directory))
+           (org-branch (ego--get-config-option :repository-org-branch))
+           (html-branch (ego--get-config-option :repository-html-branch))
+           (repo-files-function (ego--get-config-option :repo-files-function))
+           (addition-files-function (ego--get-config-option :addition-files-function))
+           (orig-branch (ego--git-branch-name repo-dir))
+           (to-repo (not test-and-not-publish))
+           (test-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
+           (store-dir (if (not base-git-commit)
+                          test-dir
+                        "~/.ego-tmp/")) ; TODO customization
+           (base-git-commit-test (if base-git-commit 1 2))
+           repo-files addition-files changed-files remote-repos)
 
-    (message "EGO: Git branch operation and get changed files")
-    (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
-    (unless (equal org-branch (ego--git-branch-name repo-dir))
-      (ego--git-change-branch repo-dir org-branch))
-    (setq repo-files
-          (-filter `(lambda (string)
-                         (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
-                      (when (functionp repo-files-function)
-                        (funcall repo-files-function repo-dir))))
-    (setq addition-files
-          (when (functionp addition-files-function)
-            (funcall addition-files-function repo-dir)))
-    (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
-    (setq ego--publish-to-repository to-repo) ;make relative-to-absolute link
-    (when (or (not (equal base-git-commit-test ego--publish-without-org-to-html))
-              test-and-not-publish)
-      (setq changed-files (if force-all
-                              `(:update ,repo-files :delete nil)
-                            (message "EGO: Getting all changed files, just waiting...")
-                            (ego--git-files-changed repo-dir (or base-git-commit
-                                                                 (ego--get-first-commit-before-publish repo-dir org-branch html-branch)
-                                                                 "HEAD~1"))))
-      (message "EGO: Create necessary directory and prepare theme!")
-      (when (file-directory-p store-dir)
-        (delete-directory store-dir t t))
-      (make-directory store-dir t)
-      (ego--prepare-theme-resources store-dir)
-      (message "EGO: Pre-publish all files needed to be publish, waiting...")
-      (ego--publish-changes repo-files addition-files changed-files store-dir)
-      (message "EGO: Pre-publish finished, output directory: %s." store-dir)
-      (setq ego--publish-without-org-to-html nil))
-    (cond (test-and-not-publish
-           (unless (file-directory-p test-dir)
-             (make-directory test-dir t))
-           ;; when (called-interactively-p 'any)
-           (if (not base-git-commit)
-               (setq ego--publish-without-org-to-html 2)
-             (copy-directory store-dir test-dir t t t)
-             (setq ego--publish-without-org-to-html 1))
-           (message "EGO: test the generated htmls in %s." test-dir)
-           (setq httpd-port (ego--get-config-option :web-server-port))
-           (httpd-serve-directory test-dir)
-           (browse-url (format "http://%s:%d" system-name httpd-port)))
-          (to-repo
-           (message "EGO: pre-publish accomplished ~ begin real publish")
-           (ego--git-change-branch repo-dir html-branch)
-           (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist); register ego--copy-file-handler to tackle relative-url-to-absolute problem
-           (copy-directory store-dir repo-dir t t t)
-           (setq file-name-handler-alist
-                 (delete '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)); unregister ego--copy-file-handler
-           (ego--git-commit-changes repo-dir (concat "Update published html files, "
-                                                    "committed by EGO."))
-           (ego--git-change-branch repo-dir orig-branch)
-           (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
+      (message "EGO: Git branch operation and get changed files")
+      (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
+      (unless (equal org-branch (ego--git-branch-name repo-dir))
+        (ego--git-change-branch repo-dir org-branch))
+      (setq repo-files
+            (-filter `(lambda (string)
+                        (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
+                     (when (functionp repo-files-function)
+                       (funcall repo-files-function repo-dir))))
+      (setq addition-files
+            (when (functionp addition-files-function)
+              (funcall addition-files-function repo-dir)))
+      (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
+      (setq ego--publish-to-repository to-repo) ;make relative-to-absolute link
+      (when (or (not (equal base-git-commit-test ego--publish-without-org-to-html))
+                test-and-not-publish)
+        (setq changed-files (if force-all
+                                `(:update ,repo-files :delete nil)
+                              (message "EGO: Getting all changed files, just waiting...")
+                              (ego--git-files-changed repo-dir (or base-git-commit
+                                                                   (ego--get-first-commit-before-publish repo-dir org-branch html-branch)
+                                                                   "HEAD~1"))))
+        (message "EGO: Create necessary directory and prepare theme!")
+        (when (file-directory-p store-dir)
+          (delete-directory store-dir t t))
+        (make-directory store-dir t)
+        (ego--prepare-theme-resources store-dir)
+        (message "EGO: Pre-publish all files needed to be publish, waiting...")
+        (ego--publish-changes repo-files addition-files changed-files store-dir)
+        (message "EGO: Pre-publish finished, output directory: %s." store-dir)
+        (setq ego--publish-without-org-to-html nil))
+      (cond (test-and-not-publish
+             (unless (file-directory-p test-dir)
+               (make-directory test-dir t))
+             ;; when (called-interactively-p 'any)
+             (if (not base-git-commit)
+                 (setq ego--publish-without-org-to-html 2)
+               (copy-directory store-dir test-dir t t t)
+               (setq ego--publish-without-org-to-html 1))
+             (message "EGO: test the generated htmls in %s." test-dir)
+             (setq httpd-port (ego--get-config-option :web-server-port))
+             (httpd-serve-directory test-dir)
+             (browse-url (format "http://%s:%d" system-name httpd-port)))
+            (to-repo
+             (message "EGO: pre-publish accomplished ~ begin real publish")
+             (ego--git-change-branch repo-dir html-branch)
+             (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist); register ego--copy-file-handler to tackle relative-url-to-absolute problem
+             (copy-directory store-dir repo-dir t t t)
+             (setq file-name-handler-alist
+                   (delete '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)); unregister ego--copy-file-handler
+             (ego--git-commit-changes repo-dir (concat "Update published html files, "
+                                                       "committed by EGO."))
+             (ego--git-change-branch repo-dir orig-branch)
+             (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
-           ;; publish remote
-           (unless (or publish-config test-and-not-publish)
-             (setq publish-config
-                   (ego--git-get-publish-config repo-dir org-branch html-branch)))
-           (when publish-config
-             (ego--git-push-remote repo-dir
-                                  (car publish-config)
-                                  (cdr publish-config))
-             (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))
-           ))
-    (setq ego--current-project-name nil)))
+             ;; publish remote
+             (unless (or publish-config test-and-not-publish)
+               (setq publish-config
+                     (ego--git-get-publish-config repo-dir org-branch html-branch)))
+             (when publish-config
+               (ego--git-push-remote repo-dir
+                                     (car publish-config)
+                                     (cdr publish-config))
+               (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))
+             ))
+      (setq ego--current-project-name nil))))
 
 ;;;###autoload
 (defun ego-test-current-page (project-name)
