@@ -160,7 +160,7 @@
            (message "EGO: test the generated htmls in %s." test-dir)
            (setq httpd-port (ego--get-config-option :web-server-port))
            (httpd-serve-directory test-dir)
-           (browse-url (format "http://%s:%d" system-name httpd-port)))
+           (browse-url (format "http://%s:%d" (system-name) httpd-port)))
           (to-repo
            (message "EGO: pre-publish accomplished ~ begin real publish")
            (ego--git-change-branch repo-dir html-branch)
@@ -229,7 +229,7 @@
     (message "EGO: test the generated htmls in %s." test-dir)
     (setq httpd-port (ego--get-config-option :web-server-port))
     (httpd-serve-directory test-dir)
-    (browse-url (format "http://%s:%d%s" system-name httpd-port test-uri))))
+    (browse-url (format "http://%s:%d%s" (system-name) httpd-port test-uri))))
 
 ;;;###autoload
 (defun ego-new-repository (repo-dir &optional html-branch source-branch)
@@ -455,7 +455,7 @@ responsibility to guarantee the two parameters are valid."
                           "master"))
          (publish-time (string-trim (ego--git-command repo-dir
                                                       (concat "log -n 1 --pretty='%cd' " html-branch))))
-         (first-commits-before-publish (string-trim (ego--git-command repo-dir
+         (first-commit-before-publish (string-trim (ego--git-command repo-dir
                                                                (format "log -n 1 --pretty='%%H' --until '%s' %s" publish-time org-branch)))))
     (if (string-blank-p first-commit-before-publish)
         nil
