@@ -228,7 +228,8 @@ element to ALIST-VAR."
   documentation for `ido-completing-read' for details on the
   other parameters."
   (let
-      ((sentinel (if sentinel sentinel "*done*"))
+      ((sentinel (or sentinel
+                     "*done*"))
        (done-reading nil)
        (remain-choices choices)
        (res ()))
