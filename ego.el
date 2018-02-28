@@ -455,7 +455,7 @@ responsibility to guarantee the two parameters are valid."
                           "master"))
          (publish-time (string-trim (ego--git-command repo-dir
                                                       (concat "log -n 1 --pretty='%cd' " html-branch))))
-         (first-commits-before-publish (string-trim (ego--git-command repo-dir
+         (first-commit-before-publish (string-trim (ego--git-command repo-dir
                                                                (format "log -n 1 --pretty='%%H' --until '%s' %s" publish-time org-branch)))))
     (if (string-blank-p first-commit-before-publish)
         nil
