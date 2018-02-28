@@ -240,12 +240,12 @@ element to ALIST-VAR."
 
     ;; read some choices
     (while (not done-reading)
-      (setq this-choice (ido-completing-read prompt remain-choices predicate
-                                             require-match initial-input hist def))
-      (if (equal this-choice sentinel)
-          (setq done-reading t)
-        (setq res (cons this-choice res))
-        (setq remain-choices (delete this-choice remain-choices))))
+      (let ((this-choice (ido-completing-read prompt remain-choices predicate
+                                              require-match initial-input hist def)))
+        (if (equal this-choice sentinel)
+            (setq done-reading t)
+          (setq res (cons this-choice res))
+          (setq remain-choices (delete this-choice remain-choices)))))
 
     ;; return the result
     res
