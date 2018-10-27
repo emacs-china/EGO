@@ -11,21 +11,26 @@
         </svg>
       </div>
       <ul class="trigger">
-        {{#nav-categories}}
-        <li><a href="{{category-uri}}">{{category-name}}</a></li>
-        {{/nav-categories}}
-        {{#authors-li}}
-        <li><a href="/authors/">Authors</a></li>
-        {{/authors-li}}
-        <li><a href="/tags/">Tags</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="{{github}}">GitHub</a></li>
-        <li><a href="/rss.xml">RSS</a></li>
+          {{#nav-categories}}
+              <li><a href="{{category-uri}}">{{category-name}}</a></li>
+          {{/nav-categories}}
+          {{#nav-summary}}
+              <li><a href="{{summary-item-uri}}">{{summary-item-name}}</a></li>
+          {{/nav-summary}}
+          {{#nav-about}}
+              <li><a href="{{about-uri}}">{{about-name}}</a></li>
+          {{/nav-about}}
+          {{#nav-source-browse}}
+              <li><a href="{{source-browse-uri}}">{{source-browse-name}}</a></li>
+          {{/nav-source-browse}}
+          {{#nav-rss}}
+              <li><a href="{{rss-uri}}">{{rss-name}}</a></li>
+          {{/nav-rss}}
       </ul>
     </nav>
-    <form method="get" id="searchform" action="http://www.gfsoso.com/search">
-      <input type="text" class="field" name="q" id="s" placeholder="Search">
-      <input type="hidden" name="as_sitesearch" value="{{site-domain}}">
+    <form method="get" id="searchform" action="http://www.google.com/search">
+        <input type="text" class="field" name="q" id="s" placeholder="Search">
+        <input type="hidden" name="as_sitesearch" value="{{site-domain}}">
     </form>
     {{#avatar}}
     <img class="avatar" src="{{avatar}}" />
