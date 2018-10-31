@@ -122,10 +122,10 @@ code, pre {
 code {
     color: #d14;
 }
-code:before, code:after {
-    content: "=";
-    color: #cfc;
-}
+/* code:before, code:after { */
+/*     content: "="; */
+/*     color: #cfc; */
+/* } */
 pre {
     display: block;
     margin: 0 0 14px;
