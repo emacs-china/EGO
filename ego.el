@@ -96,7 +96,7 @@
          (checkin-all (or checkin-all
                           (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
 
-    (if (and (ignore-errors (symbol-value 'ego--last-project-name))
+    (if (and ego--last-project-name 
              (not (equal ego--current-project-name ego--last-project-name)))
         (setq ego--publish-without-org-to-html nil))
     (setq ego--last-project-name ego--current-project-name)
