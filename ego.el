@@ -97,12 +97,7 @@
            (repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-branch (ego--git-branch-name repo-dir))
-           (to-repo t)
-           (test-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
-           (store-dir (if (not base-git-commit)
-                          test-dir
-                        "~/.ego-tmp/")) ; TODO customization
-           (base-git-commit-test (if base-git-commit 1 2))
+           (store-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
            repo-files addition-files changed-files remote-repos)
 
       (message "EGO: Git branch operation and get changed files")
@@ -118,8 +113,8 @@
             (when (functionp addition-files-function)
               (funcall addition-files-function repo-dir)))
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
-      (setq ego--publish-to-repository to-repo) ;make relative-to-absolute link
-      (when (not (equal base-git-commit-test nil))
+      (setq ego--publish-to-repository t) ;make relative-to-absolute link
+      (progn
         (setq changed-files (if force-all
                                 `(:update ,repo-files :delete nil)
                               (message "EGO: Getting all changed files, just waiting...")
@@ -134,28 +129,26 @@
         (message "EGO: Pre-publish all files needed to be publish, waiting...")
         (ego--publish-changes repo-files addition-files changed-files store-dir)
         (message "EGO: Pre-publish finished, output directory: %s." store-dir))
-      (cond (to-repo
-             (message "EGO: pre-publish accomplished ~ begin real publish")
-             (ego--git-change-branch repo-dir html-branch)
-             (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist); register ego--copy-file-handler to tackle relative-url-to-absolute problem
-             (copy-directory store-dir repo-dir t t t)
-             (setq file-name-handler-alist
-                   (delete '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)); unregister ego--copy-file-handler
-             (ego--git-commit-changes repo-dir (concat "Update published html files, "
-                                                       "committed by EGO."))
-             (ego--git-change-branch repo-dir orig-branch)
-             (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
+      (progn
+        (message "EGO: pre-publish accomplished ~ begin real publish")
+        (ego--git-change-branch repo-dir html-branch)
+        (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
+        (copy-directory store-dir repo-dir t t t)
+        (setq file-name-handler-alist
+              (delete '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; unregister ego--copy-file-handler
+        (ego--git-commit-changes repo-dir (concat "Update published html files, "
+                                                  "committed by EGO."))
+        (ego--git-change-branch repo-dir orig-branch)
+        (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
-             ;; publish remote
-             (unless (or publish-config)
-               (setq publish-config
-                     (ego--git-get-publish-config repo-dir org-branch html-branch)))
-             (when publish-config
-               (ego--git-push-remote repo-dir
-                                     (car publish-config)
-                                     (cdr publish-config))
-               (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))
-             )))))
+        ;; publish remote
+        (let ((publish-config (or publish-config (ego--git-get-publish-config repo-dir org-branch html-branch))))
+          (when publish-config
+            (ego--git-push-remote repo-dir
+                                  (car publish-config)
+                                  (cdr publish-config))
+            (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir)))
+        ))))
 
 ;;;###autoload
 (defun ego-new-repository (repo-dir &optional html-branch source-branch)
