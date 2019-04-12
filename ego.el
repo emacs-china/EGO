@@ -64,7 +64,7 @@
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive)
-  (let* ((project-name (or project-name
+  (let* ((ego--current-project-name (or project-name
                                         (ego--select-project)))
          (jobs (or jobs
                    (completing-read "Which job do you want to activate: "
@@ -73,16 +73,17 @@
                                         nil t)))
          (force-all (or force-all
                         (string= jobs "2. Full publish")))
+         (repo-dir (ego--get-repository-directory))
+         (org-branch (ego--get-config-option :repository-org-branch))
+         (html-branch (ego--get-config-option :repository-html-branch))
          (base-git-commit (or base-git-commit
                               (unless force-all
-                                (read-string "Base git commit: " (or (ego--get-first-commit-before-publish (ego--get-repository-directory)
-                                                                                                           (ego--get-config-option :repository-org-branch)
-                                                                                                           (ego--get-config-option :repository-html-branch))
+                                (read-string "Base git commit: " (or (ego--get-first-commit-before-publish repo-dir org-branch html-branch)
                                                                      "HEAD~1")))))
          (checkin-all (or checkin-all
                           (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
 
-    (setq ego--current-project-name project-name)
+    
 
     (let ((preparation-function
            (ego--get-config-option :preparation-function)))
@@ -91,9 +92,9 @@
     (message "EGO: verify configuration")
     (ego--verify-configuration)
     (setq ego--item-cache nil)
-    (let* ((repo-dir (ego--get-repository-directory))
-           (org-branch (ego--get-config-option :repository-org-branch))
-           (html-branch (ego--get-config-option :repository-html-branch))
+    (let* (
+           
+           
            (repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-branch (ego--git-branch-name repo-dir))
@@ -117,9 +118,7 @@
         (setq changed-files (if force-all
                                 `(:update ,repo-files :delete nil)
                               (message "EGO: Getting all changed files, just waiting...")
-                              (ego--git-files-changed repo-dir (or base-git-commit
-                                                                   (ego--get-first-commit-before-publish repo-dir org-branch html-branch)
-                                                                   "HEAD~1"))))
+                              (ego--git-files-changed repo-dir base-git-commit)))
         (message "EGO: Create necessary directory and prepare theme!")
         (when (file-directory-p store-dir)
           (delete-directory store-dir t t))
