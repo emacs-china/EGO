@@ -182,6 +182,9 @@
                (setq publish-config
                      (ego--git-get-publish-config repo-dir org-branch html-branch)))
              (when publish-config
+               (ego--git-pull-remote repo-dir
+                                     (car publish-config)
+                                     (cdr publish-config))
                (ego--git-push-remote repo-dir
                                      (car publish-config)
                                      (cdr publish-config))
@@ -254,6 +257,9 @@
              (setq publish-config
                    (ego--git-get-publish-config repo-dir org-branch html-branch)))
            (when publish-config
+             (ego--git-pull-remote repo-dir
+                                  (car publish-config)
+                                  (cdr publish-config))
              (ego--git-push-remote repo-dir
                                   (car publish-config)
                                   (cdr publish-config))
