@@ -223,6 +223,26 @@ presented by REPO-DIR, return nil if there is no remote repository."
           (error "Invalid remote repository '%s'." repo)
         (cons repo branchs)))))
 
+(defun ego--git-pull-remote (repo-dir remote-repo branchs)
+  "This function will pull remote repository to local branch, REPO-DIR is the
+local git repository, REMOTE-REPO is the remote repository, BRANCH is the name
+of branch will be pushed."
+  (let* ((default-directory (file-name-as-directory repo-dir))
+         (cmd (append '("git")
+                      `("pull" ,remote-repo ,@(mapcar (lambda (branch)
+                                                        (concat branch ":" branch))
+                                                      branchs))))
+         (output
+          (ego--shell-command repo-dir
+                              (format "env LC_ALL=C %s" cmd) t)))
+    (if (or (string-match "fatal" output)
+            (string-match "error" output))
+        (error "Failed to pull branch '%s' from remote repository '%s'."
+               ,(prin1-to-string branchs) ,remote-repo)
+      (with-current-buffer (get-buffer-create ego--temp-buffer-name)
+        (setf (point) (point-max))
+        (insert "remote pull success!")))))
+
 (defun ego--git-push-remote (repo-dir remote-repo branchs)
   "This function will push local branch to remote repository, REPO-DIR is the
 local git repository, REMOTE-REPO is the remote repository, BRANCH is the name
