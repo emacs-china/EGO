@@ -30,7 +30,6 @@
 
 (require 'format-spec)
 (require 'ox)
-(require 'ido)
 (require 'ht)
 (require 'cl-lib)
 (require 'dash)
@@ -776,7 +775,7 @@ PUB-BASE-DIR is the root publication directory."
 ;;;###autoload
 (defun org-ego-link-complete-link (&optional arg)
   "Completion function for EGO-LINK. ARG does nothing."
-  (let* ((org-file (file-relative-name (ido-read-file-name "enter file: " nil nil t)))
+  (let* ((org-file (file-relative-name (read-file-name "enter file: " nil nil t)))
          (current-path (expand-file-name (buffer-file-name)))
          visiting file-buffer next-link-name)
     (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")

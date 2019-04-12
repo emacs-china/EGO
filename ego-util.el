@@ -30,7 +30,6 @@
 
 (require 'ht)
 (require 'ego-config)
-(require 'ido)
 (require 'cl-lib)
 
 (defun ego--compare-standard-date (date1 date2)
@@ -218,14 +217,14 @@ element to ALIST-VAR."
     ;; Next element of NEW-ALIST.
     (setq new-alist (cdr new-alist))))
 
-(defun ego--ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
-  "Read multiple items with ido-completing-read. Reading stops
+(defun ego--completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
+  "Read multiple items with completing-read. Reading stops
   when the user enters SENTINEL. By default, SENTINEL is
   \"*done*\". SENTINEL is disambiguated with clashing completions
   by appending _ to SENTINEL until it becomes unique. So if there
   are multiple values that look like SENTINEL, the one with the
   most _ at the end is the actual sentinel value. See
-  documentation for `ido-completing-read' for details on the
+  documentation for `completing-read' for details on the
   other parameters."
   (let
       ((sentinel (or sentinel
@@ -241,7 +240,7 @@ element to ALIST-VAR."
 
     ;; read some choices
     (while (not done-reading)
-      (let ((this-choice (ido-completing-read prompt remain-choices predicate
+      (let ((this-choice (completing-read prompt remain-choices predicate
                                               require-match initial-input hist def)))
         (if (equal this-choice sentinel)
             (setq done-reading t)
