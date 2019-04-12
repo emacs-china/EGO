@@ -64,7 +64,7 @@
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive)
-  (let* ((ego--current-project-name (or project-name
+  (let* ((ego-current-project-name (or project-name
                                         (ego--select-project)))
          (jobs (or jobs
                    (completing-read "Which job do you want to activate: "
@@ -176,9 +176,9 @@ you must customize the variable `ego-project-config-alist' according to the read
 9.  `:personal-github-link': [optional] (but customization recommended)
 10. `:personal-google-analytics-id': [optional] (but customization recommended)
 11. `:theme': [optional]"
-  (unless (member ego--current-project-name
+  (unless (member ego-current-project-name
                   (mapcar 'car ego-project-config-alist))
-    (error "Can't find project: \"%s\"" ego--current-project-name))
+    (error "Can't find project: \"%s\"" ego-current-project-name))
   (let ((repo-dir (ego--get-repository-directory))
         (site-domain (ego--get-site-domain)))
     (unless (and repo-dir (file-directory-p repo-dir))
@@ -294,7 +294,7 @@ FILENAME:     the file name of this post
 Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive)
-  (let* ((ego--current-project-name (or project-name
+  (let* ((ego-current-project-name (or project-name
                                         (ego--select-project)))
          (category (or category
                        (let* ((prompt (format "Category of \"%s\" project: " p))
@@ -303,7 +303,7 @@ responsibility to guarantee the two parameters are valid."
                                                (ego--get-config-option :default-category))))
                          (completing-read prompt categories nil 'confirm init-category nil))))
          (filename (or filename
-                       (read-string (format "Filename of \"%s\" project: " ego--current-project-name) "new-post.org" p)))
+                       (read-string (format "Filename of \"%s\" project: " ego-current-project-name) "new-post.org" p)))
          (insert-fallback-template (or insert-fallback-template
                                        (yes-or-no-p "Insert fallback template? "))))
   (if (string= category "")
@@ -373,7 +373,7 @@ responsibility to guarantee the two parameters are valid."
   (completing-read "Which project theme do you want to use? "
                    (delete-dups
                     (mapcar 'car ego-project-config-alist))
-                   nil t nil nil ego--default-project-name))
+                   nil t nil nil ego-current-project-name))
 
 (provide 'ego)
 

@@ -349,7 +349,7 @@ You can see fallback value of above option in `ego-config-fallback'"
 (defvar ego--category-show-list nil
   "the list of category names(string) which will be showed in the navigation-bar")
 
-(defvar ego--current-project-name nil)
+(defvar ego-current-project-name nil)
 
 (defvar ego--item-cache nil
   "The cache for general purpose.")
@@ -429,7 +429,7 @@ You can see fallback value of above option in `ego-config-fallback'"
 which can read `option' from `ego-project-config-alist'
 if `option' is not found, get fallback value from
 `ego-config-fallback'."
-  (let ((project-plist (cdr (assoc ego--current-project-name
+  (let ((project-plist (cdr (assoc ego-current-project-name
                                    ego-project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
