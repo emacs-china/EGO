@@ -113,7 +113,6 @@
             (when (functionp addition-files-function)
               (funcall addition-files-function repo-dir)))
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
-      (setq ego--publish-to-repository t) ;make relative-to-absolute link
       (progn
         (setq changed-files (if force-all
                                 `(:update ,repo-files :delete nil)

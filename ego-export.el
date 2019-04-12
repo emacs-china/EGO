@@ -262,8 +262,7 @@ file's category is based on its name and its root folder name."
     (with-temp-buffer
       (insert html-content)
       (goto-char (point-min))
-      (when (and ego--publish-to-repository
-                 (ego--get-config-option :force-absolute-url))
+      (when (ego--get-config-option :force-absolute-url)
         (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
