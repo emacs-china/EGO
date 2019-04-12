@@ -115,10 +115,10 @@ code, pre {
     text-decoration: underline;
     color: #3aff3a;     
 }
-.underline:before, .underline:after {
-    content: "_";
-    color: #3aff3a;
-}
+/* .underline:before, .underline:after { */
+/*     content: "_"; */
+/*     color: #3aff3a; */
+/* } */
 code {
     color: #d14;
 }

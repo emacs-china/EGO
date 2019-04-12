@@ -66,11 +66,10 @@
   (interactive)
   (let* ((ego-current-project-name (or project-name
                                         (ego--select-project)))
-         (jobs (or jobs
-                   (completing-read "Which job do you want to activate: "
-                                        '("1. Partial publish"
-                                          "2. Full publish")
-                                        nil t)))
+         (jobs (completing-read "Which job do you want to activate: "
+                                '("1. Partial publish"
+                                  "2. Full publish")
+                                nil t))
          (force-all (or force-all
                         (string= jobs "2. Full publish")))
          (repo-dir (ego--get-repository-directory))
