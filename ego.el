@@ -47,7 +47,6 @@
 
 ;;;###autoload
 (defun ego-do-publication (&optional project-name
-                                     test-and-not-publish
                                      force-all
                                      base-git-commit
                                      checkin-all
@@ -62,8 +61,7 @@
       BASE-GIT-COMMIT
    3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained based on previous commit
 3) publish org files to html,
-   if TEST-AND-NOT-PUBLISH is t, test the generated html files by the web-server,
-   otherwise html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
+   html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive)
@@ -72,17 +70,11 @@
                                         (ego--select-project)))
          (jobs (or jobs
                    (completing-read "Which job do you want to activate: "
-                                        '("1. Test partial publish"
-                                          "2. Partial publish"
-                                          "3. Test full publish"
-                                          "4. Full publish")
+                                        '("1. Partial publish"
+                                          "2. Full publish")
                                         nil t)))
-         (test-and-not-publish (or test-and-not-publish
-                                   (or (string= jobs "1. Test partial publish")
-                                       (string= jobs "3. Test full publish"))))
          (force-all (or force-all
-                        (or (string= jobs "3. Test full publish")
-                            (string= jobs "4. Full publish"))))
+                        (string= jobs "2. Full publish")))
          (base-git-commit (or base-git-commit
                               (unless force-all
                                 (read-string "Base git commit: " (or (ego--get-first-commit-before-publish (ego--get-repository-directory)
@@ -108,7 +100,7 @@
            (repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-branch (ego--git-branch-name repo-dir))
-           (to-repo (not test-and-not-publish))
+           (to-repo t)
            (test-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
            (store-dir (if (not base-git-commit)
                           test-dir
@@ -130,8 +122,7 @@
               (funcall addition-files-function repo-dir)))
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
       (setq ego--publish-to-repository to-repo) ;make relative-to-absolute link
-      (when (or (not (equal base-git-commit-test ego--publish-without-org-to-html))
-                test-and-not-publish)
+      (when (not (equal base-git-commit-test ego--publish-without-org-to-html))
         (setq changed-files (if force-all
                                 `(:update ,repo-files :delete nil)
                               (message "EGO: Getting all changed files, just waiting...")
@@ -147,19 +138,7 @@
         (ego--publish-changes repo-files addition-files changed-files store-dir)
         (message "EGO: Pre-publish finished, output directory: %s." store-dir)
         (setq ego--publish-without-org-to-html nil))
-      (cond (test-and-not-publish
-             (unless (file-directory-p test-dir)
-               (make-directory test-dir t))
-             ;; when (called-interactively-p 'any)
-             (if (not base-git-commit)
-                 (setq ego--publish-without-org-to-html 2)
-               (copy-directory store-dir test-dir t t t)
-               (setq ego--publish-without-org-to-html 1))
-             (message "EGO: test the generated htmls in %s." test-dir)
-             (setq httpd-port (ego--get-config-option :web-server-port))
-             (httpd-serve-directory test-dir)
-             (browse-url (format "http://%s:%d" system-name httpd-port)))
-            (to-repo
+      (cond (to-repo
              (message "EGO: pre-publish accomplished ~ begin real publish")
              (ego--git-change-branch repo-dir html-branch)
              (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist); register ego--copy-file-handler to tackle relative-url-to-absolute problem
@@ -172,13 +151,10 @@
              (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
              ;; publish remote
-             (unless (or publish-config test-and-not-publish)
+             (unless (or publish-config)
                (setq publish-config
                      (ego--git-get-publish-config repo-dir org-branch html-branch)))
              (when publish-config
-               (ego--git-pull-remote repo-dir
-                                     (car publish-config)
-                                     (cdr publish-config))
                (ego--git-push-remote repo-dir
                                      (car publish-config)
                                      (cdr publish-config))
