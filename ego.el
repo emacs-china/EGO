@@ -82,9 +82,6 @@
                                                                      "HEAD~1")))))
          (checkin-all (or checkin-all
                           (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
-
-    
-
     (let ((preparation-function
            (ego--get-config-option :preparation-function)))
       (when preparation-function
@@ -92,10 +89,7 @@
     (message "EGO: verify configuration")
     (ego--verify-configuration)
     (setq ego--item-cache nil)
-    (let* (
-           
-           
-           (repo-files-function (ego--get-config-option :repo-files-function))
+    (let* ((repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-branch (ego--git-branch-name repo-dir))
            (store-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
