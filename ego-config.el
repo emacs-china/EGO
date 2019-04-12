@@ -350,7 +350,6 @@ You can see fallback value of above option in `ego-config-fallback'"
   "the list of category names(string) which will be showed in the navigation-bar")
 
 (defvar ego--current-project-name nil)
-(defvar ego--last-project-name nil)
 
 (defvar ego--publish-without-org-to-html nil
   "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")

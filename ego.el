@@ -68,12 +68,8 @@
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive)
 
-  (let* ((ego--current-project-name (or project-name
-                                        (or ego-default-project-name
-                                            (completing-read "Which project do you want to publish? "
-                                                                 (delete-dups
-                                                                  (mapcar 'car ego-project-config-alist))
-                                                                 nil t nil nil ego--last-project-name))))
+  (let* ((project-name (or project-name
+                                        (ego--select-project)))
          (jobs (or jobs
                    (completing-read "Which job do you want to activate: "
                                         '("1. Test partial publish"
@@ -96,10 +92,8 @@
          (checkin-all (or checkin-all
                           (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
 
-    (if (and ego--last-project-name 
-             (not (equal ego--current-project-name ego--last-project-name)))
-        (setq ego--publish-without-org-to-html nil))
-    (setq ego--last-project-name ego--current-project-name)
+    (setq ego--current-project-name project-name)
+    (setq ego--publish-without-org-to-html nil)
 
     (let ((preparation-function
            (ego--get-config-option :preparation-function)))
@@ -190,128 +184,6 @@
                                      (cdr publish-config))
                (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))
              )))))
-
-;;;###autoload
-(defun ego-test-current-page (project-name)
-  "Test the current opening org-file!"
-  (interactive)
-  (let ((ego--current-project-name (or project-name
-                          (or ego-default-project-name
-                              (completing-read "Which project theme do you want to use? "
-                                                   (delete-dups
-                                                    (mapcar 'car ego-project-config-alist))
-                                                   nil t nil nil ego--last-project-name)))))
-    (setq ego--last-project-name ego--current-project-name)
-    (let ((preparation-function
-           (ego--get-config-option :preparation-function)))
-      (when preparation-function
-        (run-hooks 'preparation-function)))
-    (setq ego--item-cache nil)
-    (let* ((repo-dir (ego--get-repository-directory))
-           (addition-files-function (ego--get-config-option :addition-files-function))
-           (test-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
-           (store-dir "~/.ego-tmp/") ; TODO customization
-           (org-file-to-test (list (expand-file-name (buffer-file-name) repo-dir)))
-           addition-files changed-files test-uri)
-      (setq addition-files
-            (when (functionp addition-files-function)
-              (funcall addition-files-function repo-dir)))
-      (setq changed-files `(:update ,org-file-to-test :delete nil))
-      (setq test-uri (plist-get (car (ego--get-org-file-options test-dir nil))
-                                :uri))
-      (message "EGO: Create necessary directory and prepare theme!")
-      (when (file-directory-p store-dir)
-        (delete-directory store-dir t t))
-      (make-directory store-dir t)
-      (ego--prepare-theme-resources store-dir)
-      (message "EGO: Pre-publish all files needed to be publish, waiting...")
-      (ego--publish-changes repo-files addition-files changed-files store-dir)
-      (message "EGO: Pre-publish finished, output directory: %s." store-dir)
-      (setq ego--publish-without-org-to-html nil))
-    (cond (test-and-not-publish
-           (unless (file-directory-p test-dir)
-             (make-directory test-dir t))
-           ;; when (called-interactively-p 'any)
-           (if (not base-git-commit)
-               (setq ego--publish-without-org-to-html 2)
-             (copy-directory store-dir test-dir t t t)
-             (setq ego--publish-without-org-to-html 1))
-           (message "EGO: test the generated htmls in %s." test-dir)
-           (setq httpd-port (ego--get-config-option :web-server-port))
-           (httpd-serve-directory test-dir)
-           (browse-url (format "http://%s:%d" (system-name) httpd-port)))
-          (to-repo
-           (message "EGO: pre-publish accomplished ~ begin real publish")
-           (ego--git-change-branch repo-dir html-branch)
-           (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist); register ego--copy-file-handler to tackle relative-url-to-absolute problem
-           (copy-directory store-dir repo-dir t t t)
-           (setq file-name-handler-alist
-                 (delete '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)); unregister ego--copy-file-handler
-           (ego--git-commit-changes repo-dir (concat "Update published html files, "
-                                                    "committed by EGO."))
-           (ego--git-change-branch repo-dir orig-branch)
-           (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
-
-           ;; publish remote
-           (unless (or publish-config test-and-not-publish)
-             (setq publish-config
-                   (ego--git-get-publish-config repo-dir org-branch html-branch)))
-           (when publish-config
-             (ego--git-pull-remote repo-dir
-                                  (car publish-config)
-                                  (cdr publish-config))
-             (ego--git-push-remote repo-dir
-                                  (car publish-config)
-                                  (cdr publish-config))
-             (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir))
-           ))
-    (setq ego--current-project-name nil)))
-
-;;;###autoload
-(defun ego-test-current-page (project-name)
-  "Test the current opening org-file!"
-  (interactive
-   (let* ((j (or ego--default-project-name
-                 (completing-read "Which project theme do you want to use? "
-                                      (delete-dups
-                                       (mapcar 'car ego-project-config-alist))
-                                      nil t nil nil ego--last-project-name))))
-     (list j)))
-  (setq ego--current-project-name project-name)
-  (setq ego--last-project-name project-name)
-  (let ((preparation-function
-         (ego--get-config-option :preparation-function)))
-    (when preparation-function
-      (run-hooks 'preparation-function)))
-  (setq ego--item-cache nil)
-  (let* ((repo-dir (ego--get-repository-directory))
-         (addition-files-function (ego--get-config-option :addition-files-function))
-         (test-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
-         (store-dir "~/.ego-tmp/") ; TODO customization
-         (org-file-to-test (list (expand-file-name (buffer-file-name) repo-dir)))
-         addition-files changed-files test-uri)
-    (setq addition-files
-          (when (functionp addition-files-function)
-            (funcall addition-files-function repo-dir)))
-    (setq changed-files `(:update ,org-file-to-test :delete nil))
-    (setq test-uri (plist-get (car (ego--get-org-file-options test-dir nil))
-                              :uri))
-    (message "EGO: Create necessary directory and prepare theme!")
-    (when (file-directory-p store-dir)
-      (delete-directory store-dir t t))
-    (make-directory store-dir t)
-    (ego--prepare-theme-resources store-dir)
-    (message "EGO: converting the org file needed to be test, waiting...")
-    (ego--publish-changes org-file-to-test addition-files changed-files store-dir)
-    (message "EGO: test finished, output directory: %s." store-dir)
-    (unless (file-directory-p test-dir)
-      (make-directory test-dir t))
-    (copy-directory store-dir test-dir t t t)
-    (setq ego--publish-without-org-to-html nil)
-    (message "EGO: test the generated htmls in %s." test-dir)
-    (setq httpd-port (ego--get-config-option :web-server-port))
-    (httpd-serve-directory test-dir)
-    (browse-url (format "http://%s:%d%s" (system-name) httpd-port test-uri))))
 
 ;;;###autoload
 (defun ego-new-repository (repo-dir &optional html-branch source-branch)
@@ -466,16 +338,11 @@ Note that this function does not verify the category and filename, it is users'
 responsibility to guarantee the two parameters are valid."
   (interactive)
   (let* ((ego--current-project-name (or project-name
-                                        ego-default-project-name
-                                        (completing-read "Which project do you want post? "
-                                                         (-uniq
-                                                          (mapcar 'car ego-project-config-alist))
-                                                         nil t nil nil ego--last-project-name)))
+                                        (ego--select-project)))
          (category (or category
                        (let* ((prompt (format "Category of \"%s\" project: " p))
                               (categories (mapcar #'file-name-nondirectory (cl-remove-if-not #'file-directory-p (directory-files (ego--get-config-option :repository-directory) t))))
                               (init-category (unless categories
-                                               (setq ego--last-project-name ego--current-project-name)
                                                (ego--get-config-option :default-category))))
                          (completing-read prompt categories nil 'confirm init-category nil))))
          (filename (or filename
@@ -506,8 +373,8 @@ responsibility to guarantee the two parameters are valid."
                                             category category)
                                     "tag1, tag2, tag3"
                                     "<Add description here>"))
-    (save-buffer))
-  (setq ego--current-project-name nil)))
+    (save-buffer))))
+
 (defun ego--get-first-commit-after-publish (&optional repo-dir org-branch html-branch)
   "Return the first commit after publish in `REPO-DIR',return nil if no commit after publish"
   (let* ((repo-dir (or repo-dir (ego--get-repository-directory)))
@@ -543,6 +410,13 @@ responsibility to guarantee the two parameters are valid."
     (if (string-blank-p first-commit-before-publish)
         nil
       first-commit-before-publish)))
+
+(defun ego--select-project ()
+  "Select a project defined in `ego-project-config-alist'"
+  (completing-read "Which project theme do you want to use? "
+                   (delete-dups
+                    (mapcar 'car ego-project-config-alist))
+                   nil t nil nil ego--default-project-name))
 
 (provide 'ego)
 
