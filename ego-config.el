@@ -351,9 +351,6 @@ You can see fallback value of above option in `ego-config-fallback'"
 
 (defvar ego--current-project-name nil)
 
-(defvar ego--publish-without-org-to-html nil
-  "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")
-
 (defvar ego--publish-to-repository nil
   "Mainly used in converting relative-url to absolute-url")
 

@@ -64,7 +64,6 @@
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
 5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
   (interactive)
-
   (let* ((project-name (or project-name
                                         (ego--select-project)))
          (jobs (or jobs
@@ -84,7 +83,6 @@
                           (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
 
     (setq ego--current-project-name project-name)
-    (setq ego--publish-without-org-to-html nil)
 
     (let ((preparation-function
            (ego--get-config-option :preparation-function)))
@@ -121,7 +119,7 @@
               (funcall addition-files-function repo-dir)))
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
       (setq ego--publish-to-repository to-repo) ;make relative-to-absolute link
-      (when (not (equal base-git-commit-test ego--publish-without-org-to-html))
+      (when (not (equal base-git-commit-test nil))
         (setq changed-files (if force-all
                                 `(:update ,repo-files :delete nil)
                               (message "EGO: Getting all changed files, just waiting...")
@@ -135,8 +133,7 @@
         (ego--prepare-theme-resources store-dir)
         (message "EGO: Pre-publish all files needed to be publish, waiting...")
         (ego--publish-changes repo-files addition-files changed-files store-dir)
-        (message "EGO: Pre-publish finished, output directory: %s." store-dir)
-        (setq ego--publish-without-org-to-html nil))
+        (message "EGO: Pre-publish finished, output directory: %s." store-dir))
       (cond (to-repo
              (message "EGO: pre-publish accomplished ~ begin real publish")
              (ego--git-change-branch repo-dir html-branch)
