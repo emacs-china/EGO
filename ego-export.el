@@ -312,9 +312,9 @@ If COMPONENT-TABLE is nil, the publication will be skipped."
       (ego--get-cache-create
        :container-template
        (message "EGO: Read container.mustache from file")
-       (ego--file-to-string (ego--get-template-file "container.mustache")))
+       (ego--file-to-string (ego--get-template-file "container.mustache"))) ; 模板的入口就是container.mustache
       component-table)
-     (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code
+     (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code 返回生成的HTML路径
      )))
 
 (defun ego--handle-deleted-file (org-file-path)
@@ -763,16 +763,17 @@ PUB-BASE-DIR is the root publication directory."
 (defun ego-link-type-process-html (path desc)
   "Generate EGO-LINK for html export, WARNING: EGO-LINK can only be linked to files in the repository directory"
   (let* ((default-directory (ego--get-repository-directory))
-         org-file webpath visiting file-buffer)
+         org-file webpath)
     (or (file-exists-p (setq org-file (expand-file-name path)))
         (file-exists-p (setq org-file (car (file-expand-wildcards (format "**/*%s" path)))))
         (error "Can't find this ego-link!"))
-    (setq visiting (find-buffer-visiting org-file))
-    (with-current-buffer (setq file-buffer
-                               (or visiting (find-file org-file)))
-      (setq webpath (plist-get (car (ego--get-org-file-options default-directory nil))
-                               :uri)))
-    (or visiting (kill-buffer file-buffer))
+    (let* ((visiting-p (find-buffer-visiting org-file))
+           (file-buffer (or visiting-p (find-file org-file))))
+      (with-current-buffer file-buffer
+        (setq webpath (plist-get (car (ego--get-org-file-options default-directory nil))
+                                 :uri)))
+      (unless visiting-p
+        (kill-buffer file-buffer)))
     (format "<span class=\"ego_link\"><a href=\"%s\">%s</a></span>" webpath desc)))
 
 ;;;###autoload
@@ -780,22 +781,22 @@ PUB-BASE-DIR is the root publication directory."
   "Completion function for EGO-LINK. ARG does nothing."
   (let* ((org-file (file-relative-name (read-file-name "enter file: " nil nil t)))
          (current-path (expand-file-name (buffer-file-name)))
-         visiting file-buffer next-link-name)
+          next-link-name)
     (when (y-or-n-p "Is it a PERVOUS(bi-directional) link? ")
-      (setq visiting (find-buffer-visiting org-file))
-      (with-current-buffer (switch-to-buffer (setq file-buffer
-                                                   (or visiting (find-file org-file))))
-        (setq next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t))
-        (local-set-key "l" `(lambda ()
-                              (interactive)
-                              (insert (format "[[ego-link:%s][%s]]" ,(file-relative-name current-path) ,next-link-name))
-                              (local-unset-key "l")
-                              (save-buffer)
-                              (exit-recursive-edit)))
-        (message "EGO: Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
-        (recursive-edit))
-      (or visiting (kill-buffer file-buffer))
-      )
+      (let ((visiting-p (find-buffer-visiting org-file))
+            (file-buffer (or visiting-p (find-file org-file)))
+            (next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t)))
+        (with-current-buffer (switch-to-buffer file-buffer)
+          (local-set-key "l" `(lambda ()
+                                (interactive)
+                                (insert (format "[[ego-link:%s][%s]]" ,(file-relative-name current-path) ,next-link-name))
+                                (local-unset-key "l")
+                                (save-buffer)
+                                (exit-recursive-edit)))
+          (message "EGO: Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
+          (recursive-edit))
+        (unless visiting-p
+          (kill-buffer file-buffer))))
     (format "ego-link:%s" org-file)))
 
 (ignore-errors                            ;make EGO compatible with org-mode 8.x

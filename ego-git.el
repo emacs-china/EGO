@@ -165,7 +165,7 @@ property list, property :update maps a list of updated/added files, property
 :delete maps a list of deleted files.
 For git, there are three types: Added, Modified, Deleted, but for ego,
 only two types will work well: need to publish or need to delete.
-<TODO>: robust enhance, branch check, etc."
+<TODO>: robust enhance, branch check, etc.未来考虑拆分新增和修改的情况"
   (let ((org-file-ext ".org")
         (repo-dir (file-name-as-directory repo-dir))
         (output (ego--shell-command

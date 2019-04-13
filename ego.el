@@ -104,7 +104,7 @@
                         (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
                      (when (functionp repo-files-function)
                        (funcall repo-files-function repo-dir))))
-      (setq addition-files
+      (setq addition-files              ;addition-files一般为repo之外的附加文件
             (when (functionp addition-files-function)
               (funcall addition-files-function repo-dir)))
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
