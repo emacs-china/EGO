@@ -349,7 +349,7 @@ You can see fallback value of above option in `ego-config-fallback'"
 (defvar ego--category-show-list nil
   "the list of category names(string) which will be showed in the navigation-bar")
 
-(defvar ego-current-project-name nil)
+(defvar ego-current-project-name "")
 
 (defvar ego--item-cache nil
   "The cache for general purpose.")

@@ -66,10 +66,11 @@
   (interactive)
   (let* ((ego-current-project-name (or project-name
                                         (ego--select-project)))
-         (jobs (completing-read "Which job do you want to activate: "
-                                '("1. Partial publish"
-                                  "2. Full publish")
-                                nil t))
+         (jobs (when (called-interactively-p)
+                 (completing-read "Which job do you want to activate: "
+                                  '("1. Partial publish"
+                                    "2. Full publish")
+                                  nil t)))
          (force-all (or force-all
                         (string= jobs "2. Full publish")))
          (repo-dir (ego--get-repository-directory))
@@ -120,13 +121,11 @@
         (message "EGO: Pre-publish all files needed to be publish, waiting...")
         (ego--publish-changes repo-files addition-files changed-files store-dir)
         (message "EGO: Pre-publish finished, output directory: %s." store-dir))
-      (progn
+      (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
+            )
         (message "EGO: pre-publish accomplished ~ begin real publish")
         (ego--git-change-branch repo-dir html-branch)
-        (push '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
         (copy-directory store-dir repo-dir t t t)
-        (setq file-name-handler-alist
-              (delete '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; unregister ego--copy-file-handler
         (ego--git-commit-changes repo-dir (concat "Update published html files, "
                                                   "committed by EGO."))
         (ego--git-change-branch repo-dir orig-branch)
@@ -142,25 +141,27 @@
         ))))
 
 ;;;###autoload
-(defun ego-new-repository (repo-dir &optional html-branch source-branch)
+(defun ego-new-repository (&optional repo-dir html-branch org-branch)
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by EGO. In order to construct a real repository,
 you must customize the variable `ego-project-config-alist' according to the readme file of EGO project."
-  (interactive
-   (list (read-directory-name
-          "Specify a directory to become the repository: " nil nil nil)
-         (completing-read "Input the branch name of 'html' branch: " (list (ego--get-config-option :repository-html-branch)))
-         (completing-read "Input the branch name of 'source' branch: " (list (ego--get-config-option :repository-org-branch)))
-         ))
-  (ego--git-init-repo repo-dir)
-  (ego--git-new-empty-branch repo-dir (if html-branch html-branch (ego--get-config-option :repository-html-branch)))
-  (ego--git-new-empty-branch repo-dir (if source-branch source-branch (ego--get-config-option :repository-org-branch)))
-  (ego--generate-readme repo-dir)
-  (ego--git-commit-changes repo-dir "initial commit")
-  (ego--generate-index repo-dir)
-  (ego--git-commit-changes repo-dir "add source index.org")
-  (ego--generate-about repo-dir)
-  (ego--git-commit-changes repo-dir "add source about.org"))
+  (interactive)
+  (let ((repo-dir (or repo-dir
+                      (read-directory-name
+                       "Specify a directory to become the repository: " nil nil nil)))
+        (html-branch (or html-branch
+                         (read-string "Input the branch name of 'html' branch: " "master" nil "master")))
+        (org-branch (or org-branch
+                        (read-string "Input the branch name of 'source' branch: " "source" nil "source"))))
+    (ego--git-init-repo repo-dir)
+    (ego--git-new-empty-branch repo-dir html-branch)
+    (ego--git-new-empty-branch repo-dir org-branch)
+    (ego--generate-readme repo-dir)
+    (ego--git-commit-changes repo-dir "initial commit")
+    (ego--generate-index repo-dir)
+    (ego--git-commit-changes repo-dir "add source index.org")
+    (ego--generate-about repo-dir)
+    (ego--git-commit-changes repo-dir "add source about.org")))
 
 (defun ego--verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:
