@@ -60,24 +60,20 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
     (when (or upd-list del-list)
       (mapc
        (lambda (org-file)
-           (let* ((visiting-p (find-buffer-visiting org-file))
-                  (file-buffer (or visiting-p (find-file org-file)))
-                  (need-upd-p (member org-file upd-list))
+           (let* ((need-upd-p (member org-file upd-list))
                   (need-del-p (member org-file del-list)))
-             (with-current-buffer file-buffer
-               (let* ((attr-cell (ego--get-org-file-options
-                                  pub-root-dir
-                                  need-upd-p))
-                      (attr-plist (car attr-cell))
-                      (component-table (cdr attr-cell)))
-                 (setq file-attr-list (cons attr-plist file-attr-list))
-                 (when need-upd-p
-                   (ego--publish-modified-file component-table
-                                               (plist-get attr-plist :pub-dir)))
-                 (when need-del-p
-                   (ego--handle-deleted-file org-file))))
-             (unless visiting-p
-               (kill-buffer file-buffer))))
+             (let* ((attr-cell (ego--get-org-file-options
+                                org-file
+                                pub-root-dir
+                                need-upd-p))
+                    (attr-plist (car attr-cell))
+                    (component-table (cdr attr-cell)))
+               (setq file-attr-list (cons attr-plist file-attr-list))
+               (when need-upd-p
+                 (ego--publish-modified-file component-table
+                                             (plist-get attr-plist :pub-dir)))
+               (when need-del-p
+                 (ego--handle-deleted-file org-file)))))
        files-list)
       (unless (member
                (expand-file-name "index.org" repo-dir)
@@ -96,101 +92,111 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
            (ego--update-summary file-attr-list pub-root-dir name))
        (mapcar #'car (ego--get-config-option :summary))))))
 
-(defun ego--get-org-file-options (pub-root-dir do-pub)
+(defun ego--get-org-file-options (org-file pub-root-dir do-pub)
   "Retrieve all needed options for org file opened in current buffer.
 PUB-ROOT-DIR is the root directory of published files, if DO-PUB is t, the
 content of the buffer will be converted into html.
 
 This functions works with `ego-current-project-name' and currect buffer.
 返回值包括两部分:(cons attr-plist component-table),其中attr-plist是元信息，component-table是渲染后的HTML内容"
-  (let* ((repo-dir (ego--get-repository-directory))
-         (filename (buffer-file-name))
-         (attr-plist `(:title ,(funcall (ego--get-config-option :get-title-function))
-                              :date ,(ego--fix-timestamp-string
-                                      (or (ego--read-org-option "DATE")
-                                          (ego--git-first-change-date repo-dir filename)
-                                          (format-time-string "%Y-%m-%d")))
-                              :mod-date ,(if (not filename)
-                                             (format-time-string "%Y-%m-%d")
-                                           (or (ego--git-last-change-date
-                                                repo-dir
-                                                filename)
-                                               (format-time-string
-                                                "%Y-%m-%d"
-                                                (nth 5 (file-attributes filename)))))
-                              :description ,(or (ego--read-org-option "DESCRIPTION")
-                                                "No Description")
-                              :thumb ,(ego--read-org-option "THUMBNAIL")))
-         (tags (ego--read-org-option "TAGS"))
-         (authors (ego--read-org-option "AUTHOR"))
-         (category (ego--get-category filename))
-           converted-path
-         component-table cat-config)
-    (plist-put
-     attr-plist :year (format "%.4s" (plist-get attr-plist :date)))
-    (when tags
-      (plist-put
-       attr-plist :tags (delete "" (mapcar 'string-trim
-                                           (split-string tags "[:,]+" t)))))
-    (when authors
-      (plist-put
-       attr-plist :authors (delete "" (mapcar 'string-trim
-                                              (split-string authors "[:,]+" t)))))
-    (plist-put
-     attr-plist :category category)
-    (setq cat-config (cdr (or (assoc category ego--category-config-alist)
-                              (ego--get-category-setting
-                               (ego--get-config-option :default-category)))))
-    (plist-put attr-plist :uri (funcall (plist-get cat-config :uri-generator)
-                                        (plist-get cat-config :uri-template)
-                                        (plist-get attr-plist :date)
-                                        (plist-get attr-plist :title)))
-    (plist-put attr-plist :pub-dir (file-name-as-directory
-                                    (concat
-                                     (file-name-as-directory pub-root-dir)
-                                     (replace-regexp-in-string
-                                      "\\`/" ""
-                                      (plist-get attr-plist :uri)))))
-    (when do-pub
-      (princ attr-plist)
-      (let* ((post-content (ego--render-content))
-             (assets-dir (file-name-as-directory
-                          (concat (file-name-as-directory pub-root-dir)
-                                  "assets/"
-                                  (replace-regexp-in-string
-                                   "\\`" "" (plist-get attr-plist :uri))))))
-        (with-temp-buffer
-          (insert post-content)
-          (goto-char (point-min))
-          (while (re-search-forward
+  (let* ((visiting-p (find-buffer-visiting org-file))
+         (file-buffer (or visiting-p (find-file org-file)))
+         result)
+    (with-current-buffer file-buffer
+      (let* ((repo-dir (ego--get-repository-directory))
+             (filename (buffer-file-name))
+             (title (funcall (ego--get-config-option :get-title-function)))
+             (date (ego--fix-timestamp-string
+                    (or (ego--read-org-option "DATE")
+                        (ego--git-first-change-date repo-dir filename)
+                        (format-time-string "%Y-%m-%d"))))
+             (year (format "%.4s" date))
+             (mod-date (if (not filename)
+                           (format-time-string "%Y-%m-%d")
+                         (or (ego--git-last-change-date
+                              repo-dir
+                              filename)
+                             (format-time-string
+                              "%Y-%m-%d"
+                              (nth 5 (file-attributes filename))))))
+             (description (or (ego--read-org-option "DESCRIPTION")
+                              "No Description"))
+             (thumb (ego--read-org-option "THUMBNAIL"))
+             (tags (ego--read-org-option "TAGS"))
+             (tags (delete "" (mapcar 'string-trim
+                                      (split-string tags "[:,]+" t))))
+             (authors (ego--read-org-option "AUTHOR"))
+             (authors (delete "" (mapcar 'string-trim
+                                         (split-string authors "[:,]+" t))))
+             (category (ego--get-category filename))
+             (cat-config (cdr (or (assoc category ego--category-config-alist)
+                                  (ego--get-category-setting
+                                   (ego--get-config-option :default-category)))))
+             (uri (funcall (plist-get cat-config :uri-generator)
+                           (plist-get cat-config :uri-template)
+                           date
+                           title))
+             (pub-dir (file-name-as-directory
+                       (concat
+                        (file-name-as-directory pub-root-dir)
+                        (replace-regexp-in-string
+                         "\\`/" ""
+                         uri))))
+             (attr-plist `(:title ,title
+                                  :date ,date
+                                  :mod-date ,mod-date
+                                  :description ,description
+                                  :thumb ,thumb
+                                  :year ,year
+                                  :tags ,tags
+                                  :authors ,authors
+                                  :category ,category
+                                  :uri ,uri
+                                  :pub-dir ,pub-dir))
+             component-table)
+        (when do-pub
+          (princ attr-plist)
+          (let* ((post-content (ego--render-content))
+                 (assets-dir (file-name-as-directory
+                              (concat (file-name-as-directory pub-root-dir)
+                                      "assets/"
+                                      (replace-regexp-in-string
+                                       "\\`" "" uri)))))
+            (with-temp-buffer
+              (insert post-content)
+              (goto-char (point-min))
+              (while (re-search-forward
 ;;; TODO: not only links need to convert, but also inline
 ;;; images, may add others later
-                  ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
-                  "<[a-zA-Z]+[^/>]+\\(src\\|href\\)=\"\\([^\"]+\\)\"[^>]*>" nil t)
-            (let* ((asset-path (match-string 2))
-                   (asset-path-begin (match-beginning 2))
-                   (asset-path-end (match-end 2))
-                   (asset-abs-path (expand-file-name asset-path (file-name-directory filename)))
-                   (pub-abs-path (concat assets-dir (file-name-nondirectory asset-path))))
-              (unless (url-type (url-generic-parse-url asset-path)) ;; 判断是否为绝对路径的URI
-                (if (not (file-exists-p asset-abs-path))
-                    (message "EGO: [WARN] File %s in hyper link does not exist, org \
+                      ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+                      "<[a-zA-Z]+[^/>]+\\(src\\|href\\)=\"\\([^\"]+\\)\"[^>]*>" nil t)
+                (let* ((asset-path (match-string 2))
+                       (asset-path-begin (match-beginning 2))
+                       (asset-path-end (match-end 2))
+                       (asset-abs-path (expand-file-name asset-path (file-name-directory filename)))
+                       (pub-abs-path (concat assets-dir (file-name-nondirectory asset-path))))
+                  (unless (url-type (url-generic-parse-url asset-path)) ;; 判断是否为绝对路径的URI
+                    (if (not (file-exists-p asset-abs-path))
+                        (message "EGO: [WARN] File %s in hyper link does not exist, org \
 file: %s." asset-abs-path filename)
-                  (unless (file-directory-p assets-dir)
-                    (mkdir assets-dir t))
-                  (copy-file asset-abs-path assets-dir t t t t)
-                  (unless (string-prefix-p pub-root-dir pub-abs-path)
-                    (message "EGO: [WARN] The publication root directory %s is not an \
+                      (unless (file-directory-p assets-dir)
+                        (mkdir assets-dir t))
+                      (copy-file asset-abs-path assets-dir t t t t)
+                      (unless (string-prefix-p pub-root-dir pub-abs-path)
+                        (message "EGO: [WARN] The publication root directory %s is not an \
 ancestor directory of assets directory %s." pub-root-dir assets-dir))
-                  (let ((converted-path
-                         (concat "/" (file-relative-name pub-abs-path pub-root-dir))))
-                    (setf (buffer-substring asset-path-begin asset-path-end) converted-path))))))
-          (setq post-content (buffer-string)))
-        (setq component-table (ht ("header" (ego--render-header))
-                                  ("nav" (ego--render-navigation-bar))
-                                  ("content" post-content)
-                                  ("footer" (ego--render-footer))))))
-    (cons attr-plist component-table)))
+                      (let ((converted-path
+                             (concat "/" (file-relative-name pub-abs-path pub-root-dir))))
+                        (setf (buffer-substring asset-path-begin asset-path-end) converted-path))))))
+              (setq post-content (buffer-string)))
+            (setq component-table (ht ("header" (ego--render-header))
+                                      ("nav" (ego--render-navigation-bar))
+                                      ("content" post-content)
+                                      ("footer" (ego--render-footer))))))
+        (setq result (cons attr-plist component-table))))
+    (unless visiting-p
+      (kill-buffer file-buffer))
+    result))
 
 (defun ego--read-org-option (option)
   "Read option value of org file opened in *current buffer*.
@@ -763,17 +769,15 @@ PUB-BASE-DIR is the root publication directory."
 (defun ego-link-type-process-html (path desc)
   "Generate EGO-LINK for html export, WARNING: EGO-LINK can only be linked to files in the repository directory"
   (let* ((default-directory (ego--get-repository-directory))
-         org-file webpath)
-    (or (file-exists-p (setq org-file (expand-file-name path)))
-        (file-exists-p (setq org-file (car (file-expand-wildcards (format "**/*%s" path)))))
-        (error "Can't find this ego-link!"))
-    (let* ((visiting-p (find-buffer-visiting org-file))
-           (file-buffer (or visiting-p (find-file org-file))))
-      (with-current-buffer file-buffer
-        (setq webpath (plist-get (car (ego--get-org-file-options default-directory nil))
-                                 :uri)))
-      (unless visiting-p
-        (kill-buffer file-buffer)))
+         (org-file-1 (expand-file-name path))
+         (org-file-2 (car (file-expand-wildcards (format "**/*%s" path))))
+         (org-file (cond ((file-exists-p org-file-1)
+                          org-file-1)
+                         ((file-exists-p org-file-2)
+                          org-file-2)
+                         (t (error "Can't find this ego-link!"))))
+         (webpath (plist-get (car (ego--get-org-file-options org-file default-directory nil))
+                             :uri)))
     (format "<span class=\"ego_link\"><a href=\"%s\">%s</a></span>" webpath desc)))
 
 ;;;###autoload
