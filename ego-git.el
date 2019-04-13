@@ -196,6 +196,18 @@ relative."
     (when (string-match "\\`\\([0-9]+-[0-9]+-[0-9]+\\) .*\n\\'" output)
       (match-string 1 output))))
 
+(defun ego--git-first-change-date (repo-dir filepath)
+  "This function will return the last commit date of a file in git repository
+presented by REPO-DIR, FILEPATH is the path of target file, can be absolute or
+relative."
+  (let ((repo-dir (file-name-as-directory repo-dir))
+        (output (ego--shell-command
+                 repo-dir
+                 (concat "env LC_ALL=C git log --reverse --format=\"%ci\" -- \"" filepath "\"|head -1")
+                 t)))
+    (when (string-match "\\`\\([0-9]+-[0-9]+-[0-9]+\\) .*\n\\'" output)
+      (match-string 1 output))))
+
 (defun ego--git-remote-name (repo-dir)
   "This function will return all remote repository names of git repository
 presented by REPO-DIR, return nil if there is no remote repository."
