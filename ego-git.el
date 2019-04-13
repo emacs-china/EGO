@@ -165,7 +165,7 @@ property list, property :update maps a list of updated/added files, property
 :delete maps a list of deleted files.
 For git, there are three types: Added, Modified, Deleted, but for ego,
 only two types will work well: need to publish or need to delete.
-<TODO>: robust enhance, branch check, etc.未来考虑拆分新增和修改的情况"
+<TODO>: robust enhance, branch check, etc.未来考虑拆分新增和修改的情况,还有重命名的情况"
   (let ((org-file-ext ".org")
         (repo-dir (file-name-as-directory repo-dir))
         (output (ego--shell-command
@@ -174,13 +174,22 @@ only two types will work well: need to publish or need to delete.
                          base-commit " HEAD")
                  t))
         upd-list del-list)
-    (mapc #'(lambda (line)
-              (if (string-match "\\`[A|M]\t\\(.*\.org\\)\\'" line)
-                  (setq upd-list (cons (concat repo-dir (match-string 1 line))
-                                       upd-list)))
-              (if (string-match "\\`D\t\\(.*\.org\\)\\'" line)
-                  (setq del-list (cons (concat repo-dir (match-string 1 line))
-                                       del-list))))
+    (mapc (lambda (line)
+              (let* ((elements (split-string line "\t"))
+                     (status (car elements))
+                     (rest (cdr elements)))
+                (cond ((string-prefix-p "A")
+                       (push (concat repo-dir (string-join rest "\t")) upd-list))
+                      ((string-prefix-p "M")
+                       (push (concat repo-dir (string-join rest "\t")) upd-list))
+                      ((string-prefix-p "D")
+                       (push (concat repo-dir (string-join rest "\t")) del-list))
+                      ((string-prefix-p "R") ;TODO 基于假设文件名中不包括TAB
+                       (let ((origin-file (car rest))
+                             (new-file (cdr rest)))
+                         (push (concat repo-dir origin-file) del-list)
+                         (push (concat repo-dir (string-join new-file "\t")) del-list)))
+                      )))
           (split-string output "\n"))
     (list :update upd-list :delete del-list)))
 
@@ -234,6 +243,26 @@ presented by REPO-DIR, return nil if there is no remote repository."
       (if (or (not (member repo remote-repos)) (not branchs))
           (error "Invalid remote repository '%s'." repo)
         (cons repo branchs)))))
+
+(defun ego--git-find-revision (repo-dir file rev)
+  (with-temp-buffer
+    (let* (process-file-side-effects
+           (coding-system-for-read 'binary)
+           (coding-system-for-write 'binary)
+           (default-directory repo-dir)
+           (fullname
+            (let ((fn (vc-git--run-command-string
+                       file "ls-files" "-z" "--full-name" "--")))
+              ;; ls-files does not return anything when looking for a
+              ;; revision of a file that has been renamed or removed.
+              (if (string= fn "")
+                  (file-relative-name file (vc-git-root default-directory))
+                (substring fn 0 -1)))))
+      (vc-git-command
+       (current-buffer) 0
+       nil
+       "cat-file" "blob" (concat (if rev rev "HEAD") ":" fullname))
+      (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun ego--git-pull-remote (repo-dir remote-repo branchs)
   "This function will pull remote repository to local branch, REPO-DIR is the
