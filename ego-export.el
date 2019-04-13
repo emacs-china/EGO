@@ -123,11 +123,13 @@ This functions works with `ego-current-project-name' and currect buffer.
                               "No Description"))
              (thumb (ego--read-org-option "THUMBNAIL"))
              (tags (ego--read-org-option "TAGS"))
-             (tags (delete "" (mapcar 'string-trim
-                                      (split-string tags "[:,]+" t))))
+             (tags (when tags
+                     (delete "" (mapcar 'string-trim
+                                        (split-string tags "[:,]+" t)))))
              (authors (ego--read-org-option "AUTHOR"))
-             (authors (delete "" (mapcar 'string-trim
-                                         (split-string authors "[:,]+" t))))
+             (authors (when authors
+                        (delete "" (mapcar 'string-trim
+                                           (split-string authors "[:,]+" t)))))
              (category (ego--get-category filename))
              (cat-config (cdr (or (assoc category ego--category-config-alist)
                                   (ego--get-category-setting
