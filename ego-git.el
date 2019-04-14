@@ -140,9 +140,12 @@ If there is no branch named BRANCH-NAME, It will create an empty brranch"
 directory where repository will be initialized."
   (unless (file-directory-p repo-dir)
     (mkdir repo-dir t))
-  (unless (string-prefix-p "Initialized empty Git repository"
-                           (ego--shell-command repo-dir "env LC_ALL=C git init" nil))
-    (error "Fatal: Failed to initialize new git repository '%s'." repo-dir)))
+  (let ((default-directory repo-dir))
+    (vc-git-create-repo))
+  ;; (unless (string-prefix-p "Initialized empty Git repository"
+  ;;                          (ego--shell-command repo-dir "env LC_ALL=C git init" nil))
+  ;;   (error "Fatal: Failed to initialize new git repository '%s'." repo-dir))
+  )
 
 
 (defun ego--git-commit-changes (repo-dir message)

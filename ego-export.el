@@ -316,17 +316,19 @@ file's category is based on its name and its root folder name."
 used to render the template, PUB-DIR is the directory for published html file.
 If COMPONENT-TABLE is nil, the publication will be skipped."
   (when component-table
-    (unless (file-directory-p pub-dir)
-      (mkdir pub-dir t))
-    (ego--string-to-file
-     (mustache-render
-      (ego--get-cache-create
-       :container-template
-       (message "EGO: Read container.mustache from file")
-       (ego--file-to-string (ego--get-template-file "container.mustache"))) ; 模板的入口就是container.mustache
-      component-table)
-     (concat (file-name-as-directory pub-dir) "index.html") ;; 'html-mode ;; do NOT indent the code 返回生成的HTML路径
-     )))
+    (let ((uri (concat (file-name-as-directory pub-dir) "index.html")))
+      (unless (file-directory-p pub-dir)
+        (mkdir pub-dir t))
+      (ego--string-to-file
+       (mustache-render
+        (ego--get-cache-create
+         :container-template
+         (message "EGO: Read container.mustache from file")
+         (ego--file-to-string (ego--get-template-file "container.mustache"))) ; 模板的入口就是container.mustache
+        component-table)
+       uri ;; 'html-mode ;; do NOT indent the code 
+       )
+      uri)))                            ;返回生成的HTML路径
 
 (defun ego--handle-deleted-file (org-file-path)
   "TODO: add logic for this function, maybe a little complex."

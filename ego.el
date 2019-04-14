@@ -114,9 +114,8 @@
                               (message "EGO: Getting all changed files, just waiting...")
                               (ego--git-files-changed repo-dir base-git-commit)))
         (message "EGO: Create necessary directory and prepare theme!")
-        (when (file-directory-p store-dir)
-          (delete-directory store-dir t t))
-        (make-directory store-dir t)
+        (unless (file-directory-p store-dir)
+          (ego--init-repository store-dir html-branch))
         (ego--prepare-theme-resources store-dir)
         (message "EGO: Pre-publish all files needed to be publish, waiting...")
         (ego--publish-changes repo-files addition-files changed-files store-dir)
@@ -124,9 +123,10 @@
       (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
             )
         (message "EGO: pre-publish accomplished ~ begin real publish")
-        (ego--git-change-branch repo-dir html-branch)
-        (copy-directory store-dir repo-dir t t t)
-        (ego--git-commit-changes repo-dir (concat "Update published html files, "
+        (ego--git-commit-changes repo-dir (concat "Update ego-db-file, "
+                                                  "committed by EGO."))
+        (ego--git-change-branch store-dir html-branch)
+        (ego--git-commit-changes store-dir (concat "Update published html files, "
                                                   "committed by EGO."))
         (ego--git-change-branch repo-dir orig-branch)
         (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
@@ -141,7 +141,11 @@
         ))))
 
 ;;;###autoload
-(defun ego-new-repository (&optional repo-dir html-branch org-branch)
+(defun ego--init-repository (repo-dir branch)
+  (ego--git-init-repo repo-dir)
+  (ego--git-new-empty-branch repo-dir branch))
+
+(defun ego-new-repository (&optional repo-dir org-branch store-dir html-branch )
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by EGO. In order to construct a real repository,
 you must customize the variable `ego-project-config-alist' according to the readme file of EGO project."
@@ -149,13 +153,18 @@ you must customize the variable `ego-project-config-alist' according to the read
   (let ((repo-dir (or repo-dir
                       (read-directory-name
                        "Specify a directory to become the repository: " nil nil nil)))
+        (org-branch (or org-branch
+                        (read-string "Input the branch name of 'source' branch: " "source" nil "source")))
+        (store-dir (or store-dir
+                      (read-directory-name
+                       "Specify a directory(not the same as repo directory) to store the html: " nil nil nil)))
         (html-branch (or html-branch
                          (read-string "Input the branch name of 'html' branch: " "master" nil "master")))
-        (org-branch (or org-branch
-                        (read-string "Input the branch name of 'source' branch: " "source" nil "source"))))
-    (ego--git-init-repo repo-dir)
-    (ego--git-new-empty-branch repo-dir html-branch)
-    (ego--git-new-empty-branch repo-dir org-branch)
+        )
+    (when (equal repo-dir store-dir)
+      (error "Repo-dir(%s) and Store-dir(%s) should not the same" repo-dir store-dir))
+    (ego--init-repository repo-dir org-branch)
+    (ego--init-repository store-dir html-branch)
     (ego--generate-readme repo-dir)
     (ego--git-commit-changes repo-dir "initial commit")
     (ego--generate-index repo-dir)
