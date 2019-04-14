@@ -31,6 +31,7 @@
 (require 'ox)
 (require 'ht)
 (require 'subr-x)
+(require 'vc-git)
 
 (defgroup ego nil
   "Options for generating static pages using ego."
@@ -309,6 +310,12 @@ You can see fallback value of above option in `ego-config-fallback'"
   :group 'ego
   :type 'function)
 
+(defcustom ego-db-file-name
+  ".ego.db"
+  "The file used to store ego related information."
+  :group 'ego
+  :type 'string)
+
 (defconst ego--temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
 
@@ -437,7 +444,7 @@ if `option' is not found, get fallback value from
 
 (defun ego--get-repository-directory ()
   "The function, which can return repository directory string."
-  (let ((dir (ego--get-config-option :repository-directory)))
+  (let ((dir (vc-git-root (ego--get-config-option :repository-directory))))
     (when dir
       (file-name-as-directory
        (expand-file-name dir)))))
@@ -511,6 +518,36 @@ multi path."
         :uri-template ,(format "/%s/%%t/" category)
         :sort-by :date
         :category-index t)))
+
+(defun ego-get-db-file ()
+  "Return the absolute path of db-file in `ego-current-project-name''s repo root directory"
+  (expand-file-name ego-db-file-name (ego--get-repository-directory)))
+
+(defun ego--update-org-html-mapping (org-path html-uri)
+  "update org-path and html-uri mapping relationship stored in `ego-db-file-name'"
+  (let* ((ego-db-file (ego-get-db-file))
+         (org-html-mapping-lines (when (file-readable-p ego-db-file)
+                                   (delete "" (split-string (ego--file-to-string ego-db-file) "[\r\n]+"))))
+         (org-html-mapping-alist (mapcar #'read org-html-mapping-lines))
+         (update-p (assoc org-path org-html-mapping-alist)))
+    (if update-p
+        (setf (cdr (assoc org-path org-html-mapping-alist)) html-uri)
+      (push (cons org-path html-uri) org-html-mapping-alist))
+    (with-temp-file ego-db-file
+      (let ((standard-output (current-buffer)))
+        (mapc #'print org-html-mapping-alist)))))
+
+(defun ego--delete-org-html-mapping (org-path)
+  "delete org-path and html-uri mapping relationship stored in `ego-db-file-name'"
+  (let* ((ego-db-file (ego-get-db-file))
+         (org-html-mapping-lines (when (file-readable-p ego-db-file)
+                                   (delete "" (split-string (ego--file-to-string ego-db-file) "[\r\n]+"))))
+         (org-html-mapping-alist (mapcar #'read org-html-mapping-lines))
+         (exist-p (assoc org-path org-html-mapping-alist)))
+    (setq org-html-mapping-alist (delete (assoc org-path org-html-mapping-alist) org-html-mapping-alist))
+    (with-temp-file ego-db-file
+      (let ((standard-output (current-buffer)))
+        (mapc #'print org-html-mapping-alist)))))
 
 (provide 'ego-config)
 
