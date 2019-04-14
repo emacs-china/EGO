@@ -58,23 +58,26 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
          (del-list (plist-get change-plist :delete))
           file-attr-list)
     (when (or upd-list del-list)
-      (mapc
-       (lambda (org-file)
-           (let* ((need-upd-p (member org-file upd-list))
-                  (need-del-p (member org-file del-list)))
-             (let* ((attr-cell (ego--get-org-file-options
-                                org-file
-                                pub-root-dir
-                                need-upd-p))
-                    (attr-plist (car attr-cell))
-                    (component-table (cdr attr-cell)))
-               (setq file-attr-list (cons attr-plist file-attr-list))
-               (when need-upd-p
-                 (ego--publish-modified-file component-table
-                                             (plist-get attr-plist :pub-dir)))
-               (when need-del-p
-                 (ego--handle-deleted-file org-file)))))
-       files-list)
+      (setq file-attr-list
+            (mapcar
+             (lambda (org-file)
+               (let* ((need-upd-p (member org-file upd-list))
+                      (need-del-p (member org-file del-list)))
+                 (let* ((attr-cell (ego--get-org-file-options
+                                    org-file
+                                    pub-root-dir
+                                    need-upd-p))
+                        (attr-plist (car attr-cell))
+                        (component-table (cdr attr-cell)))
+                   (when need-del-p
+                     (ego--handle-deleted-file org-file)
+                     (ego-delete-org-html-mapping org-file 'del))
+                   (when need-upd-p
+                     (let ((new-html-uri (ego--publish-modified-file component-table
+                                                                 (plist-get attr-plist :pub-dir))))
+                       (ego-update-org-html-mapping org-file new-html-uri 'del)))
+                   attr-plist)))
+             files-list))
       (unless (member
                (expand-file-name "index.org" repo-dir)
                files-list)

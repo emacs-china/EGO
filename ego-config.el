@@ -523,31 +523,51 @@ multi path."
   "Return the absolute path of db-file in `ego-current-project-name''s repo root directory"
   (expand-file-name ego-db-file-name (ego--get-repository-directory)))
 
-(defun ego--update-org-html-mapping (org-path html-uri)
-  "update org-path and html-uri mapping relationship stored in `ego-db-file-name'"
+(defun ego-get-org-html-mapping ()
+  "Return org-html-mapping-alist which stored in ego-db-file(use ego-get-db-file function to get it)."
   (let* ((ego-db-file (ego-get-db-file))
          (org-html-mapping-lines (when (file-readable-p ego-db-file)
                                    (delete "" (split-string (ego--file-to-string ego-db-file) "[\r\n]+"))))
-         (org-html-mapping-alist (mapcar #'read org-html-mapping-lines))
-         (update-p (assoc org-path org-html-mapping-alist)))
-    (if update-p
-        (setf (cdr (assoc org-path org-html-mapping-alist)) html-uri)
-      (push (cons org-path html-uri) org-html-mapping-alist))
+         (org-html-mapping-alist (mapcar #'read org-html-mapping-lines)))
+    org-html-mapping-alist))
+
+(defun ego-save-org-html-mapping (org-html-mapping-alist)
+  "Save org-html-mapping-alist to ego-db-file(use ego-get-db-file function to get it)."
+  (let ((ego-db-file (ego-get-db-file)))
     (with-temp-file ego-db-file
       (let ((standard-output (current-buffer)))
         (mapc #'print org-html-mapping-alist)))))
 
-(defun ego--delete-org-html-mapping (org-path)
-  "delete org-path and html-uri mapping relationship stored in `ego-db-file-name'"
-  (let* ((ego-db-file (ego-get-db-file))
-         (org-html-mapping-lines (when (file-readable-p ego-db-file)
-                                   (delete "" (split-string (ego--file-to-string ego-db-file) "[\r\n]+"))))
-         (org-html-mapping-alist (mapcar #'read org-html-mapping-lines))
-         (exist-p (assoc org-path org-html-mapping-alist)))
+(defun ego-update-org-html-mapping (org-path html-uri &optional del)
+  "update org-path and html-uri mapping relationship stored in ego-db-file(use ego-get-db-file function to get it).
+
+If DEL is not nil, then it will delete origin-html-uri as well.
+Return the origin html uri of ORG-PATH."
+  (let* ((org-html-mapping-alist (ego-get-org-html-mapping))
+         (origin-html-uri (assoc-default org-path org-html-mapping-alist)))
+    (if origin-html-uri
+        (setf (cdr (assoc org-path org-html-mapping-alist)) html-uri)
+      (push (cons org-path html-uri) org-html-mapping-alist))
+    (ego-save-org-html-mapping org-html-mapping-alist)
+    (when (and del
+               origin-html-uri
+               (not (string= html-uri origin-html-uri)))
+      (delete-file origin-html-uri))
+    origin-html-uri))
+
+(defun ego-delete-org-html-mapping (org-path &optional del)
+  "delete org-path and html-uri mapping relationship stored in ego-db-file(use ego-get-db-file function to get it).
+
+If DEL is not nil, then it will delete origin-html-uri as well.
+Return the origin html uri of ORG-PATH"
+  (let* ((org-html-mapping-alist (ego-get-org-html-mapping))
+         (origin-html-uri (assoc-default org-path org-html-mapping-alist)))
     (setq org-html-mapping-alist (delete (assoc org-path org-html-mapping-alist) org-html-mapping-alist))
-    (with-temp-file ego-db-file
-      (let ((standard-output (current-buffer)))
-        (mapc #'print org-html-mapping-alist)))))
+    (ego-save-org-html-mapping org-html-mapping-alist)
+    (when (and del
+               origin-html-uri)
+      (delete-file origin-html-uri))
+    origin-html-uri))
 
 (provide 'ego-config)
 
