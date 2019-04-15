@@ -264,7 +264,7 @@ M-x ego-do-publication
   mess up the files in the repository. So, close all opened directories
   in the repository before =ego-do-publication= .
 
-* Roadmap [4/8]
+* Roadmap [4/11]
 
 
    - [X] 不保存上一次发布的项目 
@@ -275,8 +275,8 @@ M-x ego-do-publication
    - [ ] 尝试用vc库代替git 
    - [X] gitalk替换评论系统 
    - [ ] water.css改配色
-   - [ ] 不要自动commit org文件
-   - [ ] 实现delete org file处理 
+   - [ ] 实现delete org file处理
+   - [ ] repo-dir切换到org branch前先用stash保存未提交内容，切回原branch后再unstash，这要比直接commit好
 
 * FAQ
 ** 为什么没有发布那些包含中文的 org 文件？

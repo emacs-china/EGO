@@ -91,7 +91,7 @@
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-repo-branch (ego--git-branch-name repo-dir)))
       (message "EGO: Git branch operation and get changed files")
-      (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
+      (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; TODO 使用stash代替commit应该会好点
       (ego--git-change-branch repo-dir org-branch)
       (ego--git-pull-remote repo-dir org-branch)
       (let* ((repo-files
