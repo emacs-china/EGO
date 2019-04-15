@@ -48,8 +48,7 @@
 (defun ego-do-publication (&optional project-name
                                      force-all
                                      base-git-commit
-                                     checkin-all
-                                     publish-config)
+                                     checkin-all)
   "The main entrance of ego. The entire procedure is:
 1) verify configuration
 2) read changed files on \"org branch\" of \"repository directory\",
@@ -61,8 +60,7 @@
    3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained based on previous commit
 3) publish org files to html,
    html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
-4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
-5) PUBLISH-CONFIG will publish the branchs in the repository, choose remote and corresponding branches. "
+4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING."
   (interactive)
   (let* ((ego-current-project-name (or project-name
                                         (ego--select-project)))
@@ -97,8 +95,8 @@
 
       (message "EGO: Git branch operation and get changed files")
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
-      (unless (equal org-branch (ego--git-branch-name repo-dir))
-        (ego--git-change-branch repo-dir org-branch))
+      (ego--git-change-branch repo-dir org-branch)
+      (ego--git-pull-remote repo-dir org-branch)
       (setq repo-files
             (-filter `(lambda (string)
                         (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
@@ -116,6 +114,8 @@
         (message "EGO: Create necessary directory and prepare theme!")
         (unless (file-directory-p store-dir)
           (ego--init-repository store-dir html-branch))
+        (ego--git-change-branch store-dir html-branch)
+        (ego--git-pull-remote store-dir html-branch)
         (ego--prepare-theme-resources store-dir)
         (message "EGO: Pre-publish all files needed to be publish, waiting...")
         (ego--publish-changes repo-files addition-files changed-files store-dir)
@@ -125,20 +125,15 @@
         (message "EGO: pre-publish accomplished ~ begin real publish")
         (ego--git-commit-changes repo-dir (concat "Update ego-db-file, "
                                                   "committed by EGO."))
-        (ego--git-change-branch store-dir html-branch)
         (ego--git-commit-changes store-dir (concat "Update published html files, "
-                                                  "committed by EGO."))
+                                                   "committed by EGO."))
         (ego--git-change-branch repo-dir orig-branch)
         (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
         ;; publish remote
-        (let ((publish-config (or publish-config (ego--git-get-publish-config repo-dir org-branch html-branch))))
-          (when publish-config
-            (ego--git-push-remote repo-dir
-                                  (car publish-config)
-                                  (cdr publish-config))
-            (message "EGO: Remote Publication started: on repository '%s'.\nSee *EGO OUTPUT* buffer for remote publication situation." repo-dir)))
-        ))))
+        (ego--git-push-remote repo-dir org-branch)
+        (ego--git-push-remote store-dir html-branch)
+        (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation.")))))
 
 ;;;###autoload
 (defun ego--init-repository (repo-dir branch)

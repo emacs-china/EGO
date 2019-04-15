@@ -361,9 +361,6 @@ You can see fallback value of above option in `ego-config-fallback'"
 (defvar ego--item-cache nil
   "The cache for general purpose.")
 
-(defvar ego--async-publish-success nil
-  "When push remote success: t")
-
 (defconst ego--rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <rss version=\"2.0\">
   <channel>
