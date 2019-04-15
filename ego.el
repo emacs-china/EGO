@@ -63,7 +63,7 @@
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING."
   (interactive)
   (let* ((ego-current-project-name (or project-name
-                                        (ego--select-project)))
+                                       (ego--select-project)))
          (jobs (when (called-interactively-p)
                  (completing-read "Which job do you want to activate: "
                                   '("1. Partial publish"
@@ -72,25 +72,24 @@
          (force-all (or force-all
                         (string= jobs "2. Full publish")))
          (repo-dir (ego--get-repository-directory))
+         (store-dir (expand-file-name (ego--get-config-option :store-dir)))
          (org-branch (ego--get-config-option :repository-org-branch))
          (html-branch (ego--get-config-option :repository-html-branch))
          (base-git-commit (or base-git-commit
                               (unless force-all
-                                (read-string "Base git commit: " (or (ego--get-first-commit-before-publish repo-dir org-branch html-branch)
+                                (read-string "Base git commit: " (or (ego--get-first-commit-before-publish repo-dir org-branch store-dir html-branch)
                                                                      "HEAD~1")))))
          (checkin-all (or checkin-all
-                          (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
-    (let ((preparation-function
-           (ego--get-config-option :preparation-function)))
-      (when preparation-function
-        (run-hooks 'preparation-function)))
+                          (read-string "checkin message (won't show in 'git log' if you have committed all): ")))
+         (preparation-function (ego--get-config-option :preparation-function)))
+    (when preparation-function
+      (run-hooks 'preparation-function))
     (message "EGO: verify configuration")
     (ego--verify-configuration)
     (setq ego--item-cache nil)
     (let* ((repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
-           (orig-repo-branch (ego--git-branch-name repo-dir))
-           (store-dir (expand-file-name (ego--get-config-option :store-dir))))
+           (orig-repo-branch (ego--git-branch-name repo-dir)))
       (message "EGO: Git branch operation and get changed files")
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
       (ego--git-change-branch repo-dir org-branch)
@@ -333,16 +332,17 @@ responsibility to guarantee the two parameters are valid."
                                     "<Add description here>"))
     (save-buffer))))
 
-(defun ego--get-first-commit-after-publish (&optional repo-dir org-branch html-branch)
+(defun ego--get-first-commit-after-publish (&optional repo-dir org-branch store-dir html-branch)
   "Return the first commit after publish in `REPO-DIR',return nil if no commit after publish"
   (let* ((repo-dir (or repo-dir (ego--get-repository-directory)))
+         (store-dir (or store-dir (expand-file-name (ego--get-config-option :store-dir))))
          (org-branch (or org-branch
                          (ego--get-config-option :repository-org-branch)
                          "source"))
          (html-branch (or html-branch
                           (ego--get-config-option :repository-html-branch)
                           "master"))
-         (publish-time (string-trim (ego--git-command repo-dir
+         (publish-time (string-trim (ego--git-command store-dir
                                                       (concat "log -n 1 --pretty='%cd' " html-branch))))
          (commits-after-publish (string-trim (ego--git-command repo-dir
                                                                (format "log --pretty='%%H' --since '%s' %s" publish-time org-branch))))
@@ -352,16 +352,17 @@ responsibility to guarantee the two parameters are valid."
         nil
       first-commit-after-publish)))
 
-(defun ego--get-first-commit-before-publish (&optional repo-dir org-branch html-branch)
+(defun ego--get-first-commit-before-publish (&optional repo-dir org-branch store-dir html-branch)
   "Return the first commit after publish in `REPO-DIR',return nil if no commit after publish"
   (let* ((repo-dir (or repo-dir (ego--get-repository-directory)))
+         (store-dir (or store-dir (expand-file-name (ego--get-config-option :store-dir))))
          (org-branch (or org-branch
                          (ego--get-config-option :repository-org-branch)
                          "source"))
          (html-branch (or html-branch
                           (ego--get-config-option :repository-html-branch)
                           "master"))
-         (publish-time (string-trim (ego--git-command repo-dir
+         (publish-time (string-trim (ego--git-command store-dir
                                                       (concat "log -n 1 --pretty='%cd' " html-branch))))
          (first-commit-before-publish (string-trim (ego--git-command repo-dir
                                                                (format "log -n 1 --pretty='%%H' --until '%s' %s" publish-time org-branch)))))
