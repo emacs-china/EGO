@@ -284,20 +284,13 @@ org files ignored by git, which are generated from other files.
 2. Example1: ego--addition-all-files
 
 
-  `:web-server-docroot'
+  `:store-dir'
 
 ego can start a web server to test publish, this
 set the server document root.
 1. Type: string
 2. Example1: \"~/.emacs.d/org-website-server/ego-\"
 
-
-  `:web-server-port'
-
-ego can start a web server to test publish, this
-set the server port.
-1. Type: number
-2. Example1: 9876
 
 
 You can see fallback value of above option in `ego-config-fallback'"
@@ -413,8 +406,7 @@ You can see fallback value of above option in `ego-config-fallback'"
         :repo-files-function ego--git-all-files
         :addition-files-function nil
         :org-export-function ego--default-org-export
-        :web-server-docroot "~/.emacs.d/ego-server/default"
-        :web-server-port 9876
+        :store-dir "~/.emacs.d/ego-server/default"
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
 (<a href=\"http://orgmode.org\">Org mode</a> %s)"
 (format "%s.x" emacs-major-version)

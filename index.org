@@ -42,8 +42,8 @@ CAUTION: 直接 clone emacs-china 后，需要 checkout master 和 source 后才
                    ;; :personal-duoshuo-shortname "emacs-china" ; 使用 多说 评论功能的话，它的短名称(由于多说已经关闭，这里就此废置)
                    :confound-email nil ; 是否保护邮件名称呢？t 是保护，nil 是不保护，默认是保护
                    :ignore-file-name-regexp "readme.org" ; 有些不想发布成 html 的 org 文件（但是又想被导入 git 进行管理），可以用这种正则表达的方式排除
-                   :web-server-docroot "~/webRoot/emacs-china.github.io" ; 本地测试的目录
-                   :web-server-port 5432); 本地测试的端口
+                   :store-dir "~/webRoot/emacs-china.github.io" ; 本地测试的目录
+                   )
 
                    ;; 你可以在此添加更多的站点设置
                  ))
@@ -101,7 +101,7 @@ M-x ego-do-publication
    ~ "2. 增量发布" \\
    ~ "3. 完全发布测试" \\
    ~ "4. 完全发布" \\
-   ~ 测试即意味着发布到 web-server-docroot 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。
+   ~ 测试即意味着发布到 store-dir 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。
 3) (when (2) is partial) Base git commit: HEAD~1 ? \\
    ~ *将哪些提交视为改变文件？（当第三项选了带了 “partial” 字符串时出现的选项，不懂得话回车即可）*
 4) Input checkin messages. (The message won't be inputted if you have checkined before.) \\

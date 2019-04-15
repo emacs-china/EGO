@@ -90,7 +90,7 @@
     (let* ((repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-branch (ego--git-branch-name repo-dir))
-           (store-dir (expand-file-name (ego--get-config-option :web-server-docroot)))
+           (store-dir (expand-file-name (ego--get-config-option :store-dir)))
            repo-files addition-files changed-files remote-repos)
 
       (message "EGO: Git branch operation and get changed files")

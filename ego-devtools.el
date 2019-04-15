@@ -48,8 +48,7 @@
      :summary nil
      :confound-email t
      :ignore-file-name-regexp "readme.org"
-     :web-server-docroot ,(expand-file-name "~/webRoot/EGO")
-     :web-server-port 4321))))
+     :store-dir ,(expand-file-name "~/webRoot/EGO")))))
 
 (ego--devtools-update-config)
 
