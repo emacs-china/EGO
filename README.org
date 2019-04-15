@@ -1,13 +1,11 @@
-#+TITLE:     README of EGO
-#+AUTHOR:    Feng Shu, Kuangdash
+#+TITLE:     README of EGO-lite
+#+AUTHOR:    Feng Shu, Kuangdash, Darksun
 #+EMAIL:     emacs-china@googlegroups.com
 #+DATE:      2015-07-02
 
 [[https://melpa.org/#/ego][file:https://melpa.org/packages/ego-badge.svg]]
 
-*中文用户可以点击 [[https://emacs-china.github.io/EGO][EGO 中文手册]] ~*
-
-* Introduction
+* 介绍
 
 EGO 的简化版本，去掉了很多感觉不必要的东西，保留的功能有:
 
@@ -23,16 +21,27 @@ EGO 的简化版本，去掉了很多感觉不必要的东西，保留的功能�
 10) Website traffic analytics (implemented using baidu analytics)
 11) Index/about page support (auto generated if no default is provided)
 12) Manage multi-site configs in an emacs session easily.
-
+13) 支持主题继承，能让多站点管理时的主题修改轻松很多。
+        
+    #+BEGIN_SRC emacs-lisp
+    :theme (haru emacs_love)
+    #+END_SRC
+    
+    =haru= 是在 =emacs_love= 上修改的主题。实际上 =:theme= 对应的括号里可以有很多主题，形成一个主题链（越开头越优先）。
+    
 "Emacs-version >= 24.5" is required.
 
-* Usage
 
-** Installation
-Use package repo [[http://melpa.milkbox.net/][melpa]]. or =git clone= it manually.
+* 使用方法
 
-** Configuration
-The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you can paste and adjust it to your =.emacs= file:
+** 安装
+可以从 [[http://melpa.milkbox.net/][melpa]] 安装，或者用 =git clone= 后处理。
+
+** 设置
+
+下面是 emacs-china 的设置，安装好 [[https://github.com/emacs-china/EGO][EGO]] 后，将该设置写入配置即可管理 emacs-china。
+
+CAUTION: 直接 clone emacs-china 后，需要 checkout master 和 source 后才能使用 emacs-china，否则会导致意外情况。
 
 #+BEGIN_SRC emacs-lisp
   ;; the following is only needed if you install EGO manually
@@ -41,87 +50,95 @@ The follow code is [[http://emacs-china.github.io][emacs-china]] 's config , you
   (require 'ego)
 
   (ego-add-to-alist 'ego-project-config-alist
-                 `(("emacs-china"
-                   :repository-directory "~/github/emacs-china.github.io"
-                   :repository-org-branch "master" ; 源文件所在 branch
-                   :repository-html-branch "master" ; html 文件所在 branch
-                   :site-domain "http://emacs-china.github.io/"
-                   :site-main-title "EMACS-CHINA"
-                   :site-sub-title "=============>集思广益"
-                   :theme (default)
-                   :summary (("years" :year :updates 10) ("authors" :authors) ("tags" :tags))
-                   :source-browse-url ("Github" "https://github.com/emacs-china")
-                   :personal-disqus-shortname "emacs-china"
-                   ;; :personal-duoshuo-shortname "emacs-china" ; deprecated because of duoshuo inexistence
-                   :confound-email nil
-                   :ignore-file-name-regexp "readme.org"
-                   :store-dir "~/webRoot/emacs-china.github.io")
+                 `(("emacs-china" ; 站点工程的名字
+                   :repository-directory "~/github/emacs-china.github.io" ; 站点的本地目录
+                   :site-domain "http://emacs-china.github.io/" ; 站点的网址
+                   :site-main-title "EMACS-CHINA" ; 站点的标题
+                   :site-sub-title "=============>集思广益" ; 站点的副标题
+                   :theme (default) ; 使用的主题
+                   :summary (("years" :year :updates 10) ("authors" :authors) ("tags" :tags)) ; 导航栏的设置，有 category 和 summary 两种
+                   :source-browse-url ("Github" "https://github.com/emacs-china") ; 你的工程源代码所在的位置
+                   :personal-disqus-shortname "emacs-china" ; 使用 disqus 评论功能的话，它的短名称
+                   ;; :personal-duoshuo-shortname "emacs-china" ; 使用 多说 评论功能的话，它的短名称(由于多说已经关闭，这里就此废置)
+                   :confound-email nil ; 是否保护邮件名称呢？t 是保护，nil 是不保护，默认是保护
+                   :ignore-file-name-regexp "readme.org" ; 有些不想发布成 html 的 org 文件（但是又想被导入 git 进行管理），可以用这种正则表达的方式排除
+                   :store-dir "~/webRoot/emacs-china.github.io" ; 本地测试的目录
+                   )
 
-                   ;; more projects or sites config can be added here
-
-                   ))
+                   ;; 你可以在此添加更多的站点设置
+                 ))
 #+END_SRC
 
-You can find more config options and theirs default values by commands:
+TIP: 你可以仿照上面来设置自己的站点。
+
+你可以通过以下方式发现 EGO 的设置方法（英文）
 
 #+BEGIN_EXAMPLE
 C-h v ego-project-config-alist
 C-h v ego-config-fallback
 #+END_EXAMPLE
 
-** Create New Repository
-Using the following command to create a new repository:
+** 新建 Repository
+通过以下方式创建新的 Repository（也就是一个新站点了）：
 
 #+BEGIN_EXAMPLE
 M-x ego-new-repository
 #+END_EXAMPLE
 
-The repository is preliminary, you have to configure the =ego-project-config-alist= to make it work!
+这种方式只能进行一个初级的设置，要想让它正常工作，还是需要设置 =ego-project-config-alist= 变量。
 
-** Create New Post
-Using the following command to create a new post:
+** 新建文章
+用以下方式创建新文章：
 
 #+BEGIN_EXAMPLE
 M-x ego-new-post
 #+END_EXAMPLE
 
-** Test Post
-Using the following command to test current opening org-file:
+** 测试单独文章的 html 页面
+使用以下命令可以生成当前 org 文件所对应的 html 文件，并浏览：
+
 #+BEGIN_EXAMPLE
 M-x ego-test-current-page
 #+END_EXAMPLE
 
-You can see the html version of the org-file in browser.
-
-** Publication
-The simplest way is run:
+** 发布
+用以下命令生成 html 文件，并按需传送到远程端：
 
 #+BEGIN_EXAMPLE
 M-x ego-do-publication
 #+END_EXAMPLE
 
-This command will ask you some questions:
+这条命令会问你如下几个问题：
+1) Which project do you want to publish? \\
+   ~ *发布哪个站点？*
+2) Choose a job from the jobs below: \\
+   ~ "1. Test partial publish" \\
+   ~ "2. Partial publish" \\
+   ~ "3. Test full publish" \\
+   ~ "4. Full publish" \\
+   ~ *从以下四个选项里选择一种发布方式：* \\
+   ~ "1. 增量发布测试" \\
+   ~ "2. 增量发布" \\
+   ~ "3. 完全发布测试" \\
+   ~ "4. 完全发布" \\
+   ~ 测试即意味着发布到 store-dir 文件夹下用 emacs 自带的 web server 查看，是本地的并不传送到远端。
+3) (when (2) is partial) Base git commit: HEAD~1 ? \\
+   ~ *将哪些提交视为改变文件？（当第三项选了带了 “partial” 字符串时出现的选项，不懂得话回车即可）*
+4) Input checkin messages. (The message won't be inputted if you have checkined before.) \\
+   ~ *输入 checkin 信息，了解 git 的话应该知道*
+5) (when (2) is not "test") There will be some questions for "publish-config" \\
+   ~ *对发布到远端的设置进行具体询问（在第二项没有 “test” 字符串时出现）*
 
-1) Which project do you want to publish?
-2) Choose a job from the jobs below:
-   "1. Test partial publish"
-   "2. Partial publish"
-   "3. Test full publish"
-   "4. Full publish"
-3) (when (2) is partial) Base git commit: HEAD~1 ?
-4) Input checkin messages. (The message won't be inputted if you have checkined before.)
-5) (when (2) is not "test") There will be some questions for "publish-config"
+*注意*: 当进行没测试过的发布时，任何未经测试的内容变化都不会被发布。也即，任何内容变化在真正发布之前必须经过测试发布。
 
-CAUTION: When untested publication, anything modified won't be published.If you want modified contents to be published, just test it before publication.
+你可以在 *message* buffer 和 *EGO OUTPUT* buffer 里跟踪整个过程。
 
-you can track the process in *message* buffer and *EGO OUTPUT* buffer.
+** 异步发布
+你可以使用 =async.el= 包来包裹 =ego-do-publication= 命令，使得该命令异步执行。
 
-** Async Publication
-You can use =async.el= package to wrap the command =ego-do-publication= in order to publish the static site without a wait.
+关于 =async.el= 包的用法可以参看这里（英文） : [[https://github.com/jwiegley/emacs-async][Async]].
 
-You can find some example about how to use =async.el= package here : [[https://github.com/jwiegley/emacs-async][Async]].
-
-And here is an example: (There are some important points so that you had better see it.)
+这里是一个例子: (你当然不能直接使用它，但是可以参考它进行自己的设置，就当是一个使用 async 的作业吧)
 
 #+BEGIN_SRC emacs-lisp
   (require 'ego)
@@ -229,9 +246,9 @@ And here is an example: (There are some important points so that you had better 
           (insert (format "*EGO output* should be :\n %s \nego-async-do-publish done!" result))))))
 #+END_SRC
 
-you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
+你可以在 *emacs* buffer 和 *EGO OUTPUT* buffer 里跟踪整个过程。
 
-* Dependencies
+* 依赖
 
 1. [[http://www.gnu.org/software/emacs/][emacs]]: this is an "of-course" dependency, "version >= 24.5" is required.
 2. [[http://orgmode.org/][org mode]]: v8.0 is required, please use =M-x org-version <RET>= to make sure you org mode version is not less than 8.0
@@ -240,22 +257,12 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
 5. [[http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el.cgi][htmlize.el]]: a library for syntax highlighting (usually this library is shipped with emacs)
 6. [[https://github.com/magnars/dash.el][dash.el]]: a modern list library for Emacs
 7. [[https://github.com/Wilfred/ht.el][ht.el]]: a modern hash-table library for Emacs
-8. [[https://github.com/skeeto/emacs-web-server][simple-httpd]]: a web server library in Emacs for test
 
 * Known issues
 - *CAUTION* when there are opened directories in the repository (which 
   don't contain the repository itself), =ego--git-change-branch= will
   mess up the files in the repository. So, close all opened directories
   in the repository before =ego-do-publication= .
-- Currently the deletion change handler has not been implemented so
-  if you deleted some org sources, you may have to manually delete
-  corresponding generated html files.
-- URI path change detection is not available. That is, if you make a
-  post with the URI "/blog/2013/03/25/the-old-post-name" and then
-  change this value in your org source, EGO would be unable to
-  detect that this has happened. it will only publish a new html
-  file for you so you need to delete the old html file related to
-  the old URI manually.
 
 * Roadmap [4/8]
 
@@ -270,10 +277,11 @@ you can track the process in *emacs* buffer and *EGO OUTPUT* buffer.
    - [ ] water.css改配色
    - [ ] 不要自动commit org文件
    - [ ] 实现delete org file处理 
+
 * FAQ
-** Why can't I publish those org files containning chinese charactors?
-Execute src_sh{git ls-tree -r --name-only HEAD} in the repo directory, if the chinese charactor displays like a mass, please execute
+** 为什么没有发布那些包含中文的 org 文件？
+请在 repo 目录下手工执行 src_sh{git ls-tree -r --name-only HEAD}, 若发现所有的中文都显示成乱码，那么请执行
 #+BEGIN_SRC sh
   git config --global core.quotepath false
 #+END_SRC
-and then try again.
+之后，再重新发布。
