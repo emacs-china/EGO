@@ -103,13 +103,12 @@
              (addition-files            ;addition-files一般为repo之外的附加文件
               (when (functionp addition-files-function)
                 (funcall addition-files-function repo-dir)))
-             (changed-files nil))
-        (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
+             (changed-files
+              (if force-all
+                  `(:update ,repo-files :delete nil)
+                (message "EGO: Getting all changed files, just waiting...")
+                (ego--git-files-changed repo-dir base-git-commit))))
         (progn
-          (setq changed-files (if force-all
-                                  `(:update ,repo-files :delete nil)
-                                (message "EGO: Getting all changed files, just waiting...")
-                                (ego--git-files-changed repo-dir base-git-commit)))
           (message "EGO: Create necessary directory and prepare theme!")
           (unless (file-directory-p store-dir)
             (ego--init-repository store-dir html-branch))
