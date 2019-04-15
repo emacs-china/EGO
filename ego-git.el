@@ -104,14 +104,14 @@ by REPO-DIR only if there is nothing uncommitted in the current branch.
 If there is no branch named BRANCH-NAME, It will create an empty brranch"
   (let* ((repo-dir (file-name-as-directory repo-dir))
          (current-branch (ego--git-branch-name repo-dir)))
-    (when (equal current-branch branch-name)
-      (message "current-branch is already %s" branch-name)
+    (if (equal current-branch branch-name)
+        (message "current-branch is already %s" branch-name)
       (let ((output (ego--shell-command
                      repo-dir
                      "env LC_ALL=C git status"
                      t)))
         (when (not (string-match "nothing to commit" output))
-          (error "The branch have something uncommitted, recheck it!"))
+          (error "The branch of %s have something uncommitted, recheck it!" repo-dir))
         (setq output (ego--shell-command
                       repo-dir
                       (concat "env LC_ALL=C git checkout " branch-name)

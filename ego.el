@@ -89,57 +89,56 @@
     (setq ego--item-cache nil)
     (let* ((repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
-           (orig-branch (ego--git-branch-name repo-dir))
-           (store-dir (expand-file-name (ego--get-config-option :store-dir)))
-           repo-files addition-files changed-files remote-repos)
-
+           (orig-repo-branch (ego--git-branch-name repo-dir))
+           (store-dir (expand-file-name (ego--get-config-option :store-dir))))
       (message "EGO: Git branch operation and get changed files")
       (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
       (ego--git-change-branch repo-dir org-branch)
       (ego--git-pull-remote repo-dir org-branch)
-      (setq repo-files
-            (-filter `(lambda (string)
-                        (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
-                     (when (functionp repo-files-function)
-                       (funcall repo-files-function repo-dir))))
-      (setq addition-files              ;addition-files一般为repo之外的附加文件
-            (when (functionp addition-files-function)
-              (funcall addition-files-function repo-dir)))
-      (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
-      (progn
-        (setq changed-files (if force-all
-                                `(:update ,repo-files :delete nil)
-                              (message "EGO: Getting all changed files, just waiting...")
-                              (ego--git-files-changed repo-dir base-git-commit)))
-        (message "EGO: Create necessary directory and prepare theme!")
-        (unless (file-directory-p store-dir)
-          (ego--init-repository store-dir html-branch))
-        (ego--git-change-branch store-dir html-branch)
-        (ego--git-pull-remote store-dir html-branch)
-        (ego--prepare-theme-resources store-dir)
-        (message "EGO: Pre-publish all files needed to be publish, waiting...")
-        (ego--publish-changes repo-files addition-files changed-files store-dir)
-        (message "EGO: Pre-publish finished, output directory: %s." store-dir))
-      (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
-            )
-        (message "EGO: pre-publish accomplished ~ begin real publish")
-        (ego--git-commit-changes repo-dir (concat "Update ego-db-file, "
-                                                  "committed by EGO."))
-        (ego--git-commit-changes store-dir (concat "Update published html files, "
-                                                   "committed by EGO."))
-        (ego--git-change-branch repo-dir orig-branch)
-        (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
+      (let* ((repo-files
+              (-filter `(lambda (string)
+                          (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
+                       (when (functionp repo-files-function)
+                         (funcall repo-files-function repo-dir))))
+             (addition-files            ;addition-files一般为repo之外的附加文件
+              (when (functionp addition-files-function)
+                (funcall addition-files-function repo-dir)))
+             (changed-files nil))
+        (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; commit it with checkin message
+        (progn
+          (setq changed-files (if force-all
+                                  `(:update ,repo-files :delete nil)
+                                (message "EGO: Getting all changed files, just waiting...")
+                                (ego--git-files-changed repo-dir base-git-commit)))
+          (message "EGO: Create necessary directory and prepare theme!")
+          (unless (file-directory-p store-dir)
+            (ego--init-repository store-dir html-branch))
+          (ego--git-change-branch store-dir html-branch)
+          (ego--git-pull-remote store-dir html-branch)
+          (ego--prepare-theme-resources store-dir)
+          (message "EGO: Pre-publish all files needed to be publish, waiting...")
+          (ego--publish-changes repo-files addition-files changed-files store-dir)
+          (message "EGO: Pre-publish finished, output directory: %s." store-dir))
+        (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
+              )
+          (message "EGO: pre-publish accomplished ~ begin real publish")
+          (ego--git-commit-changes repo-dir (concat "Update ego-db-file, "
+                                                    "committed by EGO."))
+          (ego--git-commit-changes store-dir (concat "Update published html files, "
+                                                     "committed by EGO."))
+          (ego--git-change-branch repo-dir orig-repo-branch)
+          (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
-        ;; publish remote
-        (ego--git-push-remote repo-dir org-branch)
-        (ego--git-push-remote store-dir html-branch)
-        (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation.")))))
+          ;; publish remote
+          (ego--git-push-remote repo-dir org-branch)
+          (ego--git-push-remote store-dir html-branch)
+          (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation."))))))
 
-;;;###autoload
 (defun ego--init-repository (repo-dir branch)
   (ego--git-init-repo repo-dir)
   (ego--git-new-empty-branch repo-dir branch))
 
+;;;###autoload
 (defun ego-new-repository (&optional repo-dir org-branch store-dir html-branch )
   "Generate a new git repository in directory REPO-DIR, which can be
 perfectly manipulated by EGO. In order to construct a real repository,
@@ -154,8 +153,7 @@ you must customize the variable `ego-project-config-alist' according to the read
                       (read-directory-name
                        "Specify a directory(not the same as repo directory) to store the html: " nil nil nil)))
         (html-branch (or html-branch
-                         (read-string "Input the branch name of 'html' branch: " "master" nil "master")))
-        )
+                         (read-string "Input the branch name of 'html' branch: " "master" nil "master"))))
     (when (equal repo-dir store-dir)
       (error "Repo-dir(%s) and Store-dir(%s) should not the same" repo-dir store-dir))
     (ego--init-repository repo-dir org-branch)
