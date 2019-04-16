@@ -61,16 +61,15 @@
 3) publish org files to html,
    html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING."
-  (interactive)
+  (interactive (list (ego--select-project)
+                     (let ((job (completing-read "Which job do you want to activate: "
+                                                 '("1. Partial publish"
+                                                   "2. Full publish")
+                                                 nil t)))
+                       (string= job "2. Full publish"))
+                     ))
   (let* ((ego-current-project-name (or project-name
                                        (ego--select-project)))
-         (jobs (when (called-interactively-p)
-                 (completing-read "Which job do you want to activate: "
-                                  '("1. Partial publish"
-                                    "2. Full publish")
-                                  nil t)))
-         (force-all (or force-all
-                        (string= jobs "2. Full publish")))
          (repo-dir (ego--get-repository-directory))
          (store-dir (expand-file-name (ego--get-config-option :store-dir)))
          (org-branch (ego--get-config-option :repository-org-branch))
@@ -91,7 +90,9 @@
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-repo-branch (ego--git-branch-name repo-dir)))
       (message "EGO: Git branch operation and get changed files")
-      (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO")) ; TODO 使用stash代替commit应该会好点
+      (if (and checkin-all
+               (not (string-blank-p checkin-all)))
+          (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))) ; TODO 使用stash代替commit应该会好点
       (ego--git-change-branch repo-dir org-branch)
       (ego--git-pull-remote repo-dir org-branch)
       (let* ((repo-files
