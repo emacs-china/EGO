@@ -62,12 +62,10 @@
    html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING."
   (interactive (list (ego--select-project)
-                     (let ((job (completing-read "Which job do you want to activate: "
-                                                 '("1. Partial publish"
-                                                   "2. Full publish")
-                                                 nil t)))
-                       (string= job "2. Full publish"))
-                     ))
+                     (yes-or-no-p "Full publish?(y/n)")
+                     nil
+                     (when ego-auto-commit
+                       (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
   (let* ((ego-current-project-name (or project-name
                                        (ego--select-project)))
          (repo-dir (ego--get-repository-directory))
@@ -78,8 +76,6 @@
                               (unless force-all
                                 (read-string "Base git commit: " (or (ego--get-first-commit-before-publish repo-dir org-branch store-dir html-branch)
                                                                      "HEAD~1")))))
-         (checkin-all (or checkin-all
-                          (read-string "checkin message (won't show in 'git log' if you have committed all): ")))
          (preparation-function (ego--get-config-option :preparation-function)))
     (when preparation-function
       (run-hooks 'preparation-function))
@@ -90,9 +86,9 @@
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-repo-branch (ego--git-branch-name repo-dir)))
       (message "EGO: Git branch operation and get changed files")
-      (if (and checkin-all
-               (not (string-blank-p checkin-all)))
-          (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))) ; TODO 使用stash代替commit应该会好点
+      (if checkin-all
+          (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
+        (ego--git-stash-changes repo-dir "EGO")) ; TODO 使用stash代替commit应该会好点
       (ego--git-change-branch repo-dir org-branch)
       (ego--git-pull-remote repo-dir org-branch)
       (let* ((repo-files
@@ -121,11 +117,11 @@
         (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
               )
           (message "EGO: pre-publish accomplished ~ begin real publish")
-          (ego--git-commit-changes repo-dir (concat "Update ego-db-file, "
-                                                    "committed by EGO."))
-          (ego--git-commit-changes store-dir (concat "Update published html files, "
-                                                     "committed by EGO."))
+          (ego--git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") ego-db-file-name)
+          (ego--git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
           (ego--git-change-branch repo-dir orig-repo-branch)
+          (unless checkin-all
+            (vc-git-stash-pop "EGO"))
           (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
           ;; publish remote

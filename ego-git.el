@@ -87,15 +87,12 @@ presented by REPO-DIR."
                           (when (string-suffix-p ".org" line t)
                             (expand-file-name line repo-dir)))
                       (split-string output "\n")))))
-
 (defun ego--git-branch-name (repo-dir)
   "Return name of current branch of git repository presented by REPO-DIR."
-  (let ((repo-dir (file-name-as-directory repo-dir))
-        (output (ego--shell-command
-                 repo-dir
-                 "env LC_ALl=C git rev-parse --abbrev-ref HEAD"
-                 t)))
-    (replace-regexp-in-string "[\n\r]" "" output)))
+  (let* ((repo-dir (file-name-as-directory repo-dir))
+        (default-directory repo-dir)
+        (branches (vc-git-branches)))
+    (car branches)))
 
 (defun ego--git-change-branch (repo-dir branch-name)
   "This function will change branch to BRANCH-NAME of git repository presented
@@ -106,37 +103,27 @@ If there is no branch named BRANCH-NAME, It will create an empty brranch"
          (current-branch (ego--git-branch-name repo-dir)))
     (if (equal current-branch branch-name)
         (message "current-branch is already %s" branch-name)
-      (let ((output (ego--shell-command
-                     repo-dir
-                     "env LC_ALL=C git status"
-                     t)))
-        (when (not (string-match "nothing to commit" output))
+      (let ((state (vc-git-state nil)))
+        (when (not (equal state 'up-to-date))
           (error "The branch of %s have something uncommitted, recheck it!" repo-dir))
-        (setq output (ego--shell-command
-                      repo-dir
-                      (concat "env LC_ALL=C git checkout " branch-name)
-                      t))
-        (when (string-match "\\(\\`error\\|[^a-zA-Z]error\\)" output)
-          (if (string-prefix-p (format "error: pathspec '%s' did not match any file(s) known to git." branch-name) output)
-              (ego--git-new-empty-branch repo-dir branch-name)
-            (error "Failed to change branch to '%s' of repository '%s'."
-                   branch-name repo-dir)))))))
+        (vc-git-checkout nil branch-name)))))
 
 (defun ego--git-new-empty-branch (repo-dir branch-name)
   "This function will create a new empty branch with BRANCH-NAME, and checkout it. "
-  (let ((repo-dir (file-name-as-directory repo-dir))
-        (output (ego--shell-command
-                 repo-dir
-                 (concat "env LC_ALL=C git checkout -b " branch-name)
-                 t)))
+  (let* ((repo-dir (file-name-as-directory repo-dir))
+         (default-directory repo-dir)
+         (output (ego--shell-command
+                  repo-dir
+                  (concat "env LC_ALL=C git checkout -b " branch-name)
+                  t)))
     (unless (or (string-match "Switched to a new branch" output) (string-match "already exists" output))
       (error "Fatal: Failed to create a new branch with name '%s'."
              branch-name))
     (if (string-match "already exists" output)
         (ego--git-change-branch repo-dir branch-name)
-      (ego--shell-command repo-dir "env LC_ALL=C git rm -r ." t)
-      (ego--shell-command repo-dir "env LC_ALL=C git add .")
-      (ego--shell-command repo-dir "env LC_ALL=C git commit -m \"New empty branch by EGO\""))))
+      ;; (ego--shell-command repo-dir "env LC_ALL=C git rm -r ." t)
+      (vc-git-command nil 0 nil "rm" "-r" ".")
+      (ego--git-commit-changes repo-dir "New empty branch by EGO"))))
 
 (defun ego--git-init-repo (repo-dir)
   "This function will initialize a new empty git repository. REPO-DIR is the
@@ -144,25 +131,39 @@ directory where repository will be initialized."
   (unless (file-directory-p repo-dir)
     (mkdir repo-dir t))
   (let ((default-directory repo-dir))
-    (vc-git-create-repo))
-  ;; (unless (string-prefix-p "Initialized empty Git repository"
-  ;;                          (ego--shell-command repo-dir "env LC_ALL=C git init" nil))
-  ;;   (error "Fatal: Failed to initialize new git repository '%s'." repo-dir))
-  )
+    (vc-git-create-repo)))
 
 
-(defun ego--git-commit-changes (repo-dir message)
+(defun ego--git-commit-changes (repo-dir commit &optional files)
   "This function will commit uncommitted changes to git repository presented by
-REPO-DIR, MESSAGE is the commit message."
-  (let ((repo-dir (file-name-as-directory repo-dir)) output)
-    (ego--shell-command repo-dir "env LC_ALL=C git add ." t)
-    (setq output
-          (ego--shell-command repo-dir
-                              (format "env LC_ALL=C git commit -m \"%s\"" message)
-                              t))
-    (when (not (or (string-match "\\[.* .*\\]" output) (string-match "nothing to commit" output)))
-      (error "Failed to commit changes on current branch of repository '%s'."
-             repo-dir))))
+REPO-DIR, MESSAGE is the commit message,FILES specify the target files."
+  (let* ((repo-dir (file-name-as-directory repo-dir))
+         (default-directory repo-dir)
+         (files (or files '("."))))
+    (vc-git-register files)
+    (vc-git-checkin files commit)))
+
+(defun ego--git-stash-changes (repo-dir name &optional files)
+  "This function will create a stash to stash uncommitted changes to git repository presented by
+REPO-DIR, NAME is the stash name,FILES specify the target files."
+  (let* ((repo-dir (file-name-as-directory repo-dir))
+         (default-directory repo-dir)
+         (files (or files ".")))
+    (vc-git-register files)
+    (vc-git-stash name)))
+
+;; (defun ego--git-commit-changes (repo-dir message)
+;;   "This function will commit uncommitted changes to git repository presented by
+;; REPO-DIR, MESSAGE is the commit message."
+;;   (let ((repo-dir (file-name-as-directory repo-dir)) output)
+;;     (ego--shell-command repo-dir "env LC_ALL=C git add ." t)
+;;     (setq output
+;;           (ego--shell-command repo-dir
+;;                               (format "env LC_ALL=C git commit -m \"%s\"" message)
+;;                               t))
+;;     (when (not (or (string-match "\\[.* .*\\]" output) (string-match "nothing to commit" output)))
+;;       (error "Failed to commit changes on current branch of repository '%s'."
+;;              repo-dir))))
 
 (defun ego--git-files-changed (repo-dir base-commit)
   "This function can get modified/deleted org files from git repository

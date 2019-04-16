@@ -309,6 +309,11 @@ You can see fallback value of above option in `ego-config-fallback'"
   :group 'ego
   :type 'string)
 
+(defcustom ego-auto-commit nil
+  "Specify auto commit repo-dir or not"
+  :group 'ego
+  :type 'boolean)
+
 (defconst ego--temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
 
