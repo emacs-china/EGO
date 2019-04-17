@@ -103,10 +103,9 @@ If there is no branch named BRANCH-NAME, It will create an empty brranch"
          (current-branch (ego--git-branch-name repo-dir)))
     (if (equal current-branch branch-name)
         (message "current-branch is already %s" branch-name)
-      (let ((state (vc-git-state nil)))
-        (when (not (equal state 'up-to-date))
-          (error "The branch of %s have something uncommitted, recheck it!" repo-dir))
-        (vc-git-checkout nil branch-name)))))
+      (unless (ego-git-repo-up2date-p repo-dir)
+        (error "The branch of %s have something uncommitted, recheck it!" repo-dir))
+      (vc-git-checkout nil branch-name))))
 
 (defun ego--git-new-empty-branch (repo-dir branch-name)
   "This function will create a new empty branch with BRANCH-NAME, and checkout it. "
@@ -133,6 +132,12 @@ directory where repository will be initialized."
   (let ((default-directory repo-dir))
     (vc-git-create-repo)))
 
+(defun ego-git-repo-up2date-p (repo-dir)
+  "Judge `REPO-DIR' is up to date or not"
+  (let* ((default-directory (file-name-as-directory repo-dir))
+         (state (vc-git-state nil)))
+    (equal state 'up-to-date)))
+
 
 (defun ego--git-commit-changes (repo-dir commit &optional files)
   "This function will commit uncommitted changes to git repository presented by
@@ -140,15 +145,16 @@ REPO-DIR, MESSAGE is the commit message,FILES specify the target files."
   (let* ((repo-dir (file-name-as-directory repo-dir))
          (default-directory repo-dir)
          (files (or files '("."))))
-    (vc-git-register files)
-    (vc-git-checkin files commit)))
+    (unless (ego-git-repo-up2date-p repo-dir)
+      (vc-git-register files)
+      (vc-git-checkin files commit))))
 
 (defun ego--git-stash-changes (repo-dir name &optional files)
   "This function will create a stash to stash uncommitted changes to git repository presented by
 REPO-DIR, NAME is the stash name,FILES specify the target files."
   (let* ((repo-dir (file-name-as-directory repo-dir))
          (default-directory repo-dir)
-         (files (or files ".")))
+         (files (or files '("."))))
     (vc-git-register files)
     (vc-git-stash name)))
 

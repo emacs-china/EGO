@@ -84,11 +84,14 @@
     (setq ego--item-cache nil)
     (let* ((repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
-           (orig-repo-branch (ego--git-branch-name repo-dir)))
+           (orig-repo-branch (ego--git-branch-name repo-dir))
+           repo-stashed-p)
       (message "EGO: Git branch operation and get changed files")
-      (if checkin-all
-          (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
-        (ego--git-stash-changes repo-dir "EGO")) ; TODO 使用stash代替commit应该会好点
+      (unless (ego-git-repo-up2date-p repo-dir)
+        (if checkin-all
+            (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
+          (ego--git-stash-changes repo-dir "EGO")
+          (setq repo-stashed-p t))) ; TODO 使用stash代替commit应该会好点
       (ego--git-change-branch repo-dir org-branch)
       (ego--git-pull-remote repo-dir org-branch)
       (let* ((repo-files
@@ -117,10 +120,10 @@
         (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
               )
           (message "EGO: pre-publish accomplished ~ begin real publish")
-          (ego--git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") ego-db-file-name)
+          (ego--git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
           (ego--git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
           (ego--git-change-branch repo-dir orig-repo-branch)
-          (unless checkin-all
+          (when repo-stashed-p
             (vc-git-stash-pop "EGO"))
           (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
