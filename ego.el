@@ -62,7 +62,7 @@
    html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
 4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING."
   (interactive (list (ego--select-project)
-                     (yes-or-no-p "Full publish?(y/n)")
+                     (yes-or-no-p "Full publish?")
                      nil
                      (when ego-auto-commit
                        (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
@@ -124,7 +124,8 @@
           (ego--git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
           (ego--git-change-branch repo-dir orig-repo-branch)
           (when repo-stashed-p
-            (vc-git-stash-pop "EGO"))
+            (let ((default-directory repo-dir))
+              (vc-git-stash-pop "0")))
           (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
           ;; publish remote

@@ -191,19 +191,19 @@ only two types will work well: need to publish or need to delete.
               (let* ((elements (split-string line "\t"))
                      (status (car elements))
                      (rest (cdr elements)))
-                (cond ((string-prefix-p "A")
+                (cond ((string-prefix-p "A" status)
                        (push (concat repo-dir (string-join rest "\t")) upd-list))
-                      ((string-prefix-p "M")
+                      ((string-prefix-p "M" status)
                        (push (concat repo-dir (string-join rest "\t")) upd-list))
-                      ((string-prefix-p "D")
+                      ((string-prefix-p "D" status)
                        (push (concat repo-dir (string-join rest "\t")) del-list))
-                      ((string-prefix-p "R") ;TODO 基于假设文件名中不包括TAB
+                      ((string-prefix-p "R" status) ;TODO 基于假设文件名中不包括TAB
                        (let ((origin-file (car rest))
                              (new-file (cdr rest)))
                          (push (concat repo-dir origin-file) del-list)
                          (push (concat repo-dir (string-join new-file "\t")) del-list)))
                       )))
-          (split-string output "\n"))
+          (delete "" (split-string output "\n")))
     (list :update upd-list :delete del-list)))
 
 (defun ego--git-last-change-date (repo-dir filepath)
@@ -315,6 +315,7 @@ of branch will be pushed."
                       `("pull" ,remote-repo ,@(mapcar (lambda (branch)
                                                         (concat branch ":" branch))
                                                       branchs))))
+         (cmd (string-join cmd " "))
          (output
           (ego--shell-command repo-dir
                               (format "env LC_ALL=C %s" cmd) t)))
