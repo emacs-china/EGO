@@ -171,7 +171,7 @@ REPO-DIR, NAME is the stash name,FILES specify the target files."
 ;;       (error "Failed to commit changes on current branch of repository '%s'."
 ;;              repo-dir))))
 
-(defun ego--git-files-changed (repo-dir base-commit)
+(defun ego-git-get-changed-files (repo-dir base-commit)
   "This function can get modified/deleted org files from git repository
 presented by REPO-DIR, diff based on BASE-COMMIT. The return value is a
 property list, property :update maps a list of updated/added files, property

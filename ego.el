@@ -106,8 +106,11 @@
               (if force-all
                   `(:update ,repo-files :delete nil)
                 (message "EGO: Getting all changed files, just waiting...")
-                (ego--git-files-changed repo-dir base-git-commit))))
-        (progn
+                (ego-git-get-changed-files repo-dir base-git-commit))))
+        (if (and (null (assoc-default :update changed-files))
+                 (null (assoc-default :delete changed-files))
+                 (null addition-files))
+            (message "no change found, Don't need to process")
           (message "EGO: Create necessary directory and prepare theme!")
           (unless (file-directory-p store-dir)
             (ego--init-repository store-dir html-branch))
@@ -116,22 +119,22 @@
           (ego--prepare-theme-resources store-dir)
           (message "EGO: Pre-publish all files needed to be publish, waiting...")
           (ego--publish-changes repo-files addition-files changed-files store-dir)
-          (message "EGO: Pre-publish finished, output directory: %s." store-dir))
-        (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
-              )
-          (message "EGO: pre-publish accomplished ~ begin real publish")
-          (ego--git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
-          (ego--git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
-          (ego--git-change-branch repo-dir orig-repo-branch)
-          (when repo-stashed-p
-            (let ((default-directory repo-dir))
-              (vc-git-stash-pop "0")))
-          (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
+          (message "EGO: Pre-publish finished, output directory: %s." store-dir)
+          (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
+                )
+            (message "EGO: pre-publish accomplished ~ begin real publish")
+            (ego--git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
+            (ego--git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
+            (ego--git-change-branch repo-dir orig-repo-branch)
+            (when repo-stashed-p
+              (let ((default-directory repo-dir))
+                (vc-git-stash-pop "0")))
+            (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
-          ;; publish remote
-          (ego--git-push-remote repo-dir org-branch)
-          (ego--git-push-remote store-dir html-branch)
-          (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation."))))))
+            ;; publish remote
+            (ego--git-push-remote repo-dir org-branch)
+            (ego--git-push-remote store-dir html-branch)
+            (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation.")))))))
 
 (defun ego--init-repository (repo-dir branch)
   (ego--git-init-repo repo-dir)
