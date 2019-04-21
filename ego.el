@@ -84,16 +84,16 @@
     (setq ego--item-cache nil)
     (let* ((repo-files-function (ego--get-config-option :repo-files-function))
            (addition-files-function (ego--get-config-option :addition-files-function))
-           (orig-repo-branch (ego--git-branch-name repo-dir))
+           (orig-repo-branch (ego-git-get-branch-name repo-dir))
            repo-stashed-p)
       (message "EGO: Git branch operation and get changed files")
       (unless (ego-git-repo-up2date-p repo-dir)
         (if checkin-all
-            (ego--git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
-          (ego--git-stash-changes repo-dir "EGO")
+            (ego-git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
+          (ego-git-stash-changes repo-dir "EGO")
           (setq repo-stashed-p t))) ; TODO 使用stash代替commit应该会好点
-      (ego--git-change-branch repo-dir org-branch)
-      (ego--git-pull-remote repo-dir org-branch)
+      (ego-git-change-branch repo-dir org-branch)
+      (ego-git-pull-remote repo-dir org-branch)
       (let* ((repo-files
               (-filter `(lambda (string)
                           (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
@@ -114,8 +114,8 @@
           (message "EGO: Create necessary directory and prepare theme!")
           (unless (file-directory-p store-dir)
             (ego--init-repository store-dir html-branch))
-          (ego--git-change-branch store-dir html-branch)
-          (ego--git-pull-remote store-dir html-branch)
+          (ego-git-change-branch store-dir html-branch)
+          (ego-git-pull-remote store-dir html-branch)
           (ego--prepare-theme-resources store-dir)
           (message "EGO: Pre-publish all files needed to be publish, waiting...")
           (ego--publish-changes repo-files addition-files changed-files store-dir)
@@ -123,22 +123,22 @@
           (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
                 )
             (message "EGO: pre-publish accomplished ~ begin real publish")
-            (ego--git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
-            (ego--git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
-            (ego--git-change-branch repo-dir orig-repo-branch)
+            (ego-git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
+            (ego-git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
+            (ego-git-change-branch repo-dir orig-repo-branch)
             (when repo-stashed-p
               (let ((default-directory repo-dir))
                 (vc-git-stash-pop "0")))
             (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
             ;; publish remote
-            (ego--git-push-remote repo-dir org-branch)
-            (ego--git-push-remote store-dir html-branch)
+            (ego-git-push-remote repo-dir org-branch)
+            (ego-git-push-remote store-dir html-branch)
             (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation.")))))))
 
 (defun ego--init-repository (repo-dir branch)
-  (ego--git-init-repo repo-dir)
-  (ego--git-new-empty-branch repo-dir branch))
+  (ego-git-init-repo repo-dir)
+  (ego-git-new-empty-branch repo-dir branch))
 
 ;;;###autoload
 (defun ego-new-repository (&optional repo-dir org-branch store-dir html-branch )
@@ -161,11 +161,11 @@ you must customize the variable `ego-project-config-alist' according to the read
     (ego--init-repository repo-dir org-branch)
     (ego--init-repository store-dir html-branch)
     (ego--generate-readme repo-dir)
-    (ego--git-commit-changes repo-dir "initial commit")
+    (ego-git-commit-changes repo-dir "initial commit")
     (ego--generate-index repo-dir)
-    (ego--git-commit-changes repo-dir "add source index.org")
+    (ego-git-commit-changes repo-dir "add source index.org")
     (ego--generate-about repo-dir)
-    (ego--git-commit-changes repo-dir "add source about.org")))
+    (ego-git-commit-changes repo-dir "add source about.org")))
 
 (defun ego--verify-configuration ()
   "Ensure all required configuration fields are properly configured, include:

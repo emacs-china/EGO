@@ -111,12 +111,12 @@ This functions works with `ego-current-project-name' and currect buffer.
              (title (funcall (ego--get-config-option :get-title-function)))
              (date (ego--fix-timestamp-string
                     (or (ego--read-org-option "DATE")
-                        (ego--git-first-change-date repo-dir filename)
+                        (ego-git-first-change-date repo-dir filename)
                         (format-time-string "%Y-%m-%d"))))
              (year (format "%.4s" date))
              (mod-date (if (not filename)
                            (format-time-string "%Y-%m-%d")
-                         (or (ego--git-last-change-date
+                         (or (ego-git-last-change-date
                               repo-dir
                               filename)
                              (format-time-string

@@ -273,7 +273,7 @@ Information about the creator of the HTML document.
 
 The function used to get all org files exported.
 1. Type: function
-2. Example1: ego--git-all-files
+2. Example1: ego-git-get-all-files
 
 
   `:addition-files-function'
@@ -408,7 +408,7 @@ You can see fallback value of above option in `ego-config-fallback'"
         :preparation-function nil
         :get-title-function ego--get-title
         :retrieve-category-function ego--get-file-category
-        :repo-files-function ego--git-all-files
+        :repo-files-function ego-git-get-all-files
         :addition-files-function nil
         :org-export-function ego--default-org-export
         :store-dir "~/.emacs.d/ego-server/default"

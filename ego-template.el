@@ -222,7 +222,7 @@ similar to `ego--render-header'."
              ("date" date)
              ("mod-date" (if (not filename)
                              (format-time-string "%Y-%m-%d")
-                           (or (ego--git-last-change-date
+                           (or (ego-git-last-change-date
                                 (ego--get-repository-directory)
                                 filename)
                                (format-time-string
