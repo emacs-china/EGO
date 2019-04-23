@@ -47,7 +47,7 @@
 ;;;###autoload
 (defun ego-do-publication (&optional project-name
                                      force-all
-                                     base-git-commit
+                                     auto-push
                                      checkin-all)
   "The main entrance of ego. The entire procedure is:
 1) verify configuration
@@ -55,15 +55,14 @@
    the definition of 'changed files' is:
    1. if FORCE-ALL is non-nil, then all files will be published
       will be published.
-   2. if FORCE-ALL is nil, the changed files will be obtained based on
-      BASE-GIT-COMMIT
-   3. if BASE-GIT-COMMIT is nil or omitted, the changed files will be obtained based on previous commit
+   2. if FORCE-ALL is nil, the changed files will be obtained based on the last commit before publish
 3) publish org files to html,
-   html files will be published on \"html-branch\" of \"repository directory\" and pushed to the remote repository.
-4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING."
+   html files will be published on ':store-dir' defined in `ego-project-config-alist'.
+4) CHECKIN-ALL checkin all the org-files, with the CHECKIN-ALL you input as the COMMIT STRING.
+5) if AUTO-PUSH is non-nil, then EGO push the html and org to the remote repository"
   (interactive (list (ego--select-project)
                      (yes-or-no-p "Full publish?")
-                     nil
+                     ego-auto-push
                      (when ego-auto-commit
                        (read-string "checkin message (won't show in 'git log' if you have committed all): "))))
   (let* ((ego-current-project-name (or project-name
@@ -72,10 +71,9 @@
          (store-dir (expand-file-name (ego--get-config-option :store-dir)))
          (org-branch (ego--get-config-option :repository-org-branch))
          (html-branch (ego--get-config-option :repository-html-branch))
-         (base-git-commit (or base-git-commit
-                              (unless force-all
-                                (read-string "Base git commit: " (or (ego--get-first-commit-before-publish repo-dir org-branch store-dir html-branch)
-                                                                     "HEAD~1")))))
+         (base-git-commit (unless force-all
+                            (or (ego--get-first-commit-before-publish repo-dir org-branch store-dir html-branch)
+                                "HEAD~1")))
          (preparation-function (ego--get-config-option :preparation-function)))
     (when preparation-function
       (run-hooks 'preparation-function))
@@ -87,11 +85,13 @@
            (orig-repo-branch (ego-git-get-branch-name repo-dir))
            repo-stashed-p)
       (message "EGO: Git branch operation and get changed files")
+      (message "repo-dir=[%s],store-dir=[%s]" repo-dir store-dir)
       (unless (ego-git-repo-up2date-p repo-dir)
         (if checkin-all
             (ego-git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
           (ego-git-stash-changes repo-dir "EGO")
-          (setq repo-stashed-p t))) ; TODO 使用stash代替commit应该会好点
+          (setq repo-stashed-p t)))     ; TODO 使用stash代替commit应该会好点
+      (message "repo-dir=[%s],store-dir=[%s]" repo-dir store-dir)
       (ego-git-change-branch repo-dir org-branch)
       (ego-git-pull-remote repo-dir org-branch)
       (let* ((repo-files
@@ -132,9 +132,10 @@
             (message "EGO: Local Publication finished, see *EGO output* buffer to get more information.")
 
             ;; publish remote
-            (ego-git-push-remote repo-dir org-branch)
-            (ego-git-push-remote store-dir html-branch)
-            (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation.")))))))
+            (when auto-push
+              (ego-git-push-remote repo-dir org-branch)
+              (ego-git-push-remote store-dir html-branch)
+              (message "EGO: Remote Publication finished.\nSee *EGO OUTPUT* buffer for remote publication situation."))))))))
 
 (defun ego--init-repository (repo-dir branch)
   (ego-git-init-repo repo-dir)

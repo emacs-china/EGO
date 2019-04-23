@@ -135,9 +135,9 @@ directory where repository will be initialized."
 (defun ego-git-repo-up2date-p (repo-dir)
   "Judge `REPO-DIR' is up to date or not"
   (let* ((default-directory (file-name-as-directory repo-dir))
-         (state (vc-git-state nil)))
+         (state (vc-git-state "")))
+    (message "repo state is %s" state)
     (equal state 'up-to-date)))
-
 
 (defun ego-git-commit-changes (repo-dir commit &optional files)
   "This function will commit uncommitted changes to git repository presented by

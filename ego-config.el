@@ -314,6 +314,11 @@ You can see fallback value of above option in `ego-config-fallback'"
   :group 'ego
   :type 'boolean)
 
+(defcustom ego-auto-push t
+  "Whether auto push repo-dir and store-dir"
+  :group 'ego
+  :type 'boolean)
+
 (defconst ego--temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
 
