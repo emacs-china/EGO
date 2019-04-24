@@ -71,6 +71,7 @@ instead of pointer HEAD."
                  (concat "env LC_ALL=C git ls-tree -r --name-only "
                          (or branch "HEAD"))
                  t)))
+    (message "output of all-files=%s" output)
     (delq nil (mapcar #'(lambda (line)
                           (when (string-suffix-p ".org" line t)
                             (expand-file-name line repo-dir)))

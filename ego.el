@@ -84,6 +84,7 @@
            (addition-files-function (ego--get-config-option :addition-files-function))
            (orig-repo-branch (ego-git-get-branch-name repo-dir))
            repo-stashed-p)
+      (message "repo-files-function is %s" repo-files-function)
       (message "EGO: Git branch operation and get changed files")
       (unless (ego-git-repo-up2date-p repo-dir)
         (if checkin-all
