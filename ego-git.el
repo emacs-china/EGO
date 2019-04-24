@@ -72,9 +72,7 @@ instead of pointer HEAD."
                          (or branch "HEAD"))
                  t)))
     (delq nil (mapcar #'(lambda (line)
-                          (message "output of all-files=%s" line)
                           (when (string-suffix-p ".org" line t)
-                            (message "output of org-files=%s" line)
                             (expand-file-name line repo-dir)))
                       (split-string output "\n")))))
 
@@ -138,7 +136,7 @@ directory where repository will be initialized."
   "Judge `REPO-DIR' is up to date or not"
   (let* ((default-directory (file-name-as-directory repo-dir))
          (state (vc-git-state "")))
-    (message "repo state is %s" state)
+    (message "repo %s state is %s" repo-dir state)
     (equal state 'up-to-date)))
 
 (defun ego-git-commit-changes (repo-dir commit &optional files)
