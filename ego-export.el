@@ -57,10 +57,13 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                             addition-list)))
          (del-list (plist-get change-plist :delete))
           file-attr-list)
+    (message "EGO DEBUG: upd-list=[%s]" upd-list)
+    (message "EGO DEBUG: del-list=[%s]" del-list)
     (when (or upd-list del-list)
       (setq file-attr-list
             (reverse (mapcar
                       (lambda (org-file)
+                        (message "EGO DEBUG: org-file=[%s]" org-file)
                         (let* ((need-upd-p (member org-file upd-list))
                                (need-del-p (member org-file del-list)))
                           (let* ((attr-cell (ego--get-org-file-options
