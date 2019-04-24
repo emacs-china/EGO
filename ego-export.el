@@ -51,11 +51,11 @@
 contains two properties, one is :update for files to be updated, another is :delete
 for files to be deleted. `pub-root-dir' is the root publication directory."
   (let* ((repo-dir (ego--get-repository-directory))
-         (files-list (delete-dups (append files-list addition-list)))
          (upd-list (delete-dups
                     (append (plist-get change-plist :update)
                             addition-list)))
          (del-list (plist-get change-plist :delete))
+         (files-list (delete-dups (append files-list del-list addition-list))) ;files-list中只包含了当前仓库中所有的文件，不包含已经被删除的文件，因此需要把del-list也加入
           file-attr-list)
     (message "EGO DEBUG: upd-list=[%s]" upd-list)
     (message "EGO DEBUG: del-list=[%s]" del-list)
