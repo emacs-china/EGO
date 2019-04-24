@@ -559,12 +559,14 @@ Return the origin html uri of ORG-PATH."
 
 If DEL is not nil, then it will delete origin-html-uri as well.
 Return the origin html uri of ORG-PATH"
+  (message "ego-delete-org-html-mapping(%s %s)" org-path del)
   (let* ((org-html-mapping-alist (ego-get-org-html-mapping))
          (origin-html-uri (assoc-default org-path org-html-mapping-alist)))
     (setq org-html-mapping-alist (delete (assoc org-path org-html-mapping-alist) org-html-mapping-alist))
     (ego-save-org-html-mapping org-html-mapping-alist)
     (when (and del
                origin-html-uri)
+      (message "delete-file %s" origin-html-uri)
       (delete-file origin-html-uri))
     origin-html-uri))
 
