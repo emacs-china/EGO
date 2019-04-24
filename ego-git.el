@@ -175,6 +175,7 @@ only two types will work well: need to publish or need to delete.
                          base-commit " HEAD")
                  t))
         upd-list del-list)
+    (message "output=%s" output)
     (mapc (lambda (line)
               (let* ((elements (split-string line "\t"))
                      (status (car elements))
