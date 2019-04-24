@@ -281,10 +281,20 @@ of branch will be pushed."
          (branchs (if (listp branchs)
                       branchs
                     (list branchs)))
-         (extra-args `(,remote-repo ,@(mapcar (lambda (branch)
-                                                (concat branch ":" branch))
-                                              branchs))))
-    (vc-git--pushpull "pull" nil extra-args)))
+         (cmd `("git" "pull" ,remote-repo ,@(mapcar (lambda (branch)
+                                                      (concat branch ":" branch))
+                                                    branchs)))
+         (cmd (string-join cmd " "))
+         (output
+          (ego--shell-command repo-dir
+                              (format "env LC_ALL=C %s" cmd) t)))
+    (if (or (string-match "fatal" output)
+            (string-match "error" output))
+        (error "Failed to pull branch '%s' from remote repository '%s'."
+               ,(prin1-to-string branchs) ,remote-repo)
+      (with-current-buffer (get-buffer-create ego--temp-buffer-name)
+        (goto-char (point-max))
+        (insert "remote pull success!")))))
 
 
 (defun ego-git-push-remote (repo-dir branchs &optional remote-repo)
@@ -299,10 +309,22 @@ it will be created."
          (branchs (if (listp branchs)
                       branchs
                     (list branchs)))
-         (extra-args `(,remote-repo ,@(mapcar (lambda (branch)
-                                                (concat branch ":" branch))
-                                              branchs))))
-    (vc-git--pushpull "push" nil extra-args)))
+         (cmd `("git" "push" ,remote-repo ,@(mapcar (lambda (branch)
+                                                      (concat branch ":" branch))
+                                                    branchs)))
+         (cmd (string-join cmd " "))
+         (output
+          (ego--shell-command repo-dir
+                              (format "env LC_ALL=C %s" cmd) t)))
+    (if (or (string-match "fatal" output)
+            (string-match "error" output))
+        (error "Failed to push branch '%s' to remote repository '%s'."
+               ,(prin1-to-string branchs) ,remote-repo)
+      (with-current-buffer (get-buffer-create ego--temp-buffer-name)
+        (goto-char (point-max))
+        (insert "remote push success!")))))
+
+
 
 (provide 'ego-git)
 
