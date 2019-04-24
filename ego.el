@@ -85,13 +85,11 @@
            (orig-repo-branch (ego-git-get-branch-name repo-dir))
            repo-stashed-p)
       (message "EGO: Git branch operation and get changed files")
-      (message "repo-dir=[%s],store-dir=[%s]" repo-dir store-dir)
       (unless (ego-git-repo-up2date-p repo-dir)
         (if checkin-all
             (ego-git-commit-changes repo-dir (concat checkin-all "--Committed by EGO"))
           (ego-git-stash-changes repo-dir "EGO")
           (setq repo-stashed-p t)))     ; TODO 使用stash代替commit应该会好点
-      (message "repo-dir=[%s],store-dir=[%s]" repo-dir store-dir)
       (ego-git-change-branch repo-dir org-branch)
       (ego-git-pull-remote repo-dir org-branch)
       (let* ((repo-files
@@ -107,6 +105,7 @@
                   `(:update ,repo-files :delete nil)
                 (message "EGO: Getting all changed files, just waiting...")
                 (ego-git-get-changed-files repo-dir base-git-commit))))
+        (message "changed-files=[%s]" changed-files)
         (if (and (null (assoc-default :update changed-files))
                  (null (assoc-default :delete changed-files))
                  (null addition-files))
