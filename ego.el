@@ -105,6 +105,7 @@
                   `(:update ,repo-files :delete nil)
                 (message "EGO: Getting all changed files, just waiting...")
                 (ego-git-get-changed-files repo-dir base-git-commit))))
+        (message "repo-files=[%s]" repo-files)
         (message "changed-files=[%s]" changed-files)
         (if (and (null (plist-get changed-files :update))
                  (null (plist-get changed-files :delete))
