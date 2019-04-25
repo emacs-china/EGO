@@ -194,6 +194,9 @@ file: %s." asset-abs-path filename)
                         (mkdir assets-dir t))
                       (message "DEBUG EGO: asset-abs-path=[%s],assets-dir=[%s]" asset-abs-path assets-dir)
                       (copy-file asset-abs-path assets-dir t t t t)
+                      (ego-update-org-html-mapping asset-abs-path
+                                                   (expand-file-name (file-name-nondirectory asset-abs-path) assets-dir)
+                                                   'del) ;附件也要记录下来
                       (unless (string-prefix-p pub-root-dir pub-abs-path)
                         (message "EGO: [WARN] The publication root directory %s is not an \
 ancestor directory of assets directory %s." pub-root-dir assets-dir))
