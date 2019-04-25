@@ -6,31 +6,34 @@
 [[https://melpa.org/#/ego][file:https://melpa.org/packages/ego-badge.svg]]
 
 * 介绍
+:PROPERTIES:
+:ID:       efd66v31lbi0
+:END:
 
-EGO 的简化版本，去掉了很多感觉不必要的东西，保留的功能有:
+EGO 的简化版本，去掉了很多感觉不必要的东西，跟之前的版本比有如下改动
 
-1) Org sources and html files managed by git
-2) Incremental publication (according to =git diff= command)
-3) Category support (not recommended)
-4) Tags support (auto generated)
-5) RSS support (auto generated)
-6) Search engine support (auto generated)
-7) A beautiful theme
-8) Theme customization support is well (using mustache template)
-9) Commenting (implemented using gitalk)
-10) Website traffic analytics (implemented using baidu analytics)
-11) Index/about page support (auto generated if no default is provided)
-12) Manage multi-site configs in an emacs session easily.
-13) 支持主题继承，能让多站点管理时的主题修改轻松很多。
-        
-    #+BEGIN_SRC emacs-lisp
-    :theme (haru emacs_love)
-    #+END_SRC
-    
-    =haru= 是在 =emacs_love= 上修改的主题。实际上 =:theme= 对应的括号里可以有很多主题，形成一个主题链（越开头越优先）。
-    
-"Emacs-version >= 24.5" is required.
 
+** 不保存上一次发布的项目 
+合并了 =ego-current-project-name= 和 =ego-default-project-name= 这两个变量，目前 =ego-current-project-name= 的作用就是以前的 =ego-default-project-name=.
+
+而ego不再保存上一次发布的项目是什么，因为上一次发布的项目不见得就是这次要发布的项目，我觉得保存上一次发布项目反而使代码变得复杂。
+** 用另一个单独的目录存储html结果 
+在同一个目录里面通过不同分支存储html和org文件，意味着要使用一个临时目录保存html再拷贝回原目录，我觉得这个拷贝的操作完全是费操作，而且当博客内容很多的时候拷贝速度也不快。
+
+另外在目录中切换分支也容易把仓库搞乱，索性简单点使用单独的一个目录来存储html，该目录和原目录分别对应远程仓库中的不同分支。这样不仅节省了拷贝操作，而且无需在进行分支的切换了。
+** 发布前先git pull同步一次上游仓库 
+有的时候会在另一台机器上写博客，而在本机上忘了同步上游仓库导致合并仓库时出现冲突
+** 去掉Emacs中的静态web服务 
+根据UNIX哲学，只做一件事情，把这件事情做好。我觉得EGO只需要实现把org文件转换成html博客就好，预览功能作用不大。
+
+而且Emacs上实现的web静态服务器太过简陋，如果真的想要预览，可以用专业的web服务器来实现
+** 根据修改的内容增量更新tag文件 
+** 尝试用vc库代替git 
+vc-git本身实现了很多git操作，可以复用这些操作而无需自己实现。
+** gitalk替换评论系统 
+** water.css改配色
+** 实现delete org file处理
+** repo-dir切换到org branch前先用stash保存未提交内容，切回原branch后再unstash，这要比直接commit好
 
 * 使用方法
 
@@ -264,19 +267,19 @@ M-x ego-do-publication
   mess up the files in the repository. So, close all opened directories
   in the repository before =ego-do-publication= .
 
-* Roadmap [4/11]
+* Roadmap [7/10]
 
 
    - [X] 不保存上一次发布的项目 
    - [X] 用另一个单独的目录存储html结果 
-   - [ ] 发布前先git pull同步一次上游仓库 
+   - [X] 发布前先git pull同步一次上游仓库 
    - [X] 去掉Emacs中的静态web服务 
    - [ ] 根据修改的内容增量更新tag文件 
    - [ ] 尝试用vc库代替git 
    - [X] gitalk替换评论系统 
    - [ ] water.css改配色
-   - [ ] 实现delete org file处理
-   - [ ] repo-dir切换到org branch前先用stash保存未提交内容，切回原branch后再unstash，这要比直接commit好
+   - [X] 实现delete org file处理
+   - [X] repo-dir切换到org branch前先用stash保存未提交内容，切回原branch后再unstash，这要比直接commit好
 
 * FAQ
 ** 为什么没有发布那些包含中文的 org 文件？
