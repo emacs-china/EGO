@@ -192,6 +192,7 @@ This functions works with `ego-current-project-name' and currect buffer.
 file: %s." asset-abs-path filename)
                       (unless (file-directory-p assets-dir)
                         (mkdir assets-dir t))
+                      (message "DEBUG EGO: asset-abs-path=[%s],assets-dir=[%s]" asset-abs-path assets-dir)
                       (copy-file asset-abs-path assets-dir t t t t)
                       (unless (string-prefix-p pub-root-dir pub-abs-path)
                         (message "EGO: [WARN] The publication root directory %s is not an \
