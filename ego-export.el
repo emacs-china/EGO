@@ -55,26 +55,29 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                     (append (plist-get change-plist :update)
                             addition-list)))
          (del-list (plist-get change-plist :delete))
-         (files-list (delete-dups (append files-list del-list addition-list))) ;files-list中只包含了当前仓库中所有的文件，不包含已经被删除的文件，因此需要把del-list也加入
+         (files-list (delete-dups (append files-list addition-list))) ;files-list中只包含了当前仓库中所有的文件，不包含已经被删除的文件，因此需要把del-list也加入
           file-attr-list)
-    (message "EGO DEBUG: upd-list=[%s]" upd-list)
     (message "EGO DEBUG: del-list=[%s]" del-list)
-    (when (or upd-list del-list)
+    (when del-list
+      (mapcar
+                      (lambda (org-file)
+                        (message "EGO DEBUG: org-file=[%s]" org-file)
+                        (ego--handle-deleted-file org-file)
+                        (ego-delete-org-html-mapping org-file 'del))
+                      del-list))
+    (message "EGO DEBUG: upd-list=[%s]" upd-list)
+    (when upd-list
       (setq file-attr-list
             (reverse (mapcar
                       (lambda (org-file)
                         (message "EGO DEBUG: org-file=[%s]" org-file)
-                        (let* ((need-upd-p (member org-file upd-list))
-                               (need-del-p (member org-file del-list)))
+                        (let* ((need-upd-p (member org-file upd-list)))
                           (let* ((attr-cell (ego--get-org-file-options
                                              org-file
                                              pub-root-dir
                                              need-upd-p))
                                  (attr-plist (car attr-cell))
                                  (component-table (cdr attr-cell)))
-                            (when need-del-p
-                              (ego--handle-deleted-file org-file)
-                              (ego-delete-org-html-mapping org-file 'del))
                             (when need-upd-p
                               (let ((new-html-uri (ego--publish-modified-file component-table
                                                                               (plist-get attr-plist :pub-dir))))
