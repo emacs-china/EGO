@@ -94,6 +94,11 @@ T[0-9][0-9]:[0-9][0-9]" date-str)
      ((string-match "^\\([0-9][0-9][0-9][0-9]\\)$" date-str)
       (match-string 1 date-str))
      (t (progn
+          ;; 兼容 2018年 07月 20日 星期五 18:15:29 CST 这种格式
+          (setq date-str
+                (replace-regexp-in-string "年 " "-" date-str))
+          (setq date-str
+                (replace-regexp-in-string "月 " "-" date-str))
           (setq date-str
                 (replace-regexp-in-string "January " "Jan. " date-str))
           (setq date-str
