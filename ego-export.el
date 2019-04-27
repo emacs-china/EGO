@@ -367,25 +367,25 @@ For sorting, later lies headmost."
        (setcdr
         cell
         (sort (cdr cell)
-              #'(lambda (plist1 plist2)
-                  (<= (ego--compare-standard-date
-                       (ego--fix-timestamp-string
-                        (plist-get
-                         plist1
-                         (plist-get
-                          (cdr (or (assoc (plist-get plist1 :category)
-                                          ego--category-config-alist)
-                                   (ego--get-category-setting default-category)))
-                          :sort-by)))
-                       (ego--fix-timestamp-string
-                        (plist-get
-                         plist2
-                         (plist-get
-                          (cdr (or (assoc (plist-get plist2 :category)
-                                          ego--category-config-alist)
-                                   (ego--get-category-setting default-category)))
-                          :sort-by))))
-                      0)))))
+              (lambda (plist1 plist2)
+                (<= (ego--compare-standard-date
+                     (ego--fix-timestamp-string
+                      (plist-get
+                       plist1
+                       (plist-get
+                        (cdr (or (assoc (plist-get plist1 :category)
+                                        ego--category-config-alist)
+                                 (ego--get-category-setting default-category)))
+                        :sort-by)))
+                     (ego--fix-timestamp-string
+                      (plist-get
+                       plist2
+                       (plist-get
+                        (cdr (or (assoc (plist-get plist2 :category)
+                                        ego--category-config-alist)
+                                 (ego--get-category-setting default-category)))
+                        :sort-by))))
+                    0)))))
      cat-alist)))
 
 (defun ego--update-category-index (file-attr-list pub-base-dir)
