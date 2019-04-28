@@ -94,16 +94,21 @@
       (ego-git-change-branch repo-dir org-branch)
       (ego-git-pull-remote repo-dir org-branch)
       (let* ((repo-files
-              (-filter `(lambda (string)
-                          (not (string-match ,(ego--get-config-option :ignore-file-name-regexp) string)))
+              (-filter (lambda (string)
+                         (not (string-match (ego--get-config-option :ignore-file-name-regexp) string)))
                        (when (functionp repo-files-function)
                          (funcall repo-files-function repo-dir))))
+             (base-files
+              (-filter (lambda (string)
+                         (not (string-match (ego--get-config-option :ignore-file-name-regexp) string)))
+                       (when (functionp repo-files-function)
+                         (funcall repo-files-function repo-dir base-git-commit))))
              (addition-files            ;addition-files一般为repo之外的附加文件
               (when (functionp addition-files-function)
                 (funcall addition-files-function repo-dir)))
              (changed-files
               (if force-all
-                  `(:update ,repo-files :delete nil)
+                  `(:update ,repo-files :delete ,base-files)
                 (message "EGO: Getting all changed files, just waiting...")
                 (ego-git-get-changed-files repo-dir base-git-commit))))
         (message "changed-files=[%s]" changed-files)
