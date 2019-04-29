@@ -280,29 +280,7 @@ file's category is based on its name and its root folder name."
                                  (expand-file-name org-file) repo-dir)
                                 "[/\\\\]+"))))))
 
-(defun ego--relative-url-to-absolute (html-content)
-  "Force convert relative url of `html-content' to absolute url."
-  (let ((site-domain (ego--get-site-domain))
-        url)
-    (with-temp-buffer
-      (insert html-content)
-      (goto-char (point-min))
-      (when (ego--get-config-option :force-absolute-url)
-        (while (re-search-forward
-                ;;; TODO: not only links need to convert, but also inline
-                ;;; images, may add others later
-                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
-                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
-          (setq url (match-string 4))
-          (when (string-prefix-p "/" url)
-            (setq url (concat
-                       (match-string 1)
-                       (match-string 2)
-                       (match-string 3)
-                       site-domain url
-                       (match-string 5)))
-            (replace-match url))))
-      (buffer-string))))
+
 
 (defun ego--copy-file-handler (operation &rest args)
   "Use ego--relative-url-to-absolute function in export process for htm/html files"

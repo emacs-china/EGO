@@ -187,6 +187,57 @@ encoded ones, like %3E, but we do NOT want this kind of url."
 		(indent-region (point-min) (point-max)))
       (write-region (point-min) (point-max) file))))
 
+(defun ego--relative-url-to-absolute (html-content)
+  "Force convert relative url of `html-content' to absolute url."
+  (let ((site-domain (ego--get-site-domain))
+        url)
+    (with-temp-buffer
+      (insert html-content)
+      (goto-char (point-min))
+      (when (ego--get-config-option :force-absolute-url)
+        (while (re-search-forward
+                ;;; TODO: not only links need to convert, but also inline
+                ;;; images, may add others later
+                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+          (setq url (match-string 4))
+          (when (string-prefix-p "/" url)
+            (setq url (concat
+                       (match-string 1)
+                       (match-string 2)
+                       (match-string 3)
+                       site-domain url
+                       (match-string 5)))
+            (replace-match url))))
+      (buffer-string))))
+
+(defun ego--absolute-url-to-relative (html-content file-path)
+  "Force convert relative url of `html-content' to absolute url."
+  (let ((store-dir (file-name-as-directory (ego--get-config-option :store-dir)))
+        (file-dir  (file-name-directory (expand-file-name file-path)))
+        url)
+    (with-temp-buffer
+      (insert html-content)
+      (goto-char (point-min))
+      (when (ego--get-config-option :force-absolute-url)
+        (while (re-search-forward
+                ;;; TODO: not only links need to convert, but also inline
+                ;;; images, may add others later
+                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+          (setq url (match-string 4))
+          (when (string-prefix-p "/" url)
+            (let* ((url-in-store-path (concat store-dir url))
+                   (relative-url (file-relative-name url-in-store-path file-dir))
+                   (link (concat
+                          (match-string 1)
+                          (match-string 2)
+                          (match-string 3)
+                          relative-url
+                          (match-string 5)))))
+            (replace-match link))))
+      (buffer-string))))
+
 (defun ego--save-to-file (content file)
   "Save CONTENT into a html FILE, only when FILE is writable. Maybe do some transformation with the links.
 
