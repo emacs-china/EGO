@@ -175,8 +175,7 @@ encoded ones, like %3E, but we do NOT want this kind of url."
     (buffer-string)))
 
 (defun ego--string-to-file (string file &optional mode)
-  "Write STRING into FILE, only when FILE is writable. If MODE is a valid major
-mode, format the string with MODE's format settings."
+  "Write STRING into FILE, only when FILE is writable. If MODE is a valid major mode, format the string with MODE's format settings."
   (when (file-writable-p file)
 	(with-temp-buffer
 	  (insert string)
@@ -187,6 +186,17 @@ mode, format the string with MODE's format settings."
 		(delete-trailing-whitespace (point-min) (point-max))
 		(indent-region (point-min) (point-max)))
       (write-region (point-min) (point-max) file))))
+
+(defun ego--save-to-file (content file)
+  "Save CONTENT into a html FILE, only when FILE is writable. Maybe do some transformation with the links.
+
+If MODE is a valid major mode, format the string with MODE's format settings."
+  (let* ((case-fold-search t)
+         (mode (and (string-match-p "html" (file-name-extension file))
+                    'html))))
+  (ego--string-to-file
+   (ego--relative-url-to-absolute content)
+   file mode))
 
 (defun ego--convert-plist-to-hashtable (plist)
   "Convert normal property list PLIST into hash table, keys of PLIST should be
