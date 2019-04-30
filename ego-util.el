@@ -251,7 +251,7 @@ If MODE is a valid major mode, format the string with MODE's format settings."
          (mode (and (string-match-p "html" (file-name-extension file))
                     'html)))
     (ego--string-to-file
-     (ego--html-link-transformer)
+     (ego--html-link-transformer content file)
      file mode)))
 
 (defun ego--convert-plist-to-hashtable (plist)
