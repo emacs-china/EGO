@@ -128,7 +128,7 @@
           (let ((file-name-handler-alist (cons '("\\(?:\\.htm\\|\\.html\\)" . ego--copy-file-handler) file-name-handler-alist)) ; register ego--copy-file-handler to tackle relative-url-to-absolute problem
                 )
             (message "EGO: pre-publish accomplished ~ begin real publish")
-            (ego-git-commit-changes repo-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
+            ;; (ego-git-commit-changes store-dir (concat "Update ego-db-file,committed by EGO.") (list ego-db-file-name))
             (ego-git-commit-changes store-dir (concat "Update published html files,committed by EGO."))
             (ego-git-change-branch repo-dir orig-repo-branch)
             (when repo-stashed-p
