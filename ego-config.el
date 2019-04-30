@@ -520,7 +520,7 @@ multi path."
 
 (defun ego-get-db-file ()
   "Return the absolute path of db-file in `ego-current-project-name''s repo root directory"
-  (expand-file-name ego-db-file-name (ego--get-repository-directory)))
+  (expand-file-name ego-db-file-name (ego--get-config-option :store-dir)))
 
 (defun ego-get-org-html-mapping ()
   "Return org-html-mapping-alist which stored in ego-db-file(use ego-get-db-file function to get it)."
