@@ -194,21 +194,20 @@ encoded ones, like %3E, but we do NOT want this kind of url."
     (with-temp-buffer
       (insert html-content)
       (goto-char (point-min))
-      (when (ego--get-config-option :force-absolute-url)
-        (while (re-search-forward
+      (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
-                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
-                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
-          (setq url (match-string 4))
-          (when (string-prefix-p "/" url)
-            (setq url (concat
-                       (match-string 1)
-                       (match-string 2)
-                       (match-string 3)
-                       site-domain url
-                       (match-string 5)))
-            (replace-match url))))
+              ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+              "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+        (setq url (match-string 4))
+        (when (string-prefix-p "/" url)
+          (setq url (concat
+                     (match-string 1)
+                     (match-string 2)
+                     (match-string 3)
+                     site-domain url
+                     (match-string 5)))
+          (replace-match url)))
       (buffer-string))))
 
 (defun ego--absolute-url-to-relative (html-content file-path)
@@ -219,22 +218,21 @@ encoded ones, like %3E, but we do NOT want this kind of url."
     (with-temp-buffer
       (insert html-content)
       (goto-char (point-min))
-      (when (ego--get-config-option :force-absolute-url)
-        (while (re-search-forward
+      (while (re-search-forward
                 ;;; TODO: not only links need to convert, but also inline
                 ;;; images, may add others later
-                ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
-                "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
-          (setq url (match-string 4))
-          (when (string-prefix-p "/" url)
-            (let* ((url-in-store-path (concat store-dir url))
-                   (relative-url (file-relative-name url-in-store-path file-dir))
-                   (link (concat
-                          (match-string 1)
-                          (match-string 2)
-                          (match-string 3)
-                          relative-url
-                          (match-string 5)))))
+              ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+              "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+        (setq url (match-string 4))
+        (when (string-prefix-p "/" url)
+          (let* ((url-in-store-path (concat store-dir (substring-no-properties url 1)))
+                 (relative-url (file-relative-name url-in-store-path file-dir))
+                 (link (concat
+                        (match-string 1)
+                        (match-string 2)
+                        (match-string 3)
+                        relative-url
+                        (match-string 5))))
             (replace-match link))))
       (buffer-string))))
 
@@ -243,11 +241,14 @@ encoded ones, like %3E, but we do NOT want this kind of url."
 
 If MODE is a valid major mode, format the string with MODE's format settings."
   (let* ((case-fold-search t)
+         (file (expand-file-name file))
          (mode (and (string-match-p "html" (file-name-extension file))
-                    'html))))
-  (ego--string-to-file
-   (ego--relative-url-to-absolute content)
-   file mode))
+                    'html)))
+    (ego--string-to-file
+     (if (ego--get-config-option :force-absolute-url)
+         (ego--relative-url-to-absolute content)
+       (ego--absolute-url-to-relative content file))
+     file mode)))
 
 (defun ego--convert-plist-to-hashtable (plist)
   "Convert normal property list PLIST into hash table, keys of PLIST should be

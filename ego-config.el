@@ -409,7 +409,7 @@ You can see fallback value of above option in `ego-config-fallback'"
         :ignore-file-name-regexp "\n"
         :summary (("tags" :tags))
         :confound-email t
-        :force-absolute-url t
+        :force-absolute-url nil
         :preparation-function nil
         :get-title-function ego--get-title
         :retrieve-category-function ego--get-file-category
