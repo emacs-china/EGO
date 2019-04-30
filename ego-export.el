@@ -203,7 +203,7 @@ ancestor directory of assets directory %s." pub-root-dir assets-dir))
                       (let ((converted-path
                              (concat "/" (file-relative-name pub-abs-path pub-root-dir))))
                         (setf (buffer-substring asset-path-begin asset-path-end) converted-path))))))
-              (setq post-content (ego--relative-url-to-absolute (buffer-string))))
+              (setq post-content (buffer-string)))
             (setq component-table (ht ("header" (ego--render-header))
                                       ("nav" (ego--render-navigation-bar))
                                       ("content" post-content)
@@ -283,21 +283,22 @@ file's category is based on its name and its root folder name."
 
 
 (defun ego--copy-file-handler (operation &rest args)
-  "Use ego--relative-url-to-absolute function in export process for htm/html files"
+  "Use `ego--html-link-transformer' function in export process for htm/html files"
   ;; First check for the specific operations
   ;; that we have special handling for.
-  (cond ((eq operation 'copy-file)
-         (ego--string-to-file
-          (ego--relative-url-to-absolute
-           (ego--file-to-string (nth 0 args)))
-          (nth 1 args)))
-        ;; Handle any operation we don’t know about.
-        (t (let ((inhibit-file-name-handlers
-                  (cons 'ego--copy-file-handler
-                        (and (eq inhibit-file-name-operation operation)
-                             inhibit-file-name-handlers)))
-                 (inhibit-file-name-operation operation))
-             (apply operation args)))))
+  (let ((source-file (nth 0 args))
+        (dest-file (nth 1 args)))
+    (cond ((eq operation 'copy-file)
+           (ego--string-to-file
+            (ego--html-link-transformer (ego--file-to-string source-file) dest-file)
+            dest-file))
+          ;; Handle any operation we don’t know about.
+          (t (let ((inhibit-file-name-handlers
+                    (cons 'ego--copy-file-handler
+                          (and (eq inhibit-file-name-operation operation)
+                               inhibit-file-name-handlers)))
+                   (inhibit-file-name-operation operation))
+               (apply operation args))))))
 
 (defun ego--publish-modified-file (component-table pub-dir)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table

@@ -236,6 +236,12 @@ encoded ones, like %3E, but we do NOT want this kind of url."
             (replace-match link))))
       (buffer-string))))
 
+(defun ego--html-link-transformer (content file)
+  "Transform links in the CONTENT."
+  (if (ego--get-config-option :force-absolute-url)
+      (ego--relative-url-to-absolute content)
+    (ego--absolute-url-to-relative content file)))
+
 (defun ego--save-to-file (content file)
   "Save CONTENT into a html FILE, only when FILE is writable. Maybe do some transformation with the links.
 
@@ -245,9 +251,7 @@ If MODE is a valid major mode, format the string with MODE's format settings."
          (mode (and (string-match-p "html" (file-name-extension file))
                     'html)))
     (ego--string-to-file
-     (if (ego--get-config-option :force-absolute-url)
-         (ego--relative-url-to-absolute content)
-       (ego--absolute-url-to-relative content file))
+     (ego--html-link-transformer)
      file mode)))
 
 (defun ego--convert-plist-to-hashtable (plist)
