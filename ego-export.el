@@ -428,11 +428,12 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                 (ego--render-footer
                  (ht ("show-meta" nil)
                      ("show-comment" nil)
-                     ;; ("author" "ego")
+                     ("author" (or user-full-name "Unknown Author"))
                      ("google-analytics" (ego--get-config-option :personal-google-analytics-id))
                      ("google-analytics-id" (ego--get-config-option :personal-google-analytics-id))
                      ("creator-info" (ego--get-html-creator-string))
-                     ;; ("email" (ego--confound-email-address "ego@emacs-china.org"))
+                     ("email" (ego--confound-email-address (or user-mail-address
+                                                               "Unknown Email")))
                      )))))
           (concat cat-dir "index.html"))))
      sort-alist)))
@@ -542,16 +543,16 @@ TODO: improve this function."
          (summary-update-number (car (cddr (cdr (assoc summary-name (ego--get-config-option :summary))))))
          summary-alist summary-list summary-dir)
     (mapc
-     #'(lambda (attr-plist)
-         (mapc
-          #'(lambda (name)
-              (setq summary-list (assoc name summary-alist))
-              (unless summary-list
-                (add-to-list 'summary-alist (setq summary-list `(,name))))
-              (nconc summary-list (list attr-plist)))
-          (let* ((summary-attr (car (cdr (assoc summary-name (ego--get-config-option :summary)))))
-                 (elem (plist-get attr-plist summary-attr)))
-            (if (listp elem) elem (list elem)))))
+     (lambda (attr-plist)
+       (mapc
+        (lambda (name)
+          (setq summary-list (assoc name summary-alist))
+          (unless summary-list
+            (add-to-list 'summary-alist (setq summary-list `(,name))))
+          (nconc summary-list (list attr-plist)))
+        (let* ((summary-attr (car (cdr (assoc summary-name (ego--get-config-option :summary)))))
+               (elem (plist-get attr-plist summary-attr)))
+          (if (listp elem) elem (list elem)))))
      file-attr-list)
     (when (equal summary-name (caar (-filter #'(lambda (element) (equal :tags (cadr element)))
                                                 (ego--get-config-option :summary))))
@@ -645,11 +646,12 @@ TODO: improve this function."
            (ego--render-footer
             (ht ("show-meta" nil)
                 ("show-comment" nil)
-                ;; ("author" "ego")
+                ("author" (or user-full-name "Unknown Author"))
                 ("google-analytics" (ego--get-config-option :personal-google-analytics-id))
                 ("google-analytics-id" (ego--get-config-option :personal-google-analytics-id))
                 ("creator-info" (ego--get-html-creator-string))
-                ;;("email" (ego--confound-email-address "ego@emacs-china.org"))
+                ("email" (ego--confound-email-address (or user-mail-address
+                                                          "Unknown Email")))
                 )))))
      (concat summary-base-dir "index.html"))
     (mapc
@@ -705,11 +707,12 @@ TODO: improve this function."
               (ego--render-footer
                (ht ("show-meta" nil)
                    ("show-comment" nil)
-                   ;; ("author" "ego")
+                   ("author" (or user-full-name "Unknown Author"))
                    ("google-analytics" (ego--get-config-option :personal-google-analytics-id))
                    ("google-analytics-id" (ego--get-config-option :personal-google-analytics-id))
                    ("creator-info" (ego--get-html-creator-string))
-                   ;;("email" (ego--confound-email-address "ego@emacs-china.org"))
+                   ("email" (ego--confound-email-address (or user-mail-address
+                                                             "Unknown Email")))
                    )))))
         (concat summary-dir "index.html")))
      summary-alist)))
