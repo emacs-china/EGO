@@ -190,7 +190,7 @@ only two types will work well: need to publish or need to delete.
                        (let ((origin-file (car rest))
                              (new-file (cdr rest)))
                          (push (concat repo-dir origin-file) del-list)
-                         (push (concat repo-dir (string-join new-file "\t")) del-list)))
+                         (push (concat repo-dir (string-join new-file "\t")) upd-list)))
                       )))
           (delete "" (split-string output "\n")))
     (list :update upd-list :delete del-list)))
