@@ -402,9 +402,9 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                       (mapcar
                        (lambda (attr-plist)
                          (let ((tags-multi (mapcar
-                                            #'(lambda (tag-name)
-                                                (ht ("link" (ego--generate-summary-uri "tags" tag-name))
-                                                    ("name" tag-name)))
+                                            (lambda (tag-name)
+                                              (ht ("link" (ego--generate-summary-uri "tags" tag-name))
+                                                  ("name" tag-name)))
                                             (plist-get attr-plist :tags))))
                            (ht ("date"
                                 (plist-get
@@ -419,9 +419,9 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
                                ("post-title" (plist-get attr-plist :title))
                                ("tag-links" (if (not tags-multi) "N/A"
                                               (mapconcat
-                                               #'(lambda (tag)
-                                                   (mustache-render
-                                                    "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                               (lambda (tag)
+                                                 (mustache-render
+                                                  "<a href=\"{{link}}\">{{name}}</a>" tag))
                                                tags-multi " : "))))))
                        (cdr cat-list))))))
                ("footer"
@@ -554,8 +554,8 @@ TODO: improve this function."
                (elem (plist-get attr-plist summary-attr)))
           (if (listp elem) elem (list elem)))))
      file-attr-list)
-    (when (equal summary-name (caar (-filter #'(lambda (element) (equal :tags (cadr element)))
-                                                (ego--get-config-option :summary))))
+    (when (equal summary-name (caar (-filter (lambda (element) (equal :tags (cadr element)))
+                                             (ego--get-config-option :summary))))
       (setq summary-name "tags")
       (setq summary-base-dir (expand-file-name
                               (concat summary-name "/")
@@ -563,24 +563,24 @@ TODO: improve this function."
     (unless (file-directory-p summary-base-dir)
       (mkdir summary-base-dir t))
     (setq summary-alist (sort summary-alist
-                              #'(lambda (plist1 plist2)
-                                  (string< (car plist1) (car plist2))))); sort the summary-item-name
+                              (lambda (plist1 plist2)
+                                (string< (car plist1) (car plist2))))); sort the summary-item-name
     (mapc
      (lambda (summary-list)
        (setcdr
         summary-list
         (sort (cdr summary-list)
-              #'(lambda (plist1 plist2)
-                  (<= (ego--compare-standard-date
-                       (ego--fix-timestamp-string
-                        (plist-get
-                         plist1
-                         :date))
-                       (ego--fix-timestamp-string
-                        (plist-get
-                         plist2
-                         :date)))
-                      0)))))
+              (lambda (plist1 plist2)
+                (<= (ego--compare-standard-date
+                     (ego--fix-timestamp-string
+                      (plist-get
+                       plist1
+                       :date))
+                     (ego--fix-timestamp-string
+                      (plist-get
+                       plist2
+                       :date)))
+                    0)))))
      summary-alist); sort the summary post list according to the date
     (ego--save-to-file
      (mustache-render
@@ -605,18 +605,18 @@ TODO: improve this function."
                    (mapcar
                     (lambda (attr-plist)
                       (let ((tags-multi (mapcar
-                                         #'(lambda (tag-name)
-                                             (ht ("link" (ego--generate-summary-uri "tags" tag-name))
-                                                 ("name" tag-name)))
+                                         (lambda (tag-name)
+                                           (ht ("link" (ego--generate-summary-uri "tags" tag-name))
+                                               ("name" tag-name)))
                                          (plist-get attr-plist :tags))))
                         (ht ("post-uri" (plist-get attr-plist :uri))
                             ("post-title" (plist-get attr-plist :title))
                             ("post-date" (plist-get attr-plist :mod-date))
                             ("tag-links" (if (not tags-multi) "N/A"
                                            (mapconcat
-                                            #'(lambda (tag)
-                                                (mustache-render
-                                                 "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                            (lambda (tag)
+                                              (mustache-render
+                                               "<a href=\"{{link}}\">{{name}}</a>" tag))
                                             tags-multi " : "))))))
                     (-uniq (-take
                             summary-update-number
@@ -680,28 +680,28 @@ TODO: improve this function."
                    ("summary-item-name" (car summary-list))
                    ("summary"
                     (mapcar
-                     #'(lambda (summary-list)
-                         (ht ("summary-item-name" (car summary-list))
-                             ("summary-item-uri" (ego--generate-summary-uri summary-name (car summary-list)))
-                             ("count" (number-to-string (length (cdr summary-list))))))
+                     (lambda (summary-list)
+                       (ht ("summary-item-name" (car summary-list))
+                           ("summary-item-uri" (ego--generate-summary-uri summary-name (car summary-list)))
+                           ("count" (number-to-string (length (cdr summary-list))))))
                      summary-alist))
                    ("posts"
                     (mapcar
-                     #'(lambda (attr-plist)
-                         (let ((tags-multi (mapcar
-                                            #'(lambda (tag-name)
-                                                (ht ("link" (ego--generate-summary-uri "tags" tag-name))
-                                                    ("name" tag-name)))
-                                            (plist-get attr-plist :tags))))
-                           (ht ("post-uri" (plist-get attr-plist :uri))
-                               ("post-title" (plist-get attr-plist :title))
-                               ("post-date" (plist-get attr-plist :date))
-                               ("tag-links" (if (not tags-multi) "N/A"
-                                              (mapconcat
-                                               #'(lambda (tag)
-                                                   (mustache-render
-                                                    "<a href=\"{{link}}\">{{name}}</a>" tag))
-                                               tags-multi " : "))))))
+                     (lambda (attr-plist)
+                       (let ((tags-multi (mapcar
+                                          (lambda (tag-name)
+                                            (ht ("link" (ego--generate-summary-uri "tags" tag-name))
+                                                ("name" tag-name)))
+                                          (plist-get attr-plist :tags))))
+                         (ht ("post-uri" (plist-get attr-plist :uri))
+                             ("post-title" (plist-get attr-plist :title))
+                             ("post-date" (plist-get attr-plist :date))
+                             ("tag-links" (if (not tags-multi) "N/A"
+                                            (mapconcat
+                                             (lambda (tag)
+                                                 (mustache-render
+                                                  "<a href=\"{{link}}\">{{name}}</a>" tag))
+                                             tags-multi " : "))))))
                      (cdr summary-list))))))
              ("footer"
               (ego--render-footer
@@ -789,12 +789,12 @@ PUB-BASE-DIR is the root publication directory."
             (file-buffer (or visiting-p (find-file org-file)))
             (next-link-name (read-string "Set the NEXT link name:" "Next-Link" nil "Next-Link" t)))
         (with-current-buffer (switch-to-buffer file-buffer)
-          (local-set-key "l" `(lambda ()
-                                (interactive)
-                                (insert (format "[[ego-link:%s][%s]]" ,(file-relative-name current-path) ,next-link-name))
-                                (local-unset-key "l")
-                                (save-buffer)
-                                (exit-recursive-edit)))
+          (local-set-key "l" (lambda ()
+                               (interactive)
+                               (insert (format "[[ego-link:%s][%s]]" ,(file-relative-name current-path) ,next-link-name))
+                               (local-unset-key "l")
+                               (save-buffer)
+                               (exit-recursive-edit)))
           (message "EGO: Press 'l' to insert this '%s'\n then input description for  the PERVOUS link" next-link-name)
           (recursive-edit))
         (unless visiting-p
