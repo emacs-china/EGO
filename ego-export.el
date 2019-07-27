@@ -300,12 +300,15 @@ a
                    (inhibit-file-name-operation operation))
                (apply operation args))))))
 
-(defun ego--publish-modified-file (component-table pub-dir)
+(defun ego--publish-modified-file (component-table pub-path)
   "Publish org file opened in current buffer. COMPONENT-TABLE is the hash table
-used to render the template, PUB-DIR is the directory for published html file.
+used to render the template, PUB-PAHT is the directory for published html file or the published html file itself(with .html suffix).
 If COMPONENT-TABLE is nil, the publication will be skipped."
   (when component-table
-    (let ((uri (concat (file-name-as-directory pub-dir) "index.html")))
+    (let* ((uri (if (string-suffix-p ".html" pub-path)
+                    pub-path
+                  (concat (file-name-as-directory pub-path) "index.html")))
+           (pub-dir (file-name-directory uri)))
       (unless (file-directory-p pub-dir)
         (mkdir pub-dir t))
       (ego--save-to-file
