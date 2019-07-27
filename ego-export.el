@@ -162,7 +162,10 @@ This functions works with `ego-current-project-name' and currect buffer.
                                   :tags ,tags
                                   :authors ,authors
                                   :category ,category
-                                  :uri ,uri
+                                  ;; ADD index.html for uri if uri is a directory
+                                  :uri ,(if (string-suffix-p ".html" uri)
+                                           uri
+                                         (concat (file-name-as-directory uri) "index.html"))
                                   :pub-dir ,pub-dir))
              component-table)
         (when do-pub
