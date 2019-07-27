@@ -259,17 +259,17 @@ file's category is based on its name and its root folder name."
         (default-category (ego--get-config-option :default-category))
         (category-ignore-list (ego--get-config-option :category-ignore-list)))
     (cond ((not org-file)
-           (let ((cat-list `("index" "about" ,(ego--get-config-option :default-category)))) ;; 3 default categories
-             (dolist (f (directory-files repo-dir))
-               (when (and (not (equal f "."))
-                          (not (equal f ".."))
-                          (not (equal f ".git"))
-                          (not (member f category-ignore-list))
-                          (not (equal f default-category))
-                          (file-directory-p
-                           (expand-file-name f repo-dir)))
-                 (setq cat-list (cons f cat-list))))
-             cat-list))
+           (let ((default-categories `("index" "about" ,(ego--get-config-option :default-category)))
+                 (cat-list (cl-remove-if-not (lambda (f)
+                                               (and (not (equal f "."))
+                                                    (not (equal f ".."))
+                                                    (not (equal f ".git"))
+                                                    (not (member f category-ignore-list))
+                                                    (not (equal f default-category))
+                                                    (file-directory-p
+                                                     (expand-file-name f repo-dir))))
+                                             (directory-files repo-dir))))
+             `(,@cat-list ,@default-categories)))
           ((string= (expand-file-name "index.org" repo-dir)
                     (expand-file-name org-file)) "index")
           ((string= (expand-file-name "about.org" repo-dir)
@@ -281,7 +281,7 @@ file's category is based on its name and its root folder name."
                                 "[/\\\\]+"))))))
 
 
-
+a
 (defun ego--copy-file-handler (operation &rest args)
   "Use `ego--html-link-transformer' function in export process for htm/html files"
   ;; First check for the specific operations
