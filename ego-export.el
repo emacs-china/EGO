@@ -375,7 +375,7 @@ file attribute property lists. PUB-BASE-DIR is the root publication directory."
      (lambda (cat-list)
        (when (if (string= (car cat-list) "blog")
                  t
-               (member (car cat-list) ego--category-show-list))
+               (member (car cat-list) (ego-get-category-show-list)))
          (setq cat-dir (file-name-as-directory
                         (concat (file-name-as-directory pub-base-dir)
                                 (ego--encode-string-to-url (car cat-list)))))

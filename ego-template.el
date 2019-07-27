@@ -51,7 +51,7 @@
   (or (ego--read-org-option "TITLE")
       (file-name-sans-extension (buffer-name))))
 
-(defun ego--get-category (org-file)
+(defun ego--get-category (&optional org-file)
   "Get org file category presented by ORG-FILE, return all categories if
 ORG-FILE is nil. "
   (let ((func (ego--get-config-option :retrieve-category-function)))
@@ -96,6 +96,19 @@ a hash table accordint to current buffer."
            ("description" (ego--read-org-option "DESCRIPTION"))
            ("keywords" (ego--read-org-option "TAGS"))))))
 
+(defun ego-get-category-show-list ()
+  (or ego--category-show-list
+      (setq ego--category-show-list
+            (sort (cl-remove-if
+                   (lambda (cat)
+                     (or (string= cat "index")
+                         (string= cat "about")
+                         (not (plist-get (cdr (or (assoc cat ego--category-config-alist)
+                                                  (ego--get-category-setting (ego--get-config-option :default-category))))
+                                         :category-index))))
+                   (ego--get-category nil))
+                  'string-lessp))))
+
 (defun ego--render-navigation-bar (&optional param-table)
   "Render the navigation bar on each page. it will be read firstly from
 `ego--item-cache', if there is no cached content, it will be rendered
@@ -121,17 +134,7 @@ render from a default hash table."
                   (ht ("category-uri"
                        (concat "/" (ego--encode-string-to-url cat) "/"))
                       ("category-name" (capitalize cat))))
-                (setq ego--category-show-list
-                      (sort (cl-remove-if
-                             (lambda (cat)
-                               (or (string= cat "index")
-                                   (string= cat "about")
-                                   (not (plist-get (cdr (or (assoc cat
-                                                                   ego--category-config-alist)
-                                                            (ego--get-category-setting (ego--get-config-option :default-category))))
-                                                   :category-index))))
-                             (ego--get-category nil))
-                            'string-lessp))))
+                (ego-get-category-show-list)))
               ("nav-summary"
                (mapcar
                 (lambda (cat)
