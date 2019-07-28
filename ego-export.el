@@ -284,7 +284,6 @@ file's category is based on its name and its root folder name."
                                 "[/\\\\]+"))))))
 
 
-a
 (defun ego--copy-file-handler (operation &rest args)
   "Use `ego--html-link-transformer' function in export process for htm/html files"
   ;; First check for the specific operations
