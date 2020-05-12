@@ -79,9 +79,11 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
                                  (attr-plist (car attr-cell))
                                  (component-table (cdr attr-cell)))
                             (when need-upd-p
+                              (run-hook-with-args 'ego-pre-publish-hooks attr-plist)
                               (let ((new-html-uri (ego--publish-modified-file component-table
                                                                               (plist-get attr-plist :pub-dir))))
-                                (ego-update-org-html-mapping org-file new-html-uri 'del)))
+                                (ego-update-org-html-mapping org-file new-html-uri 'del))
+                              (run-hook-with-args 'ego-post-publish-hooks attr-plist))
                             attr-plist)))
                       files-list)))
       (unless (member

@@ -425,6 +425,20 @@ You can see fallback value of above option in `ego-config-fallback'"
   "Unknown Version"))
 "If User don't set an option, ego will use fallback value of this option."))
 
+(defcustom ego-pre-publish-hooks nil
+  "run hook before publish changed org file to html file(by calling `ego--publish-modified-file') with attr-plist as the only argument.
+
+attr-plist contains meta data of the org file such as :title :date :mod-date :thumb :description :year :tags :authors :category :uri :pub-dir"
+  :group 'ego
+  :type 'list)
+
+(defcustom ego-post-publish-hooks nil
+  "run hook before publish changed org file to html file(by calling `ego--publish-modified-file') with attr-plist as the only argument.
+
+attr-plist contains meta data of the org file such as :title :date :mod-date :thumb :description :year :tags :authors :category :uri :pub-dir"
+  :group 'ego
+  :type 'list)
+
 (defun ego--get-config-option (option)
   "The function used to read ego config"
   (when (functionp ego--get-config-option-function)
