@@ -107,7 +107,7 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
   "Generate description of current org file buffer."
   (save-excursion
     (goto-char (point-min))
-    (search-forward-regexp "^[^#]")
+    (search-forward-regexp "^[^#]" nil t)
     (buffer-substring-no-properties (point) (point-max))))
 
 (defun ego--get-org-file-options (org-file pub-root-dir do-pub)
