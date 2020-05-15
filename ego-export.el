@@ -103,6 +103,13 @@ for files to be deleted. `pub-root-dir' is the root publication directory."
            (ego--update-summary file-attr-list pub-root-dir name))
        (mapcar #'car (ego--get-config-option :summary))))))
 
+(defun ego--generate-description ()
+  "Generate description of current org file buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (search-forward-regexp "^[^#]")
+    (buffer-substring-no-properties (point) (point-max))))
+
 (defun ego--get-org-file-options (org-file pub-root-dir do-pub)
   "Retrieve all needed options for org file opened in current buffer.
 PUB-ROOT-DIR is the root directory of published files, if DO-PUB is t, the
@@ -131,6 +138,7 @@ This functions works with `ego-current-project-name' and currect buffer.
                               "%Y-%m-%d"
                               (nth 5 (file-attributes filename))))))
              (description (or (ego--read-org-option "DESCRIPTION")
+                              (ego--generate-description)
                               "No Description"))
              (thumb (ego--read-org-option "THUMBNAIL"))
              (tags (ego--read-org-option "TAGS"))
@@ -155,20 +163,21 @@ This functions works with `ego-current-project-name' and currect buffer.
                         (replace-regexp-in-string
                          "\\`/" ""
                          uri))))
-             (attr-plist `(:title ,title
-                                  :date ,date
-                                  :mod-date ,mod-date
-                                  :description ,description
-                                  :thumb ,thumb
-                                  :year ,year
-                                  :tags ,tags
-                                  :authors ,authors
-                                  :category ,category
-                                  ;; ADD index.html for uri if uri is a directory
-                                  :uri ,(if (string-suffix-p ".html" uri)
-                                           uri
-                                         (concat (file-name-as-directory uri) "index.html"))
-                                  :pub-dir ,pub-dir))
+             (attr-plist `(:source-file ,(expand-file-name org-file)
+                                        :title ,title
+                                        :date ,date
+                                        :mod-date ,mod-date
+                                        :description ,description
+                                        :thumb ,thumb
+                                        :year ,year
+                                        :tags ,tags
+                                        :authors ,authors
+                                        :category ,category
+                                        ;; ADD index.html for uri if uri is a directory
+                                        :uri ,(if (string-suffix-p ".html" uri)
+                                                  uri
+                                                (concat (file-name-as-directory uri) "index.html"))
+                                        :pub-dir ,pub-dir))
              component-table)
         (when do-pub
           (princ attr-plist)
