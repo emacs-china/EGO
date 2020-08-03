@@ -30,7 +30,6 @@
 
 (require 'ht)
 (require 'ego-config)
-(require 'ido)
 (require 'cl-lib)
 
 (defun ego--compare-standard-date (date1 date2)
@@ -95,6 +94,11 @@ T[0-9][0-9]:[0-9][0-9]" date-str)
      ((string-match "^\\([0-9][0-9][0-9][0-9]\\)$" date-str)
       (match-string 1 date-str))
      (t (progn
+          ;; 兼容 2018年 07月 20日 星期五 18:15:29 CST 这种格式
+          (setq date-str
+                (replace-regexp-in-string "年 " "-" date-str))
+          (setq date-str
+                (replace-regexp-in-string "月 " "-" date-str))
           (setq date-str
                 (replace-regexp-in-string "January " "Jan. " date-str))
           (setq date-str
@@ -171,8 +175,7 @@ encoded ones, like %3E, but we do NOT want this kind of url."
     (buffer-string)))
 
 (defun ego--string-to-file (string file &optional mode)
-  "Write STRING into FILE, only when FILE is writable. If MODE is a valid major
-mode, format the string with MODE's format settings."
+  "Write STRING into FILE, only when FILE is writable. If MODE is a valid major mode, format the string with MODE's format settings."
   (when (file-writable-p file)
 	(with-temp-buffer
 	  (insert string)
@@ -183,6 +186,73 @@ mode, format the string with MODE's format settings."
 		(delete-trailing-whitespace (point-min) (point-max))
 		(indent-region (point-min) (point-max)))
       (write-region (point-min) (point-max) file))))
+
+(defun ego--relative-url-to-absolute (html-content)
+  "Force convert relative url of `html-content' to absolute url."
+  (let ((site-domain (ego--get-site-domain))
+        url)
+    (with-temp-buffer
+      (insert html-content)
+      (goto-char (point-min))
+      (while (re-search-forward
+                ;;; TODO: not only links need to convert, but also inline
+                ;;; images, may add others later
+              ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+              "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+        (setq url (match-string 4))
+        (when (string-prefix-p "/" url)
+          (setq url (concat
+                     (match-string 1)
+                     (match-string 2)
+                     (match-string 3)
+                     site-domain url
+                     (match-string 5)))
+          (replace-match url)))
+      (buffer-string))))
+
+(defun ego--absolute-url-to-relative (html-content file-path)
+  "Force convert relative url of `html-content' to absolute url."
+  (let ((store-dir (file-name-as-directory (ego--get-config-option :store-dir)))
+        (file-dir  (file-name-directory (expand-file-name file-path)))
+        url)
+    (with-temp-buffer
+      (insert html-content)
+      (goto-char (point-min))
+      (while (re-search-forward
+                ;;; TODO: not only links need to convert, but also inline
+                ;;; images, may add others later
+              ;; "<a[^>]+href=\"\\([^\"]+\\)\"[^>]*>\\([^<]*\\)</a>" nil t)
+              "\\(<[a-zA-Z]+[^/>]+\\)\\(src\\|href\\)\\(=\"\\)\\([^\"]+\\)\\(\"[^>]*>\\)" nil t)
+        (setq url (match-string 4))
+        (when (string-prefix-p "/" url)
+          (let* ((url-in-store-path (concat store-dir (substring-no-properties url 1)))
+                 (relative-url (file-relative-name url-in-store-path file-dir))
+                 (link (concat
+                        (match-string 1)
+                        (match-string 2)
+                        (match-string 3)
+                        relative-url
+                        (match-string 5))))
+            (replace-match link))))
+      (buffer-string))))
+
+(defun ego--html-link-transformer (content file)
+  "Transform links in the CONTENT."
+  (if (ego--get-config-option :force-absolute-url)
+      (ego--relative-url-to-absolute content)
+    (ego--absolute-url-to-relative content file)))
+
+(defun ego--save-to-file (content file)
+  "Save CONTENT into a html FILE, only when FILE is writable. Maybe do some transformation with the links.
+
+If MODE is a valid major mode, format the string with MODE's format settings."
+  (let* ((case-fold-search t)
+         (file (expand-file-name file))
+         (mode (and (string-match-p "html" (file-name-extension file))
+                    'html)))
+    (ego--string-to-file
+     (ego--html-link-transformer content file)
+     file mode)))
 
 (defun ego--convert-plist-to-hashtable (plist)
   "Convert normal property list PLIST into hash table, keys of PLIST should be
@@ -218,14 +288,14 @@ element to ALIST-VAR."
     ;; Next element of NEW-ALIST.
     (setq new-alist (cdr new-alist))))
 
-(defun ego--ido-completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
-  "Read multiple items with ido-completing-read. Reading stops
+(defun ego--completing-read-multiple (prompt choices &optional predicate require-match initial-input hist def sentinel)
+  "Read multiple items with completing-read. Reading stops
   when the user enters SENTINEL. By default, SENTINEL is
   \"*done*\". SENTINEL is disambiguated with clashing completions
   by appending _ to SENTINEL until it becomes unique. So if there
   are multiple values that look like SENTINEL, the one with the
   most _ at the end is the actual sentinel value. See
-  documentation for `ido-completing-read' for details on the
+  documentation for `completing-read' for details on the
   other parameters."
   (let
       ((sentinel (or sentinel
@@ -241,7 +311,7 @@ element to ALIST-VAR."
 
     ;; read some choices
     (while (not done-reading)
-      (let ((this-choice (ido-completing-read prompt remain-choices predicate
+      (let ((this-choice (completing-read prompt remain-choices predicate
                                               require-match initial-input hist def)))
         (if (equal this-choice sentinel)
             (setq done-reading t)

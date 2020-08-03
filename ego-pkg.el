@@ -6,5 +6,4 @@
     (mustache "0.22")
     (htmlize "1.47")
     (org "8.0")
-    (dash "2.0.0")
-    (simple-httpd "1.4.5")))
+    (dash "2.0.0")))

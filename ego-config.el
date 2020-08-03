@@ -31,13 +31,14 @@
 (require 'ox)
 (require 'ht)
 (require 'subr-x)
+(require 'vc-git)
 
 (defgroup ego nil
   "Options for generating static pages using ego."
   :tag "Org static page generator"
   :group 'org)
 
-(defcustom ego--default-project-name nil
+(defcustom ego-default-project-name nil
   "If set, `ego-do-publication' will directly publish this project
 and `ego-new-post' will directly add new post to this project."
   :group 'ego
@@ -272,7 +273,7 @@ Information about the creator of the HTML document.
 
 The function used to get all org files exported.
 1. Type: function
-2. Example1: ego--git-all-files
+2. Example1: ego-git-get-all-files
 
 
   `:addition-files-function'
@@ -283,20 +284,13 @@ org files ignored by git, which are generated from other files.
 2. Example1: ego--addition-all-files
 
 
-  `:web-server-docroot'
+  `:store-dir'
 
 ego can start a web server to test publish, this
 set the server document root.
 1. Type: string
 2. Example1: \"~/.emacs.d/org-website-server/ego-\"
 
-
-  `:web-server-port'
-
-ego can start a web server to test publish, this
-set the server port.
-1. Type: number
-2. Example1: 9876
 
 
 You can see fallback value of above option in `ego-config-fallback'"
@@ -308,6 +302,22 @@ You can see fallback value of above option in `ego-config-fallback'"
   "The function used to get config option."
   :group 'ego
   :type 'function)
+
+(defcustom ego-db-file-name
+  ".ego.db"
+  "The file used to store ego related information."
+  :group 'ego
+  :type 'string)
+
+(defcustom ego-auto-commit nil
+  "Specify auto commit repo-dir or not"
+  :group 'ego
+  :type 'boolean)
+
+(defcustom ego-auto-push t
+  "Whether auto push repo-dir and store-dir"
+  :group 'ego
+  :type 'boolean)
 
 (defconst ego--temp-buffer-name "*EGO Output*"
   "Name of the temporary buffer used by ego.")
@@ -349,20 +359,10 @@ You can see fallback value of above option in `ego-config-fallback'"
 (defvar ego--category-show-list nil
   "the list of category names(string) which will be showed in the navigation-bar")
 
-(defvar ego--current-project-name nil)
-(defvar ego--last-project-name nil)
-
-(defvar ego--publish-without-org-to-html nil
-  "partial org-files publish without org-to-html: 1; all org-files publish without org-to-html: 2; others: nil")
-
-(defvar ego--publish-to-repository nil
-  "Mainly used in converting relative-url to absolute-url")
+(defvar ego-current-project-name "")
 
 (defvar ego--item-cache nil
   "The cache for general purpose.")
-
-(defvar ego--async-publish-success nil
-  "When push remote success: t")
 
 (defconst ego--rss-template "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <rss version=\"2.0\">
@@ -409,15 +409,14 @@ You can see fallback value of above option in `ego-config-fallback'"
         :ignore-file-name-regexp "\n"
         :summary (("tags" :tags))
         :confound-email t
-        :force-absolute-url t
+        :force-absolute-url nil
         :preparation-function nil
         :get-title-function ego--get-title
         :retrieve-category-function ego--get-file-category
-        :repo-files-function ego--git-all-files
+        :repo-files-function ego-git-get-all-files
         :addition-files-function nil
         :org-export-function ego--default-org-export
-        :web-server-docroot "~/.emacs.d/ego-server/default"
-        :web-server-port 9876
+        :store-dir "~/.emacs.d/ego-server/default"
         :html-creator-string ,(format "<a href=\"http://www.gnu.org/software/emacs/\">Emacs</a> %s\
 (<a href=\"http://orgmode.org\">Org mode</a> %s)"
 (format "%s.x" emacs-major-version)
@@ -425,6 +424,20 @@ You can see fallback value of above option in `ego-config-fallback'"
     (replace-regexp-in-string "\\..*" ".x" (org-version))
   "Unknown Version"))
 "If User don't set an option, ego will use fallback value of this option."))
+
+(defcustom ego-pre-publish-hooks nil
+  "run hook before publish changed org file to html file(by calling `ego--publish-modified-file') with attr-plist as the only argument.
+
+attr-plist contains meta data of the org file such as :title :date :mod-date :thumb :description :year :tags :authors :category :uri :pub-dir"
+  :group 'ego
+  :type 'list)
+
+(defcustom ego-post-publish-hooks nil
+  "run hook before publish changed org file to html file(by calling `ego--publish-modified-file') with attr-plist as the only argument.
+
+attr-plist contains meta data of the org file such as :title :date :mod-date :thumb :description :year :tags :authors :category :uri :pub-dir"
+  :group 'ego
+  :type 'list)
 
 (defun ego--get-config-option (option)
   "The function used to read ego config"
@@ -436,7 +449,7 @@ You can see fallback value of above option in `ego-config-fallback'"
 which can read `option' from `ego-project-config-alist'
 if `option' is not found, get fallback value from
 `ego-config-fallback'."
-  (let ((project-plist (cdr (assoc ego--current-project-name
+  (let ((project-plist (cdr (assoc ego-current-project-name
                                    ego-project-config-alist))))
     (if (plist-member project-plist option)
         (plist-get project-plist option)
@@ -444,7 +457,7 @@ if `option' is not found, get fallback value from
 
 (defun ego--get-repository-directory ()
   "The function, which can return repository directory string."
-  (let ((dir (ego--get-config-option :repository-directory)))
+  (let ((dir (vc-git-root (ego--get-config-option :repository-directory))))
     (when dir
       (file-name-as-directory
        (expand-file-name dir)))))
@@ -518,6 +531,58 @@ multi path."
         :uri-template ,(format "/%s/%%t/" category)
         :sort-by :date
         :category-index t)))
+
+(defun ego-get-db-file ()
+  "Return the absolute path of db-file in `ego-current-project-name''s repo root directory"
+  (expand-file-name ego-db-file-name (ego--get-config-option :store-dir)))
+
+(defun ego-get-org-html-mapping ()
+  "Return org-html-mapping-alist which stored in ego-db-file(use ego-get-db-file function to get it)."
+  (let* ((ego-db-file (ego-get-db-file))
+         (org-html-mapping-lines (when (file-readable-p ego-db-file)
+                                   (delete "" (split-string (ego--file-to-string ego-db-file) "[\r\n]+"))))
+         (org-html-mapping-alist (mapcar #'read org-html-mapping-lines)))
+    org-html-mapping-alist))
+
+(defun ego-save-org-html-mapping (org-html-mapping-alist)
+  "Save org-html-mapping-alist to ego-db-file(use ego-get-db-file function to get it)."
+  (let ((ego-db-file (ego-get-db-file)))
+    (with-temp-file ego-db-file
+      (let ((standard-output (current-buffer)))
+        (mapc #'print org-html-mapping-alist)))))
+
+(defun ego-update-org-html-mapping (org-path html-uri &optional del)
+  "update org-path and html-uri mapping relationship stored in ego-db-file(use ego-get-db-file function to get it).
+
+If DEL is not nil, then it will delete origin-html-uri as well.
+Return the origin html uri of ORG-PATH."
+  (let* ((org-html-mapping-alist (ego-get-org-html-mapping))
+         (origin-html-uri (assoc-default org-path org-html-mapping-alist)))
+    (if origin-html-uri
+        (setf (cdr (assoc org-path org-html-mapping-alist)) html-uri)
+      (push (cons org-path html-uri) org-html-mapping-alist))
+    (ego-save-org-html-mapping org-html-mapping-alist)
+    (when (and del
+               origin-html-uri
+               (not (string= html-uri origin-html-uri)))
+      (delete-file origin-html-uri))
+    origin-html-uri))
+
+(defun ego-delete-org-html-mapping (org-path &optional del)
+  "delete org-path and html-uri mapping relationship stored in ego-db-file(use ego-get-db-file function to get it).
+
+If DEL is not nil, then it will delete origin-html-uri as well.
+Return the origin html uri of ORG-PATH"
+  (message "EGO DEBUG:ego-delete-org-html-mapping(%s %s)" org-path del)
+  (let* ((org-html-mapping-alist (ego-get-org-html-mapping))
+         (origin-html-uri (assoc-default org-path org-html-mapping-alist)))
+    (setq org-html-mapping-alist (delete (assoc org-path org-html-mapping-alist) org-html-mapping-alist))
+    (ego-save-org-html-mapping org-html-mapping-alist)
+    (when (and del
+               origin-html-uri)
+      (message "EGO DEBUG:delete-file %s" origin-html-uri)
+      (delete-file origin-html-uri))
+    origin-html-uri))
 
 (provide 'ego-config)
 

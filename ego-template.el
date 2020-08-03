@@ -39,11 +39,11 @@
 (defun ego--get-template-file (template-file-name)
   "Get path of template file which name is `template-file-name'."
   (car (remove nil (mapcar
-                    #'(lambda (dir)
-                        (let ((file (concat (file-name-as-directory dir)
-                                            template-file-name)))
-                          (when (file-exists-p file)
-                            file)))
+                    (lambda (dir)
+                      (let ((file (concat (file-name-as-directory dir)
+                                          template-file-name)))
+                        (when (file-exists-p file)
+                          file)))
                     (ego--get-theme-dirs nil nil 'templates)))))
 
 (defun ego--get-title ()
@@ -51,7 +51,7 @@
   (or (ego--read-org-option "TITLE")
       (file-name-sans-extension (buffer-name))))
 
-(defun ego--get-category (org-file)
+(defun ego--get-category (&optional org-file)
   "Get org file category presented by ORG-FILE, return all categories if
 ORG-FILE is nil. "
   (let ((func (ego--get-config-option :retrieve-category-function)))
@@ -96,6 +96,19 @@ a hash table accordint to current buffer."
            ("description" (ego--read-org-option "DESCRIPTION"))
            ("keywords" (ego--read-org-option "TAGS"))))))
 
+(defun ego-get-category-show-list ()
+  (or ego--category-show-list
+      (setq ego--category-show-list
+            (sort (cl-remove-if
+                   (lambda (cat)
+                     (or (string= cat "index")
+                         (string= cat "about")
+                         (not (plist-get (cdr (or (assoc cat ego--category-config-alist)
+                                                  (ego--get-category-setting (ego--get-config-option :default-category))))
+                                         :category-index))))
+                   (ego--get-category nil))
+                  'string-lessp))))
+
 (defun ego--render-navigation-bar (&optional param-table)
   "Render the navigation bar on each page. it will be read firstly from
 `ego--item-cache', if there is no cached content, it will be rendered
@@ -117,31 +130,21 @@ render from a default hash table."
               ("site-sub-title" (ego--get-config-option :site-sub-title))
               ("nav-categories"
                (mapcar
-                #'(lambda (cat)
-                    (ht ("category-uri"
-                         (concat "/" (ego--encode-string-to-url cat) "/"))
-                        ("category-name" (capitalize cat))))
-                (setq ego--category-show-list
-                      (sort (cl-remove-if
-                             #'(lambda (cat)
-                                 (or (string= cat "index")
-                                     (string= cat "about")
-                                     (not (plist-get (cdr (or (assoc cat
-                                                                     ego--category-config-alist)
-                                                              (ego--get-category-setting (ego--get-config-option :default-category))))
-                                                     :category-index))))
-                             (ego--get-category nil))
-                            'string-lessp))))
+                (lambda (cat)
+                  (ht ("category-uri"
+                       (concat "/" (ego--encode-string-to-url cat) "/"))
+                      ("category-name" (capitalize cat))))
+                (ego-get-category-show-list)))
               ("nav-summary"
                (mapcar
-                #'(lambda (cat)
-                    (if (equal cat (caar (-filter #'(lambda (element) (equal :tags (cadr element)))
-                                                     (ego--get-config-option :summary))))
-                        (setq cat-real "tags")
-                      (setq cat-real cat))
-                    (ht ("summary-item-uri"
-                         (concat "/" (ego--encode-string-to-url cat-real) "/"))
-                        ("summary-item-name" (capitalize cat))))
+                (lambda (cat)
+                  (if (equal cat (caar (-filter (lambda (element) (equal :tags (cadr element)))
+                                                (ego--get-config-option :summary))))
+                      (setq cat-real "tags")
+                    (setq cat-real cat))
+                  (ht ("summary-item-uri"
+                       (concat "/" (ego--encode-string-to-url cat-real) "/"))
+                      ("summary-item-name" (capitalize cat))))
                 (mapcar #'car (ego--get-config-option :summary))))
               ("nav-source-browse"
                (let ((list (ego--get-config-option :source-browse-url)))
@@ -208,9 +211,9 @@ similar to `ego--render-header'."
               (tags (ego--read-org-option "TAGS"))
               (tags (if tags
                         (mapcar
-                         #'(lambda (tag-name)
-                             (ht ("link" (ego--generate-summary-uri "tags" tag-name))
-                                 ("name" tag-name)))
+                         (lambda (tag-name)
+                           (ht ("link" (ego--generate-summary-uri "tags" tag-name))
+                               ("name" tag-name)))
                          (delete "" (mapcar 'string-trim (split-string tags "[:,]+" t))))))
               (category (ego--get-category filename))
               (config (cdr (or (assoc category ego--category-config-alist)
@@ -222,7 +225,7 @@ similar to `ego--render-header'."
              ("date" date)
              ("mod-date" (if (not filename)
                              (format-time-string "%Y-%m-%d")
-                           (or (ego--git-last-change-date
+                           (or (ego-git-last-change-date
                                 (ego--get-repository-directory)
                                 filename)
                                (format-time-string
@@ -231,9 +234,9 @@ similar to `ego--render-header'."
              ("tags" tags)
              ("tag-links" (if (not tags) "N/A"
                             (mapconcat
-                             #'(lambda (tag)
-                                 (mustache-render
-                                  "<a href=\"{{link}}\">{{name}}</a>" tag))
+                             (lambda (tag)
+                               (mustache-render
+                                "<a href=\"{{link}}\">{{name}}</a>" tag))
                              tags " : ")))
              ("author" (or (ego--read-org-option "AUTHOR")
                            user-full-name
